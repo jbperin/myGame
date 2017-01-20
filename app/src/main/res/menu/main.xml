@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.jibepe.labo3d.MainActivity" >
+    tools:context="com.jibepe.labo3d.com.jibepe.activities.MainActivity" >
 
     <item
         android:id="@+id/action_settings"

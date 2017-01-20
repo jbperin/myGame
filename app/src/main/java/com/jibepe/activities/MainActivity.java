@@ -1,27 +1,19 @@
-package com.jibepe.labo3d;
+package com.jibepe.activities;
 
 
 
-import java.util.Observable;
-import java.util.Observer;
-
-
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.ActionBarActivity;
 import android.app.ActivityManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.ConfigurationInfo;
-import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
+import com.jibepe.labo3d.GLES20View;
+import com.jibepe.labo3d.R;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -46,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 		if (supportsEs2) 
 		{
 			// Create an OpenGL ES 2.0 context.
-			theView = new GLES20View (getApplication());
+			theView = new GLES20View(getApplication());
 			
 			RelativeLayout outerView = 
 	                (RelativeLayout)this.findViewById(R.id.lelayout);
@@ -92,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+            startActivity(new Intent(getApplicationContext(), ConfigActivity.class));
             return true;
         }
         return super.onOptionsItemSelected(item);
