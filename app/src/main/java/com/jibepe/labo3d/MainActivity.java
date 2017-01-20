@@ -16,6 +16,7 @@ import android.content.IntentFilter;
 import android.content.pm.ConfigurationInfo;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +24,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 	
 	private final String TAG = "MainActivity";
 	
@@ -54,9 +55,6 @@ public class MainActivity extends ActionBarActivity {
 	        outerView.addView(theView,0);
 		}
 
-		LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
-			      new IntentFilter("custom-event-name")); 
-    
     }
     
     @Override
@@ -73,7 +71,6 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onDestroy() {
       // Unregister since the activity is about to be closed.
-      LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
       super.onDestroy();
     }    
   
@@ -100,38 +97,6 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    
-    /*********************************************/
-    /***         LOCAL MESSENGING               **/
-    /*********************************************/
-    
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
-  	  @Override
-  	  public void onReceive(Context context, Intent intent) {
-  	    // Get extra data included in the Intent
-    	String topic = intent.getStringExtra("topic");
-  	    String message = intent.getStringExtra("message");
-  	    Log.d(TAG, "Got message: ("+topic+ ") " + message);
-  	    if (topic.compareTo("bzPosition") == 0)
-  	    {
-  	    	String[] strMsg = message.split(":");
-  	    	String objName = strMsg[0];
-  	    	String[] strPos = strMsg[1].split(",");
-  	    	final float [] objPos = {Float.parseFloat(strPos[0]), Float.parseFloat(strPos[2]), -Float.parseFloat(strPos[1])}; 
-  	    	theView.getRenderer().setObjPos(objName, objPos);
-  	    } else if (topic.compareTo("bzOrientation") == 0)
-  	    {
-  	    	String[] strMsg = message.split(":");
-  	    	String objName = strMsg[0];
-  	    	String[] strRot = strMsg[1].split(",");
-  	    	final float [] objRot = {Float.parseFloat(strRot[0]), Float.parseFloat(strRot[2]), -Float.parseFloat(strRot[1])}; 
-  	    	theView.getRenderer().setObjRot(objName, objRot);
-  	    }  	    
-  	  }
-  	};
-
-  	
-  	
 
 	private GLES20View theView;
 
