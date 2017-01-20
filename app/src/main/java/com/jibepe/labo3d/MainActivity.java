@@ -23,12 +23,11 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 
-public class MainActivity extends ActionBarActivity implements Observer{
+public class MainActivity extends ActionBarActivity {
 	
 	private final String TAG = "MainActivity";
 	
-	private final boolean useMqtt = false;
-	
+
     /*********************************************/
     /***                PROCESS                 **/
     /*********************************************/
@@ -42,9 +41,7 @@ public class MainActivity extends ActionBarActivity implements Observer{
 		final ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
 		final boolean supportsEs2 = configurationInfo.reqGlEsVersion >= 0x20000;
 		
-		Force.getInstance().addObserver(this);
-		Torque.getInstance().addObserver(this);
-		
+
 		if (supportsEs2) 
 		{
 			// Create an OpenGL ES 2.0 context.
@@ -138,16 +135,5 @@ public class MainActivity extends ActionBarActivity implements Observer{
 
 	private GLES20View theView;
 
-	@Override
-	public void update(Observable observable, Object data) {
-		Log.i(TAG, "Update was Called");
-		if (observable.getClass()==Force.class) {
-			Log.i(TAG, "Force "+((Force)observable).getStrength());
-		}
-		else if (observable.getClass().isInstance(Torque.getInstance())) {
-			Log.i(TAG, "Force "+((Torque)observable).getStrength());
-		}
-
-	}
 
 }

@@ -48,8 +48,6 @@ public class GLES20View extends GLSurfaceView  {
 		switch (e.getAction()) {
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_POINTER_UP:
-			Torque.getInstance().setStrength(0.0f );
-			Force.getInstance().setStrength(0.0f );
 			break;
 		case MotionEvent.ACTION_DOWN:
 			performClick();
@@ -60,13 +58,11 @@ public class GLES20View extends GLSurfaceView  {
 			if (Math.abs(dx) > Math.abs(dy)) {
 				//Log.e("onTouchEvent", "Rotate: " + dx);
 				mRenderer.rotateCam(dx / 2.0f );
-				Torque.getInstance().setStrength(dx / 2.0f );
 			}
 			else 
 			{
 				//Log.e("onTouchEvent", "Translate: " + dy);
 				mRenderer.moveCam(- dy / 6.0f );
-				Force.getInstance().setStrength(- dy / 6.0f );
 			}
 			requestRender();
 			break;
