@@ -2,11 +2,13 @@ package com.jibepe.activities;
 
 
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ConfigurationInfo;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,12 +16,20 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import com.jibepe.labo3d.GLES20View;
 import com.jibepe.labo3d.R;
+import com.jibepe.util.DownloadFilesTask;
+import com.jibepe.util.DownloadHelper;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 
 public class MainActivity extends AppCompatActivity {
 	
 	private final String TAG = "MainActivity";
-	
 
     /*********************************************/
     /***                PROCESS                 **/
@@ -30,12 +40,40 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-		final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-		final ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
-		final boolean supportsEs2 = configurationInfo.reqGlEsVersion >= 0x20000;
-		
+        String DownloadUrl = "http://jb.perin.pagesperso-orange.fr/";
+        String fileName = "scene.mtl";
 
-		if (supportsEs2) 
+        boolean canW = DownloadHelper.isExternalStorageWritable();
+        boolean canR = DownloadHelper.isExternalStorageReadable();
+        if(canW == canR == true) {
+
+            File folder = getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+            //DownloadHelper.verifyStoragePermissions(this);
+            String FullUrl = DownloadUrl;
+            URL url = null;
+            try {
+                url = new URL(FullUrl);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            if (url != null) {
+                new DownloadFilesTask(url, folder).execute(fileName);
+            }
+        }
+        //File file = new File(Environment.getExternalStoragePublicDirectory(
+        //        Environment.DIRECTORY_PICTURES), "scene.mtl");
+
+        //try {
+            //DownloadHelper.DownloadFile("scene.obj");
+            //DownloadHelper.DownloadFile("scene.obj");
+        //} catch (IOException e) {
+        //    e.printStackTrace();
+        //}
+        final ActivityManager activityManager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        final ConfigurationInfo configurationInfo = activityManager.getDeviceConfigurationInfo();
+        final boolean supportsEs2 = configurationInfo.reqGlEsVersion >= 0x20000;
+
+        if (supportsEs2)
 		{
 			// Create an OpenGL ES 2.0 context.
 			theView = new GLES20View(getApplication());
