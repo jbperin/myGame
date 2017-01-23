@@ -26,23 +26,22 @@ import android.opengl.GLSurfaceView.Renderer;
 import android.os.SystemClock;
 
 public class GLES20Renderer implements Renderer {
+
 	private Context mContext;
 	private ObjLoader mSceneLoader;
 	private ObjLoader mObjLoader;
 	private Dictionary<String, Integer> dTextureHandlers;
+	private ShaderHelper mShaderHelper;
 
 	public GLES20Renderer(Context context) {
 		super();
 		mContext = context;
 		mSceneLoader = new ObjLoader(mContext);
 		mObjLoader = new ObjLoader(mContext);
+		mShaderHelper = new ShaderHelper(mContext);
 	}
 
-	private String getShader(int ressourceID)
-	{
-		return RawResourceReader.readTextFileFromRawResource(mContext, ressourceID);
-	}
-	
+
 	@Override
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         // Set the clear color
@@ -54,41 +53,7 @@ public class GLES20Renderer implements Renderer {
 		// Enable depth testing
 		GLES20.glEnable(GLES20.GL_DEPTH_TEST);
 
-		final int sclShader_V = myShaderTB.compileShader(GLES20.GL_VERTEX_SHADER, getShader(R.raw.solid_color_light_v));		
-		final int sclShader_F = myShaderTB.compileShader(GLES20.GL_FRAGMENT_SHADER, getShader(R.raw.solid_color_light_f));		
-		mSolidColorLightProgram = myShaderTB.createAndLinkProgram(sclShader_V, sclShader_F, 
-							new String[] {"a_Position",  "a_Color", "a_Normal"});	
-
-		final int suclShader_V = myShaderTB.compileShader(GLES20.GL_VERTEX_SHADER, getShader(R.raw.solid_ucolor_light_v));		
-		final int suclShader_F = myShaderTB.compileShader(GLES20.GL_FRAGMENT_SHADER, getShader(R.raw.solid_ucolor_light_f));		
-		mSolidUColorLightProgram = myShaderTB.createAndLinkProgram(suclShader_V, suclShader_F, 
-							new String[] {"a_Position", "a_Normal"});	
-
-		final int pointShader_V = myShaderTB.compileShader(GLES20.GL_VERTEX_SHADER, getShader(R.raw.solid_color_point_v));		
-		final int pointShader_F = myShaderTB.compileShader(GLES20.GL_FRAGMENT_SHADER, getShader(R.raw.solid_color_point_f));		
-		mSolidPointProgram = myShaderTB.createAndLinkProgram(pointShader_V, pointShader_F, 
-							new String[] {"a_Position"});	
-
-		final int LineShader_V = myShaderTB.compileShader(GLES20.GL_VERTEX_SHADER, getShader(R.raw.solid_ucolor_nolight_v));		
-		final int LineShader_F = myShaderTB.compileShader(GLES20.GL_FRAGMENT_SHADER, getShader(R.raw.solid_ucolor_nolight_f));		
-		mSolidLineProgram = myShaderTB.createAndLinkProgram(LineShader_V, LineShader_F, 
-							new String[] {"a_Position"});	
-
-		final int stclShader_V = myShaderTB.compileShader(GLES20.GL_VERTEX_SHADER, getShader(R.raw.solid_tex_ucolor_light_v));		
-		final int stclShader_F = myShaderTB.compileShader(GLES20.GL_FRAGMENT_SHADER, getShader(R.raw.solid_tex_ucolor_light_f));		
-		mSolidTexColorLightProgram = myShaderTB.createAndLinkProgram(stclShader_V, stclShader_F, 
-				new String[] {"a_Position", "a_Normal", "a_TexCoordinate"});
-
-		final int stcShader_V = myShaderTB.compileShader(GLES20.GL_VERTEX_SHADER, getShader(R.raw.solid_tex_ucolor_nolight_v));		
-		final int stcShader_F = myShaderTB.compileShader(GLES20.GL_FRAGMENT_SHADER, getShader(R.raw.solid_tex_ucolor_nolight_f));		
-		mSolidTexColorNoLightProgram = myShaderTB.createAndLinkProgram(stcShader_V, stcShader_F, 
-				new String[] {"a_Position", "a_TexCoordinate"});
-
-		final int stlShader_V = myShaderTB.compileShader(GLES20.GL_VERTEX_SHADER, getShader(R.raw.solid_tex_light_v));		
-		final int stlShader_F = myShaderTB.compileShader(GLES20.GL_FRAGMENT_SHADER, getShader(R.raw.solid_tex_light_f));		
-		mSolidTexLightProgram = myShaderTB.createAndLinkProgram(stlShader_V, stlShader_F, 
-				new String[] {"a_Position", "a_Normal", "a_TexCoordinate"});
-
+		mShaderHelper.loadShaders();
 		// Load models
 		mSceneLoader.loadModel("scene");
 		mObjLoader.loadModel("plantexture");
@@ -303,7 +268,7 @@ public class GLES20Renderer implements Renderer {
 	private void drawPoint(float X, float Y, float Z, float size, 
 			float r, float g, float b, float a)
 	{
-		int program = mSolidPointProgram;
+		int program = mShaderHelper.getShaderProgram(ShaderHelper.sSolidPointProgram);
 		
         final int mMVPMatrixHandle = GLES20.glGetUniformLocation(program, "u_MVPMatrix");
         final int mColorHandle = GLES20.glGetUniformLocation(program, "u_Color");
@@ -345,6 +310,8 @@ public class GLES20Renderer implements Renderer {
     	//final float[] Color = {r, g, b, a};
     	final float[] mMVPMatrix = new float[16];
     	final float[] ModelMatrix = new float[16];
+
+		int mSolidLineProgram = mShaderHelper.getShaderProgram(ShaderHelper.sSolidLineProgram);
 
         GLES20.glUseProgram(mSolidLineProgram);
 
@@ -390,7 +357,7 @@ public class GLES20Renderer implements Renderer {
 
 	private void drawBuffer(float[] buffer, float[] color) {
 		
-		int program = mSolidUColorLightProgram;
+		int program = mShaderHelper.getShaderProgram(ShaderHelper.sSolidUColorLightProgram);
         GLES20.glUseProgram(program);
 		
 		final int mPositionHandle = GLES20.glGetAttribLocation(program, "a_Position");
@@ -454,7 +421,7 @@ public class GLES20Renderer implements Renderer {
 		int program;
 		
 		
-		program = mSolidTexColorNoLightProgram;
+		program = mShaderHelper.getShaderProgram(ShaderHelper.sSolidTexColorNoLightProgram);
 		GLES20.glUseProgram(program);
 		
 		// "a_Position", "a_Color", "a_Normal", "a_TexCoordinate"
@@ -605,16 +572,6 @@ public class GLES20Renderer implements Renderer {
 	/** Used to hold the transformed position of the light in eye space (after transformation via modelview matrix) */
 	final float[] mLightPosInEyeSpace = new float[4];
 	
-	private ShaderUtil myShaderTB = new ShaderUtil();
-
-	/** This is a handle to our per-vertex cube shading program. */
-	private int mSolidPointProgram;
-	private int mSolidLineProgram;
-	private int mSolidColorLightProgram;
-	private int mSolidUColorLightProgram;
-	private int mSolidTexColorLightProgram;
-	private int mSolidTexColorNoLightProgram;
-	private int mSolidTexLightProgram;
 
 	/** This is a handle to our texture data. */
 	private int mAlphaTextureDataHandle, mTextureDataHandle;
