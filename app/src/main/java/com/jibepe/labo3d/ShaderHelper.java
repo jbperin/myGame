@@ -17,7 +17,7 @@ public class ShaderHelper {
 	private int mSolidTexLightProgram;
 
 	public final static String sSolidPointProgram = "SolidPointProgram";
-	public final static String sSolidLineProgram = "SolidPointProgram";
+	public final static String sSolidLineProgram = "SolidLineProgram";
 	public final static String sSolidColorLightProgram = "SolidColorLightProgram";
 	public final static String sSolidUColorLightProgram = "SolidUColorLightProgram";
 	public final static String sSolidTexColorLightProgram = "SolidTexColorLightProgram";

@@ -8,7 +8,7 @@ import android.view.MotionEvent;
 public class GLES20View extends GLSurfaceView  {
 	Context mContext;
 	GLES20Renderer mRenderer;
-
+	SceneGraph mScene;
 
 	private float mPreviousX;
 	private float mPreviousY;
@@ -20,7 +20,9 @@ public class GLES20View extends GLSurfaceView  {
 
 		getHolder().setFormat(PixelFormat.TRANSLUCENT);
 		//setEGLConfigChooser(8, 8, 8, 8, 8, 8);
-		mRenderer = new GLES20Renderer (context);
+		mScene = new SceneGraph();
+
+		mRenderer = new GLES20Renderer (context, new SceneContentProvider(mScene));
 
 		// Request an OpenGL ES 2.0 compatible context.
 		setEGLContextClientVersion(2);
@@ -57,12 +59,14 @@ public class GLES20View extends GLSurfaceView  {
 			float dy = y - mPreviousY;
 			if (Math.abs(dx) > Math.abs(dy)) {
 				//Log.e("onTouchEvent", "Rotate: " + dx);
-				mRenderer.rotateCam(dx / 2.0f );
+				//mRenderer.rotateCam(dx / 2.0f );
+				mScene.rotateCam(dx / 2.0f );
 			}
 			else 
 			{
 				//Log.e("onTouchEvent", "Translate: " + dy);
-				mRenderer.moveCam(- dy / 6.0f );
+				//mRenderer.moveCam(- dy / 6.0f );
+				mScene.moveCam(- dy / 6.0f );
 			}
 			requestRender();
 			break;

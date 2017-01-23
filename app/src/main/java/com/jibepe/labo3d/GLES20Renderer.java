@@ -27,18 +27,71 @@ import android.os.SystemClock;
 
 public class GLES20Renderer implements Renderer {
 
+
+	private final int FLOAT_FIELD_SIZE = 4;
+	private final int POSITION_DATA_SIZE = 3;
+	private final int NORMAL_DATA_SIZE = 3;
+	private final int UVCOORD_DATA_SIZE = 2;
+	private final int COLOR_DATA_SIZE = 4;
+
+
+
+	/** Store the projection matrix. This is used to project the scene onto a 2D viewport. */
+	private float[] mProjectionMatrix = new float[16];
+	/**
+	 * Store the view matrix. This can be thought of as our camera. This matrix transforms world space to eye space;
+	 * it positions things relative to our eye.
+	 */
+	private float[] mViewMatrix = new float[16];
+
+	/**
+	 * Store the model matrix. This matrix is used to move models from object space (where each model can be thought
+	 * of being located at the center of the universe) to world space.
+	 */
+	private float[] mModelMatrix = new float[16];
+
+	/**
+	 * Store the model matrix. This matrix is used to move models from object space (where each model can be thought
+	 * of being located at the center of the universe) to world space.
+	 */
+	private float[] mVPMatrix = new float[16];
+
+	/**
+	 * Stores a copy of the model matrix specifically for the light position.
+	 */
+	private float[] mLightModelMatrix = new float[16];
+
+	/** Used to hold a light centered on the origin in model space. We need a 4th coordinate so we can get translations to work when
+	 *  we multiply this by our transformation matrices. */
+	final float[] mLightPosInModelSpace = new float[] {0.0f, 0.0f, 0.0f, 1.0f};
+
+	/** Used to hold the current position of the light in world space (after transformation via model matrix). */
+	final float[] mLightPosInWorldSpace = new float[4];
+
+	/** Used to hold the transformed position of the light in eye space (after transformation via modelview matrix) */
+	final float[] mLightPosInEyeSpace = new float[4];
+
+
+	/** This is a handle to our texture data. */
+	private int mAlphaTextureDataHandle, mTextureDataHandle;
+	private Dictionary<String, Integer> dTextureHandlers;
+
+
+
 	private Context mContext;
 	private ObjLoader mSceneLoader;
 	private ObjLoader mObjLoader;
-	private Dictionary<String, Integer> dTextureHandlers;
 	private ShaderHelper mShaderHelper;
+    private InterfaceSceneRenderer mScene;
 
-	public GLES20Renderer(Context context) {
+
+    public GLES20Renderer(Context context, InterfaceSceneRenderer scene) {
 		super();
 		mContext = context;
 		mSceneLoader = new ObjLoader(mContext);
 		mObjLoader = new ObjLoader(mContext);
 		mShaderHelper = new ShaderHelper(mContext);
+		mScene = scene;
 	}
 
 
@@ -54,6 +107,7 @@ public class GLES20Renderer implements Renderer {
 		GLES20.glEnable(GLES20.GL_DEPTH_TEST);
 
 		mShaderHelper.loadShaders();
+
 		// Load models
 		mSceneLoader.loadModel("scene");
 		mObjLoader.loadModel("plantexture");
@@ -110,9 +164,6 @@ public class GLES20Renderer implements Renderer {
 	@Override
 	public void onDrawFrame(GL10 gl) {
 
-        // Do a complete rotation every 10 seconds.
-        long time = SystemClock.uptimeMillis() % 10000L;        
-        float angleInDegrees = (360.0f / 10000.0f) * ((int) time);                
 
         // clear Screen and Depth Buffer, we have set the clear color as black.
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
@@ -122,6 +173,12 @@ public class GLES20Renderer implements Renderer {
         // Set the view matrix. This matrix can be said to represent the camera position.
 		// NOTE: In OpenGL 1, a ModelView matrix is used, which is a combination of a model and
 		// view matrix. In OpenGL 2, we can keep track of these matrices separately if we choose.
+        float [] mPosCam = mScene.getCamPos();
+		float mPosCamX  = mPosCam [0];
+        float mPosCamY = mPosCam [1];
+        float [] mRotCam = mScene.getCamRot();
+        float mAngleCam = mRotCam [1];
+
 		Matrix.setLookAtM(mViewMatrix, 0, 
 				// Position the eye in front of the origin.
 				mPosCamX, 1.0f, mPosCamY,// eyeX, eyeY, eyeZ, 
@@ -131,12 +188,14 @@ public class GLES20Renderer implements Renderer {
 				0.0f, 1.0f, 0.0f  //upX, upY, upZ
 				);		
 		Matrix.multiplyMM(mVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
-		
+
+		float [] lightPos = mScene.getLightsPos().get(0);
+
         // Calculate position of the light. Rotate and then push into the distance.
         Matrix.setIdentityM(mLightModelMatrix, 0);
         //Matrix.translateM(mLightModelMatrix, 0, 0.0f, 0.0f, -2.0f);      
-        Matrix.rotateM(mLightModelMatrix, 0, angleInDegrees, 0.0f, 1.0f, 0.0f);
-        Matrix.translateM(mLightModelMatrix, 0, 0.0f, 1.0f, 2.0f);
+        //Matrix.rotateM(mLightModelMatrix, 0, angleInDegrees, 0.0f, 1.0f, 0.0f);
+        Matrix.translateM(mLightModelMatrix, 0, lightPos[0], lightPos[1], lightPos[2]);
                
         Matrix.multiplyMV(mLightPosInWorldSpace, 0, mLightModelMatrix, 0, mLightPosInModelSpace, 0);
         Matrix.multiplyMV(mLightPosInEyeSpace, 0, mViewMatrix, 0, mLightPosInWorldSpace, 0);                        
@@ -166,7 +225,9 @@ public class GLES20Renderer implements Renderer {
         final float scnOrientation [] = {0.0f, 0.0f, 0.0f};
 
         drawDroid (scnPosition, scnOrientation, mSceneLoader);
-        
+
+        float objPos[] = {1.0f, 0.0f, -1.0f};
+        float objRot[] = {0.0f, 0.0f, 0.0f};
 
         final float position [] = {objPos[0], objPos[1], objPos[2]};
         final float orientation [] = {objRot[0], objRot[1], objRot[2]};
@@ -174,9 +235,7 @@ public class GLES20Renderer implements Renderer {
         drawDroid (position, orientation, mObjLoader);
         
 	}
-	private float objPos[] = {1.0f, 0.0f, -1.0f};
-	private float objRot[] = {0.0f, 0.0f, 0.0f};
-	
+
 	private void drawDroid (float[] position, float[] orientation, ObjLoader Shape){
 		
 		
@@ -513,72 +572,5 @@ public class GLES20Renderer implements Renderer {
 
 	}
 	
-	public void rotateCam(float f) {
-		mAngleCam += f;
-	}
 
-	public void moveCam(float f) {
-		mPosCamX += f*Math.cos(Math.toRadians(mAngleCam));
-		mPosCamY += f*Math.sin(Math.toRadians(mAngleCam));
-	}	
-	
-	public void setObjPos(String objName, float [] pos){
-		// TODO: Gerer le dictionnaire d'objet
-		objPos = pos;
-	}
-	public void setObjRot(String objName, float [] rot){
-		// TODO: Gerer le dictionnaire d'objet
-		objRot = rot;
-	}
-	
-	private float mAngleCam = -90.0f;
-	private float mPosCamX = 0.0f;
-	private float mPosCamY = 0.0f;
-
-	
-
-	/** Store the projection matrix. This is used to project the scene onto a 2D viewport. */
-	private float[] mProjectionMatrix = new float[16];
-	/**
-	 * Store the view matrix. This can be thought of as our camera. This matrix transforms world space to eye space;
-	 * it positions things relative to our eye.
-	 */
-	private float[] mViewMatrix = new float[16];
-
-	/**
-	 * Store the model matrix. This matrix is used to move models from object space (where each model can be thought
-	 * of being located at the center of the universe) to world space.
-	 */
-	private float[] mModelMatrix = new float[16];
-
-	/**
-	 * Store the model matrix. This matrix is used to move models from object space (where each model can be thought
-	 * of being located at the center of the universe) to world space.
-	 */
-	private float[] mVPMatrix = new float[16];
-	
-	/** 
-	 * Stores a copy of the model matrix specifically for the light position.
-	 */
-	private float[] mLightModelMatrix = new float[16];	
-
-	/** Used to hold a light centered on the origin in model space. We need a 4th coordinate so we can get translations to work when
-	 *  we multiply this by our transformation matrices. */
-	final float[] mLightPosInModelSpace = new float[] {0.0f, 0.0f, 0.0f, 1.0f};
-
-	/** Used to hold the current position of the light in world space (after transformation via model matrix). */
-	final float[] mLightPosInWorldSpace = new float[4];
-
-	/** Used to hold the transformed position of the light in eye space (after transformation via modelview matrix) */
-	final float[] mLightPosInEyeSpace = new float[4];
-	
-
-	/** This is a handle to our texture data. */
-	private int mAlphaTextureDataHandle, mTextureDataHandle;
-	
-	private final int FLOAT_FIELD_SIZE = 4; 
-	private final int POSITION_DATA_SIZE = 3;
-	private final int NORMAL_DATA_SIZE = 3;
-	private final int UVCOORD_DATA_SIZE = 2;
-	private final int COLOR_DATA_SIZE = 4;
 }

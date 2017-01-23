@@ -40,6 +40,7 @@ public class ObjLoader {
 		mContext = context;
 	}
 	/**
+     *
 	 * @param args
 	 */
 	public void  loadModel (String sceneFilename) {// {int objRessourceId, int mtlRessourceId) {
@@ -207,6 +208,7 @@ public class ObjLoader {
 		}
 		return (bufferObj.array());
 	}
+
 	public void listTexture(List<String> ltex) {
 		 
         Enumeration<String> key = this.dictionary.keys();
