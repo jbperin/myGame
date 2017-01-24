@@ -2,6 +2,7 @@ package com.jibepe.labo3d;
 
 import android.os.SystemClock;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,8 +12,10 @@ public class SceneContentProvider implements InterfaceSceneRenderer{
 
     SceneGraph mSceneGraph;
 
+
     public SceneContentProvider (SceneGraph sg) {
         mSceneGraph = sg;
+
     }
     @Override
     public float[] getCamPos() {
@@ -30,8 +33,72 @@ public class SceneContentProvider implements InterfaceSceneRenderer{
     }
 
     @Override
-    public List<float[]> getRenderableShapes() {
-        return null;
+    public List<glRenderableShape> getRenderableShapes() {
+
+        List <glRenderableShape> shapes2Render = new ArrayList<glRenderableShape>();
+
+//        drawLine (0.0f, 0.0f, 0.0f,
+//    			  1.0f, 0.0f, 0.0f,
+//    			  1.0f, 0.0f, 0.0f, 1.0f); //red
+//
+//        drawLine (0.0f, 0.0f, 0.0f,
+//  			  0.0f, 0.0f, -1.0f,
+//  			  0.0f, 1.0f, 0.0f, 1.0f);  // green
+//
+//        drawLine (0.0f, 0.0f, 0.0f,
+//  			  0.0f, 1.0f, 0.0f,
+//  			  0.0f, 0.0f, 1.0f, 1.0f);  // blue
+//
+//
+        glLine line1 = new glLine();
+
+        line1.setPosStart(new float [] {0.0f, 0.0f, 0.0f});
+        line1.setPosEnd(new float [] {1.0f, 0.0f, 0.0f});
+        line1.setColor(new float [] {1.0f, 0.0f, 0.0f, 1.0f}); //red
+
+        shapes2Render.add(line1);
+
+        glLine line2 = new glLine();
+
+        line2.setPosStart(new float [] {0.0f, 0.0f, 0.0f});
+        line2.setPosEnd(new float [] {0.0f, 0.0f, -1.0f});
+        line2.setColor(new float [] {0.0f, 1.0f, 0.0f, 1.0f});// green
+
+        shapes2Render.add(line2);
+
+
+        glLine line3 = new glLine();
+
+        line3.setPosStart(new float [] {0.0f, 0.0f, 0.0f});
+        line3.setPosEnd(new float [] {0.0f, 1.0f, 0.0f});
+        line3.setColor(new float [] {0.0f, 0.0f, 1.0f, 1.0f});// blue
+
+        shapes2Render.add(line3);
+
+        int numberOfLine = 5;
+		for (int ii = -numberOfLine; ii <= numberOfLine; ii ++) {
+            glLine aLine = new glLine();
+            aLine.setPosStart (new float [] {(float)ii, 0.0f, (float)-numberOfLine});
+            aLine.setPosEnd (new float [] {(float)ii, 0.0f, (float) numberOfLine});
+            aLine.setColor(new float [] {0.5f, 0.5f , 0.5f ,1.0f});
+            shapes2Render.add(aLine);
+
+            glLine aLine2 = new glLine();
+            aLine2.setPosStart (new float [] {(float)-numberOfLine, 0.0f, (float)ii});
+            aLine2.setPosEnd (new float [] {(float) numberOfLine, 0.0f, (float)ii});
+            aLine2.setColor(new float [] {0.5f, 0.5f , 0.5f ,1.0f});
+            shapes2Render.add(aLine2);
+
+		}
+
+        glColoredShape shapeScene = new glColoredShape(mSceneGraph.getObj("scene"));
+        shapeScene.setPosition (new float [] {0.0f, 0.0f, 0.0f});
+        shapeScene.setRotation (new float [] {0.0f, 0.0f, 0.0f});
+
+        shapes2Render.add(shapeScene);
+
+
+        return shapes2Render;
     }
 
 

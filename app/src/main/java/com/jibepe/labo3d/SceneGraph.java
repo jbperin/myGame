@@ -1,6 +1,11 @@
 package com.jibepe.labo3d;
 
+import com.jibepe.objparser.MaterialShape;
+import com.jibepe.objparser.ObjLoader;
+
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.List;
 
 /**
@@ -9,7 +14,7 @@ import java.util.List;
 public class SceneGraph {
 
 
-
+    public Dictionary<String, ObjLoader> objectDictionary;
 //    private float mPosCamX = 0.0f;
 //
 //    private float mPosCamY = 0.0f;
@@ -21,6 +26,7 @@ public class SceneGraph {
     private float camRot[] = {0.0f, -90.0f, 0.0f};
 
     public SceneGraph (){
+        objectDictionary = new Hashtable<String, ObjLoader>();
 
     }
     public float [] getCamPos(){
@@ -66,7 +72,12 @@ public class SceneGraph {
         // TODO: Gerer le dictionnaire d'objet
         objRot = rot;
     }
-
+    public void addObj (String name, ObjLoader obj) {
+        objectDictionary.put(name, obj);
+    }
+    public ObjLoader getObj (String objectName) {
+        return objectDictionary.get(objectName);
+    }
 
     public List<float[]> getLightsPos() {
 //        // Do a complete rotation every 10 seconds.

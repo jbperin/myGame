@@ -40,7 +40,6 @@ public class ObjLoader {
 		mContext = context;
 	}
 	/**
-     *
 	 * @param args
 	 */
 	public void  loadModel (String sceneFilename) {// {int objRessourceId, int mtlRessourceId) {

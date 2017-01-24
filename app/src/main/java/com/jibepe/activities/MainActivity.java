@@ -16,6 +16,8 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import com.jibepe.labo3d.GLES20View;
 import com.jibepe.labo3d.R;
+import com.jibepe.labo3d.SceneGraph;
+import com.jibepe.objparser.ObjLoader;
 import com.jibepe.util.DownloadFilesTask;
 import com.jibepe.util.DownloadHelper;
 
@@ -62,7 +64,10 @@ public class MainActivity extends AppCompatActivity {
         }
         //File file = new File(Environment.getExternalStoragePublicDirectory(
         //        Environment.DIRECTORY_PICTURES), "scene.mtl");
-
+        ObjLoader mSceneLoader = new ObjLoader(getApplication());
+        mSceneLoader.loadModel("scene");
+        SceneGraph theSceneGraph = new SceneGraph();
+        theSceneGraph.addObj("scene", mSceneLoader);
         //try {
             //DownloadHelper.DownloadFile("scene.obj");
             //DownloadHelper.DownloadFile("scene.obj");
@@ -76,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         if (supportsEs2)
 		{
 			// Create an OpenGL ES 2.0 context.
-			theView = new GLES20View(getApplication());
+			theView = new GLES20View(getApplication(), theSceneGraph);
 			
 			RelativeLayout outerView = 
 	                (RelativeLayout)this.findViewById(R.id.lelayout);

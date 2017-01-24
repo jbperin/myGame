@@ -4,23 +4,26 @@ import android.content.Context;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
+import com.jibepe.model.GrosBordel;
 
 public class GLES20View extends GLSurfaceView  {
 	Context mContext;
 	GLES20Renderer mRenderer;
 	SceneGraph mScene;
+	GrosBordel grBordel;
 
 	private float mPreviousX;
 	private float mPreviousY;
 
-	public GLES20View(Context context) {
+	public GLES20View(Context context, SceneGraph theSceneGraph) {
 		super(context);
 
 		mContext = context;
 
 		getHolder().setFormat(PixelFormat.TRANSLUCENT);
 		//setEGLConfigChooser(8, 8, 8, 8, 8, 8);
-		mScene = new SceneGraph();
+		mScene = theSceneGraph;
+		//grBordel = new GrosBordel(mContext);
 
 		mRenderer = new GLES20Renderer (context, new SceneContentProvider(mScene));
 
