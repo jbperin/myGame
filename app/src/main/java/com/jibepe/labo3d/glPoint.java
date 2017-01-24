@@ -49,7 +49,7 @@ public class glPoint extends glRenderableShape {
         GLES20.glUniform1f(mSizeHandle, size);
 
         // Since we are not using a buffer object, disable vertex arrays for this attribute.
-        GLES20.glDisableVertexAttribArray(mPositionHandle);
+        //GLES20.glDisableVertexAttribArray(mPositionHandle);
 
         // Pass in the transformation matrix.
         Matrix.multiplyMM(mMVPMatrix, 0, mVPMatrix, 0, mModelMatrix, 0);

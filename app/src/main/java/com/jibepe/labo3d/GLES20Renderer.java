@@ -126,6 +126,11 @@ public class GLES20Renderer implements Renderer {
 				1.0f, 70.0f// near, far
 				);
 	}
+	void checkGLError()
+	{
+		for (int error = GLES20.glGetError(); error != 0; error = GLES20.glGetError())
+			;
+	}
 
 	@Override
 	public void onDrawFrame(GL10 gl) {
@@ -172,6 +177,7 @@ public class GLES20Renderer implements Renderer {
             //
             // shap.render(mVPMatrix, mShaderHelper, mScene);
             shap.render(mViewMatrix, mProjectionMatrix, mShaderHelper, mScene);
+			checkGLError();
         }
 
 

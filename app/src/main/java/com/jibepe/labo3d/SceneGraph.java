@@ -84,7 +84,7 @@ public class SceneGraph {
 //        long time = SystemClock.uptimeMillis() % 10000L;
 //        float angleInDegrees = (360.0f / 10000.0f) * ((int) time);
         ArrayList<float[]> al = new ArrayList<float[]>();
-        al.add(new float[] {0.0f, 1.0f, 2.0f});
+        al.add(new float[] {1.0f, 1.0f, 1.0f});
         return (al);
     }
 }

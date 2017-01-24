@@ -1,5 +1,7 @@
 package com.jibepe.labo3d;
 
+import android.opengl.GLES20;
+
 /**
  * Created by tbpk7658 on 24/01/2017.
  */
