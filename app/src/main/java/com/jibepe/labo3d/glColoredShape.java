@@ -243,6 +243,8 @@ public class glColoredShape extends glRenderableShape {
                 GLES20.glUniform4f(mColorHandle, matShape.r, matShape.g, matShape.b, 1.0f);
 
                 GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, matShape.buffer.length/(POSITION_DATA_SIZE + NORMAL_DATA_SIZE));
+                GLES20.glDisableVertexAttribArray(mNormalHandle);
+                GLES20.glDisableVertexAttribArray(mPositionHandle);
 
             }
         }
