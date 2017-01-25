@@ -66,8 +66,21 @@ public class glAlphaTexturedShape extends glRenderableShape{
                 int program;
 
 
-                program = ShaderHandler.getInstance().getShaderProgram(ShaderHandler.sSolidTexColorNoLightProgram);
+                program = ShaderHandler.getInstance().getShaderProgram(ShaderHandler.sSolidTexColorLightProgram);
                 GLES20.glUseProgram(program);
+                /**
+                 * Stores a copy of the model matrix specifically for the light position.
+                 */
+                float[] mLightModelMatrix = new float[16];
+                /** Used to hold a light centered on the origin in model space. We need a 4th coordinate so we can get translations to work when
+                 *  we multiply this by our transformation matrices. */
+                float[] mLightPosInModelSpace = new float[] {0.0f, 0.0f, 0.0f, 1.0f};
+
+                /** Used to hold the current position of the light in world space (after transformation via model matrix). */
+                float[] mLightPosInWorldSpace = new float[4];
+
+                /** Used to hold the transformed position of the light in eye space (after transformation via modelview matrix) */
+                float[] mLightPosInEyeSpace = new float[4];
                 /**
                  * Store the model matrix. This matrix is used to move models from object space (where each model can be thought
                  * of being located at the center of the universe) to world space.
@@ -107,7 +120,6 @@ public class glAlphaTexturedShape extends glRenderableShape{
                 GLES20.glVertexAttribPointer(mNormalHandle, NORMAL_DATA_SIZE, GLES20.GL_FLOAT, false,
                         stride, FaceData);
                 GLES20.glEnableVertexAttribArray(mNormalHandle);
-
 
                 // Set the active texture unit to texture unit 0.
                 GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
@@ -161,12 +173,27 @@ public class glAlphaTexturedShape extends glRenderableShape{
                 // Pass in the combined matrix.
                 GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
 
-                float[] mLightPosInEyeSpace = Scene.getLightsPos().get(0);
+                float [] lightPos = Scene.getLightsPos().get(0);
+
+                // Calculate position of the light. Rotate and then push into the distance.
+                Matrix.setIdentityM(mLightModelMatrix, 0);
+                //Matrix.translateM(mLightModelMatrix, 0, 0.0f, 0.0f, -2.0f);
+                //Matrix.rotateM(mLightModelMatrix, 0, angleInDegrees, 0.0f, 1.0f, 0.0f);
+                Matrix.translateM(mLightModelMatrix, 0, lightPos[0], lightPos[1], lightPos[2]);
+
+                Matrix.multiplyMV(mLightPosInWorldSpace, 0, mLightModelMatrix, 0, mLightPosInModelSpace, 0);
+                Matrix.multiplyMV(mLightPosInEyeSpace, 0, mMatrixView, 0, mLightPosInWorldSpace, 0);
+
                 // Pass in the light position in eye space.
                 GLES20.glUniform3f(mLightPosHandle, mLightPosInEyeSpace[0], mLightPosInEyeSpace[1], mLightPosInEyeSpace[2]);
 
                 // Draw the cube.
                 GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, matShape.buffer.length / (POSITION_DATA_SIZE + NORMAL_DATA_SIZE + UVCOORD_DATA_SIZE));
+
+
+                GLES20.glDisableVertexAttribArray(mTextureCoordinateHandle);
+                GLES20.glDisableVertexAttribArray(mNormalHandle);
+                GLES20.glDisableVertexAttribArray(mPositionHandle);
 
                 // DEB Alpha Blending
                 GLES20.glDisable(GLES20.GL_BLEND);

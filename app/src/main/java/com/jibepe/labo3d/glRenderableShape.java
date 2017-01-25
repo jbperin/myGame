@@ -11,6 +11,7 @@ public abstract class glRenderableShape {
     protected final int POSITION_DATA_SIZE = 3;
     protected final int NORMAL_DATA_SIZE = 3;
     protected final int UVCOORD_DATA_SIZE = 2;
+    protected final int COLOR_DATA_SIZE = 4;
 
 
 
