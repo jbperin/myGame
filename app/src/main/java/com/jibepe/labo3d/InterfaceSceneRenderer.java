@@ -1,5 +1,7 @@
 package com.jibepe.labo3d;
 
+import com.jibepe.render3d.glRenderableShape;
+
 import java.util.List;
 
 /**

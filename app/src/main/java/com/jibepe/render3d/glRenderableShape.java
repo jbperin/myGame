@@ -1,6 +1,7 @@
-package com.jibepe.labo3d;
+package com.jibepe.render3d;
 
 import android.opengl.GLES20;
+import com.jibepe.labo3d.InterfaceSceneRenderer;
 
 /**
  * Created by tbpk7658 on 24/01/2017.
@@ -19,7 +20,6 @@ public abstract class glRenderableShape {
 
     }
 
-    abstract void render (float[] mMatrixVP, InterfaceSceneRenderer Scene);
 
     abstract void render (float[] mMatrixView, float[] mMatrixProjection,  InterfaceSceneRenderer Scene);
 

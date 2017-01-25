@@ -1,4 +1,4 @@
-package com.jibepe.labo3d;
+package com.jibepe.model;
 
 import com.jibepe.objparser.MaterialShape;
 import com.jibepe.objparser.ObjLoader;

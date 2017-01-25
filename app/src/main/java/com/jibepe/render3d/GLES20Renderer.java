@@ -1,4 +1,4 @@
-package com.jibepe.labo3d;
+package com.jibepe.render3d;
 
 
 import java.util.List;
@@ -9,6 +9,7 @@ import javax.microedition.khronos.opengles.GL10;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.opengl.GLSurfaceView.Renderer;
+import com.jibepe.labo3d.InterfaceSceneRenderer;
 
 public class GLES20Renderer implements Renderer {
 

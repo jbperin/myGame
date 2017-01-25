@@ -1,7 +1,9 @@
-package com.jibepe.labo3d;
+package com.jibepe.render3d;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import com.jibepe.labo3d.InterfaceSceneRenderer;
+import com.jibepe.labo3d.ShaderHandler;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -45,6 +47,12 @@ public class glLine extends glRenderableShape {
     }
 
     @Override
+    void render(float[] mMatrixView, float[] mMatrixProjection, InterfaceSceneRenderer Scene) {
+        float[] mVPMatrix = new float[16];
+        Matrix.multiplyMM(mVPMatrix, 0, mMatrixProjection, 0, mMatrixView, 0);
+        render (mVPMatrix, Scene);
+    }
+
     void render(float[] mVPMatrix, InterfaceSceneRenderer Scene) {
         final float VertexData[] = {posStart[0], posStart[1], posStart[2], posEnd[0], posEnd[1], posEnd[2]};
         //final float[] Color = {r, g, b, a};
@@ -86,10 +94,4 @@ public class glLine extends glRenderableShape {
 
     }
 
-    @Override
-    void render(float[] mMatrixView, float[] mMatrixProjection, InterfaceSceneRenderer Scene) {
-        float[] mVPMatrix = new float[16];
-        Matrix.multiplyMM(mVPMatrix, 0, mMatrixProjection, 0, mMatrixView, 0);
-        render (mVPMatrix, Scene);
-    }
 }

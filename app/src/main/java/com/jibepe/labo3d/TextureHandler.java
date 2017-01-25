@@ -2,6 +2,8 @@ package com.jibepe.labo3d;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import com.jibepe.util.TextureHelper;
+
 import java.io.IOException;
 import java.io.InputStream;
 

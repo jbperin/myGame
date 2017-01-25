@@ -1,4 +1,4 @@
-package com.jibepe.labo3d;
+package com.jibepe.util;
 
 
 import java.io.BufferedReader;

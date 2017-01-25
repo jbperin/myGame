@@ -1,4 +1,4 @@
-package com.jibepe.model;
+package com.jibepe.labo3d;
 
 public class Constants {
     // shared preferences

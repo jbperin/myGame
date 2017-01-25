@@ -2,6 +2,12 @@ package com.jibepe.labo3d;
 
 
 
+import com.jibepe.model.SceneGraph;
+import com.jibepe.render3d.glAlphaTexturedShape;
+import com.jibepe.render3d.glColoredShape;
+import com.jibepe.render3d.glLine;
+import com.jibepe.render3d.glRenderableShape;
+
 import java.util.ArrayList;
 import java.util.List;
 

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
+import com.jibepe.model.SceneGraph;
+import com.jibepe.render3d.GLES20Renderer;
 
 public class GLES20View extends GLSurfaceView  {
 
@@ -32,9 +34,7 @@ public class GLES20View extends GLSurfaceView  {
 		setRenderer(mRenderer);
 		setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 	}
-	public GLES20Renderer getRenderer (){
-		return mRenderer;
-	}
+
 	@Override public boolean onTrackballEvent(MotionEvent e) {
 		//        mAngleX += e.getX();
 		//        mAngleY += e.getY();

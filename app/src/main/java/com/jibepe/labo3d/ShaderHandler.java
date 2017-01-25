@@ -2,6 +2,8 @@ package com.jibepe.labo3d;
 
 import android.content.Context;
 import android.opengl.GLES20;
+import com.jibepe.util.RawResourceReader;
+import com.jibepe.util.ShaderHelper;
 
 import java.util.HashMap;
 import java.util.Map;

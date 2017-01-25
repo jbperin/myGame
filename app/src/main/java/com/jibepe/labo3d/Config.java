@@ -1,4 +1,4 @@
-package com.jibepe.model;
+package com.jibepe.labo3d;
 
 import android.content.Context;
 import android.content.SharedPreferences;

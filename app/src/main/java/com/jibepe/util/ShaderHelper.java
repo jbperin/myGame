@@ -1,4 +1,4 @@
-package com.jibepe.labo3d;
+package com.jibepe.util;
 
 
 import android.content.Context;

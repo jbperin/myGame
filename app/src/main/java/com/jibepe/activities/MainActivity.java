@@ -2,7 +2,6 @@ package com.jibepe.activities;
 
 
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
@@ -15,14 +14,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import com.jibepe.labo3d.*;
+import com.jibepe.model.SceneGraph;
 import com.jibepe.objparser.ObjLoader;
 import com.jibepe.util.DownloadFilesTask;
 import com.jibepe.util.DownloadHelper;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 

@@ -1,7 +1,9 @@
-package com.jibepe.labo3d;
+package com.jibepe.render3d;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import com.jibepe.labo3d.InterfaceSceneRenderer;
+import com.jibepe.labo3d.ShaderHandler;
 
 /**
  * Created by tbpk7658 on 24/01/2017.
@@ -17,6 +19,13 @@ public class glPoint extends glRenderableShape {
     }
 
     @Override
+    void render(float[] mMatrixView, float[] mMatrixProjection, InterfaceSceneRenderer Scene) {
+        float[] mVPMatrix = new float[16];
+        Matrix.multiplyMM(mVPMatrix, 0, mMatrixProjection, 0, mMatrixView, 0);
+        render (mVPMatrix, Scene);
+    }
+
+
     void render(float[] mVPMatrix, InterfaceSceneRenderer Scene) {
         int program = ShaderHandler.getInstance().getShaderProgramId(ShaderHandler.sSolidPointProgram);
 
@@ -61,10 +70,4 @@ public class glPoint extends glRenderableShape {
 
     }
 
-    @Override
-    void render(float[] mMatrixView, float[] mMatrixProjection, InterfaceSceneRenderer Scene) {
-        float[] mVPMatrix = new float[16];
-        Matrix.multiplyMM(mVPMatrix, 0, mMatrixProjection, 0, mMatrixView, 0);
-        render (mVPMatrix, Scene);
-    }
 }
