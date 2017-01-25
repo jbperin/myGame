@@ -85,7 +85,7 @@ public class TextureHelper
 	    return textureId[0];	}
 
 	
-	public static int loadPNGTexture(final Context context, final InputStream in)
+	public static int loadPNGTexture(final InputStream in)
 	{
 	    int[] textureId = new int[1];
 		final BitmapFactory.Options options = new BitmapFactory.Options();
@@ -118,7 +118,7 @@ public class TextureHelper
 	    GLES20.glTexParameteri ( GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR );
 	    GLES20.glTexParameteri ( GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE );
 	    GLES20.glTexParameteri ( GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE );
-
+		GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
 	    return textureId[0];	}
 	
 }

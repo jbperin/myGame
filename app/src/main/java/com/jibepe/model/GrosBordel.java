@@ -3,8 +3,6 @@ package com.jibepe.model;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.opengl.GLES20;
-import com.jibepe.labo3d.ShaderHelper;
-import com.jibepe.labo3d.TextureHelper;
 import com.jibepe.objparser.ObjLoader;
 
 import java.io.IOException;
@@ -52,8 +50,8 @@ public class GrosBordel {
             InputStream inObj;
             try {
                 inObj = assetManager.open(texture_filename);
-                int textureId = TextureHelper.loadPNGTexture(mContext, inObj);
-                dTextureHandlers.put(texture_filename, textureId);
+                //int textureId = TextureHelper.loadPNGTexture(mContext, inObj);
+                //dTextureHandlers.put(texture_filename, textureId);
                 GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
             } catch (IOException e) {
                 // TODO Auto-generated catch block

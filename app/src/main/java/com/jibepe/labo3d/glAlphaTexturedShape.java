@@ -16,6 +16,21 @@ import java.util.Enumeration;
 public class glAlphaTexturedShape extends glRenderableShape{
 
 
+    public float[] getPosition() {
+        return position;
+    }
+
+    public void setPosition(float[] position) {
+        this.position = position;
+    }
+
+    public float[] getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(float[] rotation) {
+        this.rotation = rotation;
+    }
 
     private float [] position = {0.0f, 0.0f, 0.0f}; // X,Y,Z
     private float [] rotation = {0.0f, 0.0f, 0.0f}; // rX,rY,rZ
@@ -33,25 +48,25 @@ public class glAlphaTexturedShape extends glRenderableShape{
 
 
     @Override
-    void render(float[] mMatrixVP, ShaderHelper sh, InterfaceSceneRenderer Scene) {
+    void render(float[] mMatrixVP,  InterfaceSceneRenderer Scene) {
 
     }
 
     @Override
-    void render(float[] mMatrixView, float[] mMatrixProjection, ShaderHelper sh, InterfaceSceneRenderer Scene) {
+    void render(float[] mMatrixView, float[] mMatrixProjection,  InterfaceSceneRenderer Scene) {
 
         Enumeration<String> key = mShape.dictionary.keys();
 
-        while(key.hasMoreElements()){
+        while(key.hasMoreElements()) {
             String matName = key.nextElement();
-            MaterialShape matShape = (MaterialShape)mShape.dictionary.get(matName);
+            MaterialShape matShape = (MaterialShape) mShape.dictionary.get(matName);
             if (matShape.texturename != null) {
 
 
                 int program;
 
 
-                program = sh.getShaderProgram(ShaderHelper.sSolidTexColorNoLightProgram);
+                program = ShaderHandler.getInstance().getShaderProgram(ShaderHandler.sSolidTexColorNoLightProgram);
                 GLES20.glUseProgram(program);
                 /**
                  * Store the model matrix. This matrix is used to move models from object space (where each model can be thought
@@ -98,8 +113,8 @@ public class glAlphaTexturedShape extends glRenderableShape{
                 GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
 
                 // Bind the texture to this unit.
-                int textId = dTextureHandlers.get(matShape.texturename);
-                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandler);
+                int textureHandlerId = TextureHandler.getInstance().getTextureId(matShape.texturename);
+                GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandlerId);
 
                 // Tell the texture uniform sampler to use this texture in the shader by binding to texture unit 0.
                 GLES20.glUniform1i(mTextureUniformHandle, 0);
@@ -132,7 +147,6 @@ public class glAlphaTexturedShape extends glRenderableShape{
                 mModelMatrix[14] = position[2];
 
 
-
                 // This multiplies the view matrix by the model matrix, and stores the result in the MVP matrix
                 // (which currently contains model * view).
                 Matrix.multiplyMM(mMVPMatrix, 0, mMatrixView, 0, mModelMatrix, 0);
@@ -147,7 +161,7 @@ public class glAlphaTexturedShape extends glRenderableShape{
                 // Pass in the combined matrix.
                 GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
 
-                float [] mLightPosInEyeSpace = Scene.getLightsPos().get(0);
+                float[] mLightPosInEyeSpace = Scene.getLightsPos().get(0);
                 // Pass in the light position in eye space.
                 GLES20.glUniform3f(mLightPosHandle, mLightPosInEyeSpace[0], mLightPosInEyeSpace[1], mLightPosInEyeSpace[2]);
 
@@ -160,6 +174,9 @@ public class glAlphaTexturedShape extends glRenderableShape{
 //		GLES20.glEnable(GLES20.GL_DEPTH_TEST);
                 GLES20.glEnable(GLES20.GL_CULL_FACE);
 
+            } else {
+
             }
+        }
     }
 }

@@ -30,7 +30,7 @@ public class glColoredShape extends glRenderableShape {
     }
 
     @Override
-    void render(float[] mMatrixView, float[] mMatrixProjection, ShaderHelper sh, InterfaceSceneRenderer Scene) {
+    void render(float[] mMatrixView, float[] mMatrixProjection, InterfaceSceneRenderer Scene) {
 
         Enumeration<String> key = mShape.dictionary.keys();
 
@@ -45,7 +45,7 @@ public class glColoredShape extends glRenderableShape {
         	else
         	{
             	final float [] matShapeColor= {matShape.r, matShape.g, matShape.b, 1.0f};
-                int program = sh.getShaderProgram(ShaderHelper.sSolidUColorLightProgram);
+                int program = ShaderHandler.getInstance().getShaderProgram(ShaderHandler.sSolidUColorLightProgram);
                 GLES20.glUseProgram(program);
 
 
@@ -147,7 +147,7 @@ public class glColoredShape extends glRenderableShape {
     }
 
     @Override
-    void render(float[] mMatrixVP, ShaderHelper sh, InterfaceSceneRenderer Scene) {
+    void render(float[] mMatrixVP, InterfaceSceneRenderer Scene) {
         Enumeration<String> key = mShape.dictionary.keys();
 
         while(key.hasMoreElements()){
@@ -161,7 +161,7 @@ public class glColoredShape extends glRenderableShape {
             else
             {
                 final float [] matShapeColor= {matShape.r, matShape.g, matShape.b, 1.0f};
-                int program = sh.getShaderProgram(ShaderHelper.sSolidUColorLightProgram);
+                int program = ShaderHandler.getInstance().getShaderProgram(ShaderHandler.sSolidUColorLightProgram);
                 GLES20.glUseProgram(program);
 
 

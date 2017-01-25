@@ -18,8 +18,8 @@ public abstract class glRenderableShape {
 
     }
 
-    abstract void render (float[] mMatrixVP, ShaderHelper sh, InterfaceSceneRenderer Scene);
+    abstract void render (float[] mMatrixVP, InterfaceSceneRenderer Scene);
 
-    abstract void render (float[] mMatrixView, float[] mMatrixProjection,  ShaderHelper sh, InterfaceSceneRenderer Scene);
+    abstract void render (float[] mMatrixView, float[] mMatrixProjection,  InterfaceSceneRenderer Scene);
 
 }

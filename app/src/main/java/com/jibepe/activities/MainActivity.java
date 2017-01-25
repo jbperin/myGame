@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import com.jibepe.labo3d.GLES20View;
 import com.jibepe.labo3d.R;
 import com.jibepe.labo3d.SceneGraph;
+import com.jibepe.labo3d.TextureHandler;
 import com.jibepe.objparser.ObjLoader;
 import com.jibepe.util.DownloadFilesTask;
 import com.jibepe.util.DownloadHelper;
@@ -62,12 +63,19 @@ public class MainActivity extends AppCompatActivity {
                 new DownloadFilesTask(url, folder).execute(fileName);
             }
         }
+
+        TextureHandler.getInstance().setContext(getApplication());
+        SceneGraph theSceneGraph = new SceneGraph();
         //File file = new File(Environment.getExternalStoragePublicDirectory(
         //        Environment.DIRECTORY_PICTURES), "scene.mtl");
         ObjLoader mSceneLoader = new ObjLoader(getApplication());
         mSceneLoader.loadModel("scene");
-        SceneGraph theSceneGraph = new SceneGraph();
         theSceneGraph.addObj("scene", mSceneLoader);
+
+        ObjLoader mPersoLoader = new ObjLoader(getApplication());
+        mPersoLoader.loadModel("plantexture");
+        theSceneGraph.addObj("plantexture", mPersoLoader);
+
         //try {
             //DownloadHelper.DownloadFile("scene.obj");
             //DownloadHelper.DownloadFile("scene.obj");

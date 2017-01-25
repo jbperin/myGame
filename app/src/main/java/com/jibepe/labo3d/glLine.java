@@ -45,13 +45,13 @@ public class glLine extends glRenderableShape {
     }
 
     @Override
-    void render(float[] mVPMatrix, ShaderHelper sh, InterfaceSceneRenderer Scene) {
+    void render(float[] mVPMatrix, InterfaceSceneRenderer Scene) {
         final float VertexData[] = {posStart[0], posStart[1], posStart[2], posEnd[0], posEnd[1], posEnd[2]};
         //final float[] Color = {r, g, b, a};
         final float[] mMVPMatrix = new float[16];
         final float[] ModelMatrix = new float[16];
 
-        int mSolidLineProgram = sh.getShaderProgram(ShaderHelper.sSolidLineProgram);
+        int mSolidLineProgram = ShaderHandler.getInstance().getShaderProgram(ShaderHandler.sSolidLineProgram);
 
         GLES20.glUseProgram(mSolidLineProgram);
 
@@ -87,9 +87,9 @@ public class glLine extends glRenderableShape {
     }
 
     @Override
-    void render(float[] mMatrixView, float[] mMatrixProjection, ShaderHelper sh, InterfaceSceneRenderer Scene) {
+    void render(float[] mMatrixView, float[] mMatrixProjection, InterfaceSceneRenderer Scene) {
         float[] mVPMatrix = new float[16];
         Matrix.multiplyMM(mVPMatrix, 0, mMatrixProjection, 0, mMatrixView, 0);
-        render (mVPMatrix,sh, Scene);
+        render (mVPMatrix, Scene);
     }
 }

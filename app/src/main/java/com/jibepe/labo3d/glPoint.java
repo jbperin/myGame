@@ -17,8 +17,8 @@ public class glPoint extends glRenderableShape {
     }
 
     @Override
-    void render(float[] mVPMatrix, ShaderHelper sh, InterfaceSceneRenderer Scene) {
-        int program = sh.getShaderProgram(ShaderHelper.sSolidPointProgram);
+    void render(float[] mVPMatrix, InterfaceSceneRenderer Scene) {
+        int program = ShaderHandler.getInstance().getShaderProgram(ShaderHandler.sSolidPointProgram);
 
         final int mMVPMatrixHandle = GLES20.glGetUniformLocation(program, "u_MVPMatrix");
         final int mColorHandle = GLES20.glGetUniformLocation(program, "u_Color");
@@ -62,9 +62,9 @@ public class glPoint extends glRenderableShape {
     }
 
     @Override
-    void render(float[] mMatrixView, float[] mMatrixProjection, ShaderHelper sh, InterfaceSceneRenderer Scene) {
+    void render(float[] mMatrixView, float[] mMatrixProjection, InterfaceSceneRenderer Scene) {
         float[] mVPMatrix = new float[16];
         Matrix.multiplyMM(mVPMatrix, 0, mMatrixProjection, 0, mMatrixView, 0);
-        render (mVPMatrix,sh, Scene);
+        render (mVPMatrix, Scene);
     }
 }

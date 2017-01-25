@@ -78,7 +78,7 @@ public class GLES20Renderer implements Renderer {
 
 	private Context mContext;
     private InterfaceSceneRenderer mScene;
-    private ShaderHelper mShaderHelper;
+    //private ShaderHelper mShaderHelper;
 
 
 
@@ -86,7 +86,8 @@ public class GLES20Renderer implements Renderer {
 		super();
 		mContext = context;
 		mScene = scene;
-        this.mShaderHelper = new ShaderHelper(context);
+		ShaderHandler.getInstance().setContext(mContext);
+        //this.mShaderHelper = new ShaderHelper(context);
 	}
 
 
@@ -101,7 +102,7 @@ public class GLES20Renderer implements Renderer {
 		// Enable depth testing
 		GLES20.glEnable(GLES20.GL_DEPTH_TEST);
 
-        mShaderHelper.loadShaders();
+        ShaderHandler.getInstance().loadShaders();
 
 //        mAlphaTextureDataHandle = TextureHelper.loadAlphaTexture(mContext, R.drawable.ic_launcher);
 //        GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
@@ -176,7 +177,7 @@ public class GLES20Renderer implements Renderer {
         for (glRenderableShape shap : ShapesToRender) {
             //
             // shap.render(mVPMatrix, mShaderHelper, mScene);
-            shap.render(mViewMatrix, mProjectionMatrix, mShaderHelper, mScene);
+            shap.render(mViewMatrix, mProjectionMatrix, mScene);
 			checkGLError();
         }
 

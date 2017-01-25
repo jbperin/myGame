@@ -1,6 +1,6 @@
 package com.jibepe.labo3d;
 
-import android.os.SystemClock;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +97,11 @@ public class SceneContentProvider implements InterfaceSceneRenderer{
 
         shapes2Render.add(shapeScene);
 
+        glAlphaTexturedShape shapePerso = new glAlphaTexturedShape(mSceneGraph.getObj("plantexture"));
+        shapePerso.setPosition (new float [] {0.0f, 0.0f, 0.0f});
+        shapePerso.setRotation (new float [] {0.0f, 0.0f, 0.0f});
+
+        shapes2Render.add(shapePerso);
 
         return shapes2Render;
     }
