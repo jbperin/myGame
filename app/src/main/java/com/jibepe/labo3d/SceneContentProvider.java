@@ -37,19 +37,6 @@ public class SceneContentProvider implements InterfaceSceneRenderer{
 
         List <glRenderableShape> shapes2Render = new ArrayList<glRenderableShape>();
 
-//        drawLine (0.0f, 0.0f, 0.0f,
-//    			  1.0f, 0.0f, 0.0f,
-//    			  1.0f, 0.0f, 0.0f, 1.0f); //red
-//
-//        drawLine (0.0f, 0.0f, 0.0f,
-//  			  0.0f, 0.0f, -1.0f,
-//  			  0.0f, 1.0f, 0.0f, 1.0f);  // green
-//
-//        drawLine (0.0f, 0.0f, 0.0f,
-//  			  0.0f, 1.0f, 0.0f,
-//  			  0.0f, 0.0f, 1.0f, 1.0f);  // blue
-//
-//
         glLine line1 = new glLine();
 
         line1.setPosStart(new float [] {0.0f, 0.0f, 0.0f});

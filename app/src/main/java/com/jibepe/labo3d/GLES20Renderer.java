@@ -1,40 +1,16 @@
 package com.jibepe.labo3d;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Enumeration;
-import java.util.Hashtable;
+
 import java.util.List;
-import java.util.ListIterator;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import com.jibepe.objparser.MaterialShape;
-import com.jibepe.objparser.ObjLoader;
-
-import android.content.Context;
-import android.content.res.AssetManager;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 import android.opengl.GLSurfaceView.Renderer;
-import android.os.SystemClock;
 
 public class GLES20Renderer implements Renderer {
-
-
-	private final int FLOAT_FIELD_SIZE = 4;
-	private final int POSITION_DATA_SIZE = 3;
-	private final int NORMAL_DATA_SIZE = 3;
-	private final int UVCOORD_DATA_SIZE = 2;
-	private final int COLOR_DATA_SIZE = 4;
-
-
 
 	/** Store the projection matrix. This is used to project the scene onto a 2D viewport. */
 	private float[] mProjectionMatrix = new float[16];
@@ -44,11 +20,6 @@ public class GLES20Renderer implements Renderer {
 	 */
 	private float[] mViewMatrix = new float[16];
 
-	/**
-	 * Store the model matrix. This matrix is used to move models from object space (where each model can be thought
-	 * of being located at the center of the universe) to world space.
-	 */
-	private float[] mModelMatrix = new float[16];
 
 	/**
 	 * Store the model matrix. This matrix is used to move models from object space (where each model can be thought
@@ -56,38 +27,12 @@ public class GLES20Renderer implements Renderer {
 	 */
 	private float[] mVPMatrix = new float[16];
 
-	/**
-	 * Stores a copy of the model matrix specifically for the light position.
-	 */
-	private float[] mLightModelMatrix = new float[16];
-
-	/** Used to hold a light centered on the origin in model space. We need a 4th coordinate so we can get translations to work when
-	 *  we multiply this by our transformation matrices. */
-	final float[] mLightPosInModelSpace = new float[] {0.0f, 0.0f, 0.0f, 1.0f};
-
-	/** Used to hold the current position of the light in world space (after transformation via model matrix). */
-	final float[] mLightPosInWorldSpace = new float[4];
-
-	/** Used to hold the transformed position of the light in eye space (after transformation via modelview matrix) */
-	final float[] mLightPosInEyeSpace = new float[4];
-
-
-	/** This is a handle to our texture data. */
-
-
-
-	private Context mContext;
     private InterfaceSceneRenderer mScene;
-    //private ShaderHelper mShaderHelper;
 
 
-
-    public GLES20Renderer(Context context, InterfaceSceneRenderer scene) {
+    public GLES20Renderer(InterfaceSceneRenderer scene) {
 		super();
-		mContext = context;
 		mScene = scene;
-		ShaderHandler.getInstance().setContext(mContext);
-        //this.mShaderHelper = new ShaderHelper(context);
 	}
 
 
@@ -102,14 +47,6 @@ public class GLES20Renderer implements Renderer {
 		// Enable depth testing
 		GLES20.glEnable(GLES20.GL_DEPTH_TEST);
 
-        ShaderHandler.getInstance().loadShaders();
-
-//        mAlphaTextureDataHandle = TextureHelper.loadAlphaTexture(mContext, R.drawable.ic_launcher);
-//        GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
-		
-//        mTextureDataHandle = TextureHelper.loadTexture(mContext, R.drawable.stone_wall_public_domain);
-//        GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
-		
 	}
 
 	@Override
@@ -126,11 +63,6 @@ public class GLES20Renderer implements Renderer {
 				-1.0f, 1.0f,// bottom, top, 
 				1.0f, 70.0f// near, far
 				);
-	}
-	void checkGLError()
-	{
-		for (int error = GLES20.glGetError(); error != 0; error = GLES20.glGetError())
-			;
 	}
 
 	@Override
@@ -159,18 +91,7 @@ public class GLES20Renderer implements Renderer {
 				// Set our up vector. This is where our head would be pointing were we holding the camera.
 				0.0f, 1.0f, 0.0f  //upX, upY, upZ
 				);		
-		Matrix.multiplyMM(mVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
-
-		float [] lightPos = mScene.getLightsPos().get(0);
-
-        // Calculate position of the light. Rotate and then push into the distance.
-        Matrix.setIdentityM(mLightModelMatrix, 0);
-        //Matrix.translateM(mLightModelMatrix, 0, 0.0f, 0.0f, -2.0f);      
-        //Matrix.rotateM(mLightModelMatrix, 0, angleInDegrees, 0.0f, 1.0f, 0.0f);
-        Matrix.translateM(mLightModelMatrix, 0, lightPos[0], lightPos[1], lightPos[2]);
-               
-        Matrix.multiplyMV(mLightPosInWorldSpace, 0, mLightModelMatrix, 0, mLightPosInModelSpace, 0);
-        Matrix.multiplyMV(mLightPosInEyeSpace, 0, mViewMatrix, 0, mLightPosInWorldSpace, 0);
+		//Matrix.multiplyMM(mVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
 
         List<glRenderableShape>ShapesToRender = mScene.getRenderableShapes();
@@ -181,74 +102,16 @@ public class GLES20Renderer implements Renderer {
 			checkGLError();
         }
 
-
-//        drawGrid(5);
-//
-//        drawLine (0.0f, 0.0f, 0.0f,
-//    			  1.0f, 0.0f, 0.0f,
-//    			  1.0f, 0.0f, 0.0f, 1.0f); //red
-//
-//        drawLine (0.0f, 0.0f, 0.0f,
-//  			  0.0f, 0.0f, -1.0f,
-//  			  0.0f, 1.0f, 0.0f, 1.0f);  // green
-//
-//        drawLine (0.0f, 0.0f, 0.0f,
-//  			  0.0f, 1.0f, 0.0f,
-//  			  0.0f, 0.0f, 1.0f, 1.0f);  // blue
-//
-//
-//        mModelMatrix = mLightModelMatrix;
-//
-//        drawPoint(mLightPosInModelSpace[0], mLightPosInModelSpace[1], mLightPosInModelSpace[2],
-//        		5.0f,
-//        		1.0f, 1.0f, 1.0f, 1.0f);
-
-//        final float scnPosition [] = {0.0f, 0.0f, 0.0f};
-//        final float scnOrientation [] = {0.0f, 0.0f, 0.0f};
-//
-//        drawDroid (scnPosition, scnOrientation, mSceneLoader);
-//
-//        float objPos[] = {1.0f, 0.0f, -1.0f};
-//        float objRot[] = {0.0f, 0.0f, 0.0f};
-//
-//        final float position [] = {objPos[0], objPos[1], objPos[2]};
-//        final float orientation [] = {objRot[0], objRot[1], objRot[2]};
-//
-//        drawDroid (position, orientation, mObjLoader);
-//
 	}
 
-//	private void drawDroid (float[] position, float[] orientation, ObjLoader Shape){
-//
-//
-//
-//		Matrix.setIdentityM(mModelMatrix, 0);
-//
-//		Matrix.rotateM(mModelMatrix, 0, orientation[0], 1.0f, 0.0f, 0.0f);
-//		Matrix.rotateM(mModelMatrix, 0, orientation[1], 0.0f, 1.0f, 0.0f);
-//		Matrix.rotateM(mModelMatrix, 0, orientation[2], 0.0f, 0.0f, 1.0f);
-//
-//		mModelMatrix[12] = position[0];
-//		mModelMatrix[13] = position[1];
-//		mModelMatrix[14] = position[2];
-//
-		
-//        Enumeration<String> key = Shape.dictionary.keys();
-//        while(key.hasMoreElements()){
-//        	String matName = key.nextElement();
-//        	MaterialShape matShape = (MaterialShape)Shape.dictionary.get(matName);
-//        	if (matShape.texturename != null) {
-//        		final float[] uvplan_color = {0.5f, 0.5f, 0.5f, 1.0f};
-//        		final int textId = dTextureHandlers.get(matShape.texturename);
-//        		drawAlphaTexturedBuffer(matShape.buffer, uvplan_color, textId);
-//        	}
-//        	else
-//        	{
-//            	final float [] matShapeColor= {matShape.r, matShape.g, matShape.b, 1.0f};
-//                drawBuffer (matShape.buffer, matShapeColor);
-//        	}
-//        }
-		
+    void checkGLError()
+    {
+        for (int error = GLES20.glGetError(); error != 0; error = GLES20.glGetError())
+            ;
+    }
+
+}
+
 //		final float uvplan_buffer []=
 //			{
 //
@@ -276,7 +139,7 @@ public class GLES20Renderer implements Renderer {
 //				0.0f, 0.0f, -1.0f,
 //				0.0f, 1.0f,
 //
-//				
+//
 ////				-1.0f, 0.0f, -1.0f,  // Pt 1
 ////				0.0f, 1.0f, 0.0f,
 ////				0.0f, 0.0f,
@@ -303,256 +166,5 @@ public class GLES20Renderer implements Renderer {
 ////
 //			};
 
-		//drawAlphaTexturedBuffer(uvplan_buffer, uvplan_color);
-//	}
-	
-//	private void drawPoint(float X, float Y, float Z, float size,
-//			float r, float g, float b, float a)
-//	{
-//		int program = mShaderHelper.getShaderProgram(ShaderHelper.sSolidPointProgram);
-//
-//        final int mMVPMatrixHandle = GLES20.glGetUniformLocation(program, "u_MVPMatrix");
-//        final int mColorHandle = GLES20.glGetUniformLocation(program, "u_Color");
-//        final int mSizeHandle = GLES20.glGetUniformLocation(program, "u_Size");
-//
-//        final int mPositionHandle = GLES20.glGetAttribLocation(program, "a_Position");
-//
-//    	/** Allocate storage for the final combined matrix. This will be passed into the shader program. */
-//    	final float[] mMVPMatrix = new float[16];
-//
-//		GLES20.glUseProgram(program);
-//
-//        // Pass in the position.
-//		GLES20.glVertexAttrib3f(mPositionHandle, X, Y, Z);
-//
-//        // Color
-//        GLES20.glUniform4f(mColorHandle, r, g, b, a);
-//
-//        // Size
-//        GLES20.glUniform1f(mSizeHandle, size);
-//
-//		// Since we are not using a buffer object, disable vertex arrays for this attribute.
-//        GLES20.glDisableVertexAttribArray(mPositionHandle);
-//
-//		// Pass in the transformation matrix.
-//        Matrix.multiplyMM(mMVPMatrix, 0, mVPMatrix, 0, mModelMatrix, 0);
-//		GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
-//
-//		// Draw the point.
-//		GLES20.glDrawArrays(GLES20.GL_POINTS, 0, 1);
-//
-//	}
-//
-//	private void drawLine (float p1x, float p1y, float p1z,
-//			float p2x, float p2y, float p2z,
-//			float r, float g, float b, float a) {
-//
-//		final float VertexData[] = {p1x, p1y, p1z, p2x, p2y, p2z};
-//    	//final float[] Color = {r, g, b, a};
-//    	final float[] mMVPMatrix = new float[16];
-//    	final float[] ModelMatrix = new float[16];
-//
-//		int mSolidLineProgram = mShaderHelper.getShaderProgram(ShaderHelper.sSolidLineProgram);
-//
-//        GLES20.glUseProgram(mSolidLineProgram);
-//
-//        final int mPositionHandle = GLES20.glGetAttribLocation(mSolidLineProgram, "a_Position");
-//
-//        /** This will be used to pass in the transformation matrix. */
-//        final int mMVPMatrixHandle = GLES20.glGetUniformLocation(mSolidLineProgram, "u_MVPMatrix");
-//
-//        final int mColorHandle = GLES20.glGetUniformLocation(mSolidLineProgram, "u_Color");
-//
-//		FloatBuffer mLinePositions = ByteBuffer.allocateDirect(VertexData.length * FLOAT_FIELD_SIZE)
-//				.order(ByteOrder.nativeOrder()).asFloatBuffer();
-//		mLinePositions.put(VertexData).position(0);
-//
-//		// Positions
-//        GLES20.glVertexAttribPointer(mPositionHandle, POSITION_DATA_SIZE, GLES20.GL_FLOAT, false,
-//        		0, mLinePositions);
-//        GLES20.glEnableVertexAttribArray(mPositionHandle);
-//
-//        Matrix.setIdentityM(ModelMatrix, 0);
-//        Matrix.multiplyMM(mMVPMatrix, 0, mVPMatrix, 0, ModelMatrix, 0);
-//
-//        // Combined matrix.
-//        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
-//
-//        // Color.
-//        GLES20.glUniform4f(mColorHandle, r, g, b, a);
-//
-//        GLES20.glDrawArrays(GLES20.GL_LINES, 0, 2);
-//	}
-//
-//	private void drawGrid (int number) {
-//		for (int ii = -number; ii <= number; ii ++) {
-//	        drawLine ((float)ii, 0.0f, (float)-number,
-//	        		  (float)ii, 0.0f, (float) number,
-//	        		  0.5f, 0.5f , 0.5f ,1.0f);
-//	        drawLine ((float)-number, 0.0f, (float)ii,
-//	        		  (float) number, 0.0f, (float)ii,
-//	        		  0.5f, 0.5f , 0.5f ,1.0f);
-//
-//		}
-//	}
 
-//	private void drawBuffer(float[] buffer, float[] color) {
-//
-//		int program = mShaderHelper.getShaderProgram(ShaderHelper.sSolidUColorLightProgram);
-//        GLES20.glUseProgram(program);
-//
-//		final int mPositionHandle = GLES20.glGetAttribLocation(program, "a_Position");
-//		final int mNormalHandle = GLES20.glGetAttribLocation(program, "a_Normal");
-//
-//        /** This will be used to pass in the transformation matrix. */
-//        final int mMVPMatrixHandle = GLES20.glGetUniformLocation(program, "u_MVPMatrix");
-//    	/** This will be used to pass in the modelview matrix. */
-//        final int mMVMatrixHandle = GLES20.glGetUniformLocation(program, "u_MVMatrix");
-//    	/** This will be used to pass in the light position. */
-//        final int mLightPosHandle = GLES20.glGetUniformLocation(program, "u_LightPos");
-//
-//        final int mColorHandle = GLES20.glGetUniformLocation(program, "u_Color");
-//
-//        final float[] mMVPMatrix = new float[16];
-//
-//        final int stride = (POSITION_DATA_SIZE + NORMAL_DATA_SIZE) * FLOAT_FIELD_SIZE;
-//
-//
-//        FloatBuffer FaceData = ByteBuffer.allocateDirect(buffer.length * FLOAT_FIELD_SIZE)
-//		.order(ByteOrder.nativeOrder()).asFloatBuffer();
-//        FaceData.put(buffer).position(0);
-//
-//        FaceData.position(0);
-//        GLES20.glVertexAttribPointer(mPositionHandle,POSITION_DATA_SIZE, GLES20.GL_FLOAT, false,
-//        		stride, FaceData);
-//        GLES20.glEnableVertexAttribArray(mPositionHandle);
-//
-//        FaceData.position(POSITION_DATA_SIZE);
-//        GLES20.glVertexAttribPointer(mNormalHandle,NORMAL_DATA_SIZE, GLES20.GL_FLOAT, false,
-//        		stride, FaceData);
-//        GLES20.glEnableVertexAttribArray(mNormalHandle);
-//
-//
-//		// This multiplies the view matrix by the model matrix, and stores the result in the MVP matrix
-//        // (which currently contains model * view).
-//        Matrix.multiplyMM(mMVPMatrix, 0, mViewMatrix, 0, mModelMatrix, 0);
-//
-//        // Pass in the modelview matrix.
-//        GLES20.glUniformMatrix4fv(mMVMatrixHandle, 1, false, mMVPMatrix, 0);
-//
-//        // This multiplies the modelview matrix by the projection matrix, and stores the result in the MVP matrix
-//        // (which now contains model * view * projection).
-//        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVPMatrix, 0);
-//
-//        // Pass in the combined matrix.
-//        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
-//
-//        // Pass in the light position in eye space.
-//        GLES20.glUniform3f(mLightPosHandle, mLightPosInEyeSpace[0], mLightPosInEyeSpace[1], mLightPosInEyeSpace[2]);
-//
-//        // Color.
-//        GLES20.glUniform4f(mColorHandle, color[0], color[1], color[2], color[3]);
-//
-//		GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, buffer.length/(POSITION_DATA_SIZE + NORMAL_DATA_SIZE));
-//
-//	}
-//
-//
-//	private void drawAlphaTexturedBuffer(float[] buffer, float[] color, int textureHandler) {
-//		int program;
-//
-//
-//		program = mShaderHelper.getShaderProgram(ShaderHelper.sSolidTexColorNoLightProgram);
-//		GLES20.glUseProgram(program);
-//
-//		// "a_Position", "a_Color", "a_Normal", "a_TexCoordinate"
-//		final int mPositionHandle = GLES20.glGetAttribLocation(program, "a_Position");
-//        final int mNormalHandle = GLES20.glGetAttribLocation(program, "a_Normal");
-//        final int mTextureCoordinateHandle = GLES20.glGetAttribLocation(program, "a_TexCoordinate");
-//
-//        final int mTextureUniformHandle = GLES20.glGetUniformLocation(program, "u_Texture");
-//        /** This will be used to pass in the transformation matrix. */
-//        final int mMVPMatrixHandle = GLES20.glGetUniformLocation(program, "u_MVPMatrix");
-//    	/** This will be used to pass in the modelview matrix. */
-//        final int mMVMatrixHandle = GLES20.glGetUniformLocation(program, "u_MVMatrix");
-//    	/** This will be used to pass in the light position. */
-//        final int mLightPosHandle = GLES20.glGetUniformLocation(program, "u_LightPos");
-//        final int mColorHandle = GLES20.glGetUniformLocation(program, "u_Color");
-//
-//    	/** Allocate storage for the final combined matrix. This will be passed into the shader program. */
-//    	final float[] mMVPMatrix = new float[16];
-//
-//        FloatBuffer FaceData = ByteBuffer.allocateDirect(buffer.length * FLOAT_FIELD_SIZE)
-//		.order(ByteOrder.nativeOrder()).asFloatBuffer();
-//        FaceData.put(buffer).position(0);
-//
-//        final int stride = (POSITION_DATA_SIZE + NORMAL_DATA_SIZE + UVCOORD_DATA_SIZE) * FLOAT_FIELD_SIZE;
-//
-//        FaceData.position(0);
-//        GLES20.glVertexAttribPointer(mPositionHandle,POSITION_DATA_SIZE, GLES20.GL_FLOAT, false,
-//        		stride, FaceData);
-//        GLES20.glEnableVertexAttribArray(mPositionHandle);
-//
-//        FaceData.position(POSITION_DATA_SIZE);
-//        GLES20.glVertexAttribPointer(mNormalHandle,NORMAL_DATA_SIZE, GLES20.GL_FLOAT, false,
-//        		stride, FaceData);
-//        GLES20.glEnableVertexAttribArray(mNormalHandle);
-//
-//
-//
-//        // Set the active texture unit to texture unit 0.
-//        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-//
-//        // Bind the texture to this unit.
-//        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandler);
-//
-//        // Tell the texture uniform sampler to use this texture in the shader by binding to texture unit 0.
-//        GLES20.glUniform1i(mTextureUniformHandle, 0);
-//
-//        FaceData.position(POSITION_DATA_SIZE + NORMAL_DATA_SIZE);
-//        GLES20.glVertexAttribPointer(mTextureCoordinateHandle, UVCOORD_DATA_SIZE, GLES20.GL_FLOAT, false,
-//        		stride, FaceData);
-//        GLES20.glEnableVertexAttribArray(mTextureCoordinateHandle);
-//
-//        // Color.
-//        GLES20.glUniform4f(mColorHandle, color[0], color[1], color[2], color[3]);
-//
-//
-//        // DEB Alpha Blending
-////        GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
-////        GLES20.glEnable(GLES20.GL_BLEND);
-//        GLES20.glBlendFunc(GLES20.GL_ONE, GLES20.GL_ONE_MINUS_SRC_ALPHA);
-//        GLES20.glEnable(GLES20.GL_BLEND);
-////		GLES20.glDisable(GLES20.GL_DEPTH_TEST);
-//        GLES20.glDisable(GLES20.GL_CULL_FACE);
-//
-//		// This multiplies the view matrix by the model matrix, and stores the result in the MVP matrix
-//        // (which currently contains model * view).
-//        Matrix.multiplyMM(mMVPMatrix, 0, mViewMatrix, 0, mModelMatrix, 0);
-//
-//        // Pass in the modelview matrix.
-//        GLES20.glUniformMatrix4fv(mMVMatrixHandle, 1, false, mMVPMatrix, 0);
-//
-//        // This multiplies the modelview matrix by the projection matrix, and stores the result in the MVP matrix
-//        // (which now contains model * view * projection).
-//        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mMVPMatrix, 0);
-//
-//        // Pass in the combined matrix.
-//        GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
-//
-//        // Pass in the light position in eye space.
-//        GLES20.glUniform3f(mLightPosHandle, mLightPosInEyeSpace[0], mLightPosInEyeSpace[1], mLightPosInEyeSpace[2]);
-//
-//        // Draw the cube.
-//        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, buffer.length/(POSITION_DATA_SIZE + NORMAL_DATA_SIZE + UVCOORD_DATA_SIZE));
-//
-//        // DEB Alpha Blending
-//        GLES20.glDisable(GLES20.GL_BLEND);
-//        //GLES20.glDisableVertexAttribArray(mPositionHandle);
-////		GLES20.glEnable(GLES20.GL_DEPTH_TEST);
-//        GLES20.glEnable(GLES20.GL_CULL_FACE);
-//
-//	}
-//
 
-}

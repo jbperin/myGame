@@ -12,6 +12,7 @@ import android.opengl.GLUtils;
 
 public class TextureHelper
 {
+
 	public static int loadTexture(final Context context, final int resourceId)
 	{
 		final int[] textureHandle = new int[1];
@@ -81,7 +82,7 @@ public class TextureHelper
 	    GLES20.glTexParameteri ( GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_LINEAR );
 	    GLES20.glTexParameteri ( GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_S, GLES20.GL_CLAMP_TO_EDGE );
 	    GLES20.glTexParameteri ( GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_WRAP_T, GLES20.GL_CLAMP_TO_EDGE );
-
+		GLES20.glGenerateMipmap(GLES20.GL_TEXTURE_2D);
 	    return textureId[0];	}
 
 	

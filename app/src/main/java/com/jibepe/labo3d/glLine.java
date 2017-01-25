@@ -51,7 +51,7 @@ public class glLine extends glRenderableShape {
         final float[] mMVPMatrix = new float[16];
         final float[] ModelMatrix = new float[16];
 
-        int mSolidLineProgram = ShaderHandler.getInstance().getShaderProgram(ShaderHandler.sSolidLineProgram);
+        int mSolidLineProgram = ShaderHandler.getInstance().getShaderProgramId(ShaderHandler.sSolidLineProgram);
 
         GLES20.glUseProgram(mSolidLineProgram);
 

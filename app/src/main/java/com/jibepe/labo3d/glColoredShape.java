@@ -45,7 +45,7 @@ public class glColoredShape extends glRenderableShape {
         	else
         	{
             	final float [] matShapeColor= {matShape.r, matShape.g, matShape.b, 1.0f};
-                int program = ShaderHandler.getInstance().getShaderProgram(ShaderHandler.sSolidUColorLightProgram);
+                int program = ShaderHandler.getInstance().getShaderProgramId(ShaderHandler.sSolidUColorLightProgram);
                 GLES20.glUseProgram(program);
 
 

@@ -66,7 +66,7 @@ public class glAlphaTexturedShape extends glRenderableShape{
                 int program;
 
 
-                program = ShaderHandler.getInstance().getShaderProgram(ShaderHandler.sSolidTexColorLightProgram);
+                program = ShaderHandler.getInstance().getShaderProgramId(ShaderHandler.sSolidTexColorLightProgram);
                 GLES20.glUseProgram(program);
                 /**
                  * Stores a copy of the model matrix specifically for the light position.

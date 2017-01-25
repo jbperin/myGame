@@ -14,10 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
-import com.jibepe.labo3d.GLES20View;
-import com.jibepe.labo3d.R;
-import com.jibepe.labo3d.SceneGraph;
-import com.jibepe.labo3d.TextureHandler;
+import com.jibepe.labo3d.*;
 import com.jibepe.objparser.ObjLoader;
 import com.jibepe.util.DownloadFilesTask;
 import com.jibepe.util.DownloadHelper;
@@ -65,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         TextureHandler.getInstance().setContext(getApplication());
+        ShaderHandler.getInstance().setContext(getApplication());
+
         SceneGraph theSceneGraph = new SceneGraph();
         //File file = new File(Environment.getExternalStoragePublicDirectory(
         //        Environment.DIRECTORY_PICTURES), "scene.mtl");
