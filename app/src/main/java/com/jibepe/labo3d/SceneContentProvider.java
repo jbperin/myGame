@@ -3,10 +3,7 @@ package com.jibepe.labo3d;
 
 
 import com.jibepe.model.SceneGraph;
-import com.jibepe.render3d.glAlphaTexturedShape;
-import com.jibepe.render3d.glColoredShape;
-import com.jibepe.render3d.glLine;
-import com.jibepe.render3d.glRenderableShape;
+import com.jibepe.render3d.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,6 +80,13 @@ public class SceneContentProvider implements InterfaceSceneRenderer{
             shapes2Render.add(aLine2);
 
 		}
+        Square aSquare = new Square();
+
+        shapes2Render.add(aSquare);
+
+        Triangle aTriangle = new Triangle();
+
+        shapes2Render.add(aTriangle);
 
         glColoredShape shapeScene = new glColoredShape(mSceneGraph.getObj("scene"));
         shapeScene.setPosition (new float [] {0.0f, 0.0f, 0.0f});
@@ -90,12 +94,12 @@ public class SceneContentProvider implements InterfaceSceneRenderer{
 
         shapes2Render.add(shapeScene);
 
-        glAlphaTexturedShape shapePerso = new glAlphaTexturedShape(mSceneGraph.getObj("plantexture"));
-        shapePerso.setPosition (new float [] {0.0f, 0.0f, 0.0f});
-        shapePerso.setRotation (new float [] {0.0f, 0.0f, 0.0f});
-
-        shapes2Render.add(shapePerso);
-
+//        glAlphaTexturedShape shapePerso = new glAlphaTexturedShape(mSceneGraph.getObj("plantexture"));
+//        shapePerso.setPosition (new float [] {0.0f, 0.0f, 0.0f});
+//        shapePerso.setRotation (new float [] {0.0f, 0.0f, 0.0f});
+//
+//        shapes2Render.add(shapePerso);
+//
         return shapes2Render;
     }
 
