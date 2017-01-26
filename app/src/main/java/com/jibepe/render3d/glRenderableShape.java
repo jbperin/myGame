@@ -9,6 +9,7 @@ import com.jibepe.labo3d.InterfaceSceneRenderer;
 public abstract class glRenderableShape {
 
     protected final int FLOAT_FIELD_SIZE = 4;
+    protected final int SHORT_FIELD_SIZE = 2;
     protected final int POSITION_DATA_SIZE = 3;
     protected final int NORMAL_DATA_SIZE = 3;
     protected final int UVCOORD_DATA_SIZE = 2;

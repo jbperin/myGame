@@ -67,6 +67,22 @@ public class Triangle extends glRenderableShape {
 
     float color[] = { 0.63671875f, 0.76953125f, 0.22265625f, 0.0f };
 
+    public float[] getPosition() {
+        return position;
+    }
+
+    public void setPosition(float[] position) {
+        this.position = position;
+    }
+
+    public float[] getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(float[] rotation) {
+        this.rotation = rotation;
+    }
+
     private float [] position = {0.0f, 0.0f, 0.0f}; // X,Y,Z
     private float [] rotation = {0.0f, 0.0f, 0.0f}; // rX,rY,rZ
 

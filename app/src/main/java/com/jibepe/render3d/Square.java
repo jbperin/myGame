@@ -70,6 +70,22 @@ public class Square extends glRenderableShape {
 
     float color[] = { 0.2f, 0.709803922f, 0.898039216f, 1.0f };
 
+    public float[] getPosition() {
+        return position;
+    }
+
+    public void setPosition(float[] position) {
+        this.position = position;
+    }
+
+    public float[] getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(float[] rotation) {
+        this.rotation = rotation;
+    }
+
     private float [] position = {0.0f, 0.0f, 0.0f}; // X,Y,Z
     private float [] rotation = {0.0f, 0.0f, 0.0f}; // rX,rY,rZ
 

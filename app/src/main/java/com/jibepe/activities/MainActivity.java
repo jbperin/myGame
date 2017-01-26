@@ -37,26 +37,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String DownloadUrl = "http://jb.perin.pagesperso-orange.fr/";
-        String fileName = "scene.mtl";
-
-        boolean canW = DownloadHelper.isExternalStorageWritable();
-        boolean canR = DownloadHelper.isExternalStorageReadable();
-        if(canW == canR == true) {
-
-            File folder = getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
-            //DownloadHelper.verifyStoragePermissions(this);
-            String FullUrl = DownloadUrl;
-            URL url = null;
-            try {
-                url = new URL(FullUrl);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            if (url != null) {
-                new DownloadFilesTask(url, folder).execute(fileName);
-            }
-        }
+        //DownloadFiles();
 
         TextureHandler.getInstance().setContext(getApplication());
         ShaderHandler.getInstance().setContext(getApplication());
@@ -95,7 +76,30 @@ public class MainActivity extends AppCompatActivity {
 		}
 
     }
-    
+
+    private void DownloadFiles() {
+        String DownloadUrl = "http://jb.perin.pagesperso-orange.fr/";
+        String fileName = "scene.mtl";
+
+        boolean canW = DownloadHelper.isExternalStorageWritable();
+        boolean canR = DownloadHelper.isExternalStorageReadable();
+        if(canW == canR == true) {
+
+            File folder = getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+            //DownloadHelper.verifyStoragePermissions(this);
+            String FullUrl = DownloadUrl;
+            URL url = null;
+            try {
+                url = new URL(FullUrl);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+            if (url != null) {
+                new DownloadFilesTask(url, folder).execute(fileName);
+            }
+        }
+    }
+
     @Override
     protected void onStart() {
     	super.onStart();

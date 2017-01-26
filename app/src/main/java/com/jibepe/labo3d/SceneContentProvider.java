@@ -80,13 +80,6 @@ public class SceneContentProvider implements InterfaceSceneRenderer{
             shapes2Render.add(aLine2);
 
 		}
-        Square aSquare = new Square();
-
-        shapes2Render.add(aSquare);
-
-        Triangle aTriangle = new Triangle();
-
-        shapes2Render.add(aTriangle);
 
         glColoredShape shapeScene = new glColoredShape(mSceneGraph.getObj("scene"));
         shapeScene.setPosition (new float [] {0.0f, 0.0f, 0.0f});
@@ -94,12 +87,27 @@ public class SceneContentProvider implements InterfaceSceneRenderer{
 
         shapes2Render.add(shapeScene);
 
-//        glAlphaTexturedShape shapePerso = new glAlphaTexturedShape(mSceneGraph.getObj("plantexture"));
-//        shapePerso.setPosition (new float [] {0.0f, 0.0f, 0.0f});
-//        shapePerso.setRotation (new float [] {0.0f, 0.0f, 0.0f});
+        glAlphaTexturedShape shapePerso = new glAlphaTexturedShape(mSceneGraph.getObj("plantexture"));
+        shapePerso.setPosition (new float [] {1.0f, 1.0f, 0.0f});
+        shapePerso.setRotation (new float [] {0.0f, 0.0f, 0.0f});
+
+        shapes2Render.add(shapePerso);
+
 //
-//        shapes2Render.add(shapePerso);
+//        Square aSquare = new Square();
 //
+//        shapes2Render.add(aSquare);
+//
+//        Triangle aTriangle = new Triangle();
+//
+//        shapes2Render.add(aTriangle);
+//
+//
+        glTexturedShape anIBOShape = new glTexturedShape();
+        anIBOShape.setPosition(new float [] {-1.0f, 1.0f, 0.0f});
+        shapes2Render.add(anIBOShape);
+
+
         return shapes2Render;
     }
 
