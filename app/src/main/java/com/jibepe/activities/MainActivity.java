@@ -6,6 +6,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ConfigurationInfo;
+import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import android.widget.RelativeLayout;
 import com.jibepe.labo3d.*;
 import com.jibepe.model.SceneGraph;
 import com.jibepe.objparser.ObjLoader;
+import com.jibepe.render3d.GLES20Renderer;
 import com.jibepe.util.DownloadFilesTask;
 import com.jibepe.util.DownloadHelper;
 
@@ -28,6 +30,11 @@ public class MainActivity extends AppCompatActivity {
 	
 	private final String TAG = "MainActivity";
 
+    private GLES20View theView;
+
+    GLES20Renderer mRenderer = null;
+    SceneGraph theSceneGraph = null;
+
     /*********************************************/
     /***                PROCESS                 **/
     /*********************************************/
@@ -38,11 +45,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //DownloadFiles();
-
+        TextureHandler.getInstance().reset();
         TextureHandler.getInstance().setContext(getApplication());
+        ShaderHandler.getInstance().reset();
         ShaderHandler.getInstance().setContext(getApplication());
 
-        SceneGraph theSceneGraph = new SceneGraph();
+        theSceneGraph = new SceneGraph();
         //File file = new File(Environment.getExternalStoragePublicDirectory(
         //        Environment.DIRECTORY_PICTURES), "scene.mtl");
         ObjLoader mSceneLoader = new ObjLoader(getApplication());
@@ -65,9 +73,17 @@ public class MainActivity extends AppCompatActivity {
 
         if (supportsEs2)
 		{
-			// Create an OpenGL ES 2.0 context.
-			theView = new GLES20View(getApplication(), theSceneGraph);
-			
+            mRenderer = new GLES20Renderer();
+            // Request an OpenGL ES 2.0 compatible context.
+            //setEGLContextClientVersion(2);
+
+            // Create an OpenGL ES 2.0 context.
+			theView = new GLES20View(getApplication(),mRenderer, theSceneGraph);
+            theView.setEGLContextClientVersion(2);
+            // Set the Renderer for drawing on the GLSurfaceView
+            theView.setRenderer(mRenderer);
+            theView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+
 			RelativeLayout outerView = 
 	                (RelativeLayout)this.findViewById(R.id.lelayout);
 	        View view1 =  this.findViewById(R.id.txt2glsurf);
@@ -142,7 +158,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-	private GLES20View theView;
 
 
 }

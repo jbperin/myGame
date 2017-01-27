@@ -40,7 +40,10 @@ public class ShaderHandler {
     public static ShaderHandler getInstance()
     {	return INSTANCE;
     }
-
+    public void reset(){
+        dShaderHandler.clear();
+        //dShaderHandler = new HashMap<String, Integer>();
+    }
     public void setContext (Context context) {
         mContext = context;
     }
@@ -130,7 +133,8 @@ public class ShaderHandler {
             dShaderHandler.put(shaderName, mSolidTexLightProgram);
             return (mSolidTexLightProgram);
         } else {
-            return -1;
+            return (mSolidPointProgram);
+            //return -1;
         }
     }
 

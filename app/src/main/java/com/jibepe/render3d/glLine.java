@@ -91,6 +91,7 @@ public class glLine extends glRenderableShape {
         GLES20.glDrawArrays(GLES20.GL_LINES, 0, 2);
 
         GLES20.glDisableVertexAttribArray(mPositionHandle);
+        //GLES20.glUseProgram(0);
 
     }
 

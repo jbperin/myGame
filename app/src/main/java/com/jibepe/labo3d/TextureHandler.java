@@ -24,6 +24,10 @@ public class TextureHandler {
     private TextureHandler() {
         dTextureHandlers = new HashMap<String, Integer>();
     }
+    public void reset(){
+        dTextureHandlers.clear();
+        //dTextureHandlers = new HashMap<String, Integer>();
+    }
     public static TextureHandler getInstance()
 
     {

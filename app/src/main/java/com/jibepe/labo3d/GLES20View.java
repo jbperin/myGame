@@ -9,14 +9,14 @@ import com.jibepe.render3d.GLES20Renderer;
 
 public class GLES20View extends GLSurfaceView  {
 
-	GLES20Renderer mRenderer;
-	SceneGraph mScene;
-	SceneContentProvider mSceneView;
+	GLES20Renderer mRenderer = null;
+	SceneGraph mScene = null;
+	SceneContentProvider mSceneView = null;
 
 	private float mPreviousX;
 	private float mPreviousY;
 
-	public GLES20View(Context context, SceneGraph theSceneGraph) {
+	public GLES20View(Context context, GLES20Renderer theRenderer, SceneGraph theSceneGraph) {
 		super(context);
 
 
@@ -25,14 +25,10 @@ public class GLES20View extends GLSurfaceView  {
 		mScene = theSceneGraph;
 		mSceneView = new SceneContentProvider(mScene);
 
-		mRenderer = new GLES20Renderer (mSceneView);
+		mRenderer = theRenderer;
+		mRenderer.setScene(mSceneView);
 
-		// Request an OpenGL ES 2.0 compatible context.
-		setEGLContextClientVersion(2);
 
-		// Set the Renderer for drawing on the GLSurfaceView
-		setRenderer(mRenderer);
-		setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
 	}
 
 	@Override public boolean onTrackballEvent(MotionEvent e) {

@@ -28,12 +28,19 @@ public class GLES20Renderer implements Renderer {
 	 */
 	private float[] mVPMatrix = new float[16];
 
-    private InterfaceSceneRenderer mScene;
+	public InterfaceSceneRenderer getScene() {
+		return mScene;
+	}
+
+	public void setScene(InterfaceSceneRenderer mScene) {
+		this.mScene = mScene;
+	}
+
+	private InterfaceSceneRenderer mScene = null;
 
 
-    public GLES20Renderer(InterfaceSceneRenderer scene) {
+    public GLES20Renderer() {
 		super();
-		mScene = scene;
 	}
 
 
@@ -78,31 +85,31 @@ public class GLES20Renderer implements Renderer {
         // Set the view matrix. This matrix can be said to represent the camera position.
 		// NOTE: In OpenGL 1, a ModelView matrix is used, which is a combination of a model and
 		// view matrix. In OpenGL 2, we can keep track of these matrices separately if we choose.
-        float [] mPosCam = mScene.getCamPos();
-		float mPosCamX  = mPosCam [0];
-        float mPosCamY = mPosCam [1];
-        float [] mRotCam = mScene.getCamRot();
-        float mAngleCam = mRotCam [1];
+		if (mScene != null ) {
+			float [] mPosCam = mScene.getCamPos();
+			float mPosCamX  = mPosCam [0];
+			float mPosCamY = mPosCam [1];
+			float [] mRotCam = mScene.getCamRot();
+			float mAngleCam = mRotCam [1];
 
-		Matrix.setLookAtM(mViewMatrix, 0, 
-				// Position the eye in front of the origin.
-				mPosCamX, 1.0f, mPosCamY,// eyeX, eyeY, eyeZ, 
-				// We are looking toward the distance
-				(float)(mPosCamX + (Math.cos(Math.toRadians(mAngleCam)))), 1.0f, (float)(mPosCamY + (Math.sin(Math.toRadians(mAngleCam)))), // lookX, lookY, lookZ, 
-				// Set our up vector. This is where our head would be pointing were we holding the camera.
-				0.0f, 1.0f, 0.0f  //upX, upY, upZ
-				);		
-		//Matrix.multiplyMM(mVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+			Matrix.setLookAtM(mViewMatrix, 0,
+					// Position the eye in front of the origin.
+					mPosCamX, 1.0f, mPosCamY,// eyeX, eyeY, eyeZ,
+					// We are looking toward the distance
+					(float)(mPosCamX + (Math.cos(Math.toRadians(mAngleCam)))), 1.0f, (float)(mPosCamY + (Math.sin(Math.toRadians(mAngleCam)))), // lookX, lookY, lookZ,
+					// Set our up vector. This is where our head would be pointing were we holding the camera.
+					0.0f, 1.0f, 0.0f  //upX, upY, upZ
+					);
+			//Matrix.multiplyMM(mVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
-
-        List<glRenderableShape>ShapesToRender = mScene.getRenderableShapes();
-        for (glRenderableShape shap : ShapesToRender) {
-            //
-            // shap.render(mVPMatrix, mShaderHelper, mScene);
-            shap.render(mViewMatrix, mProjectionMatrix, mScene);
-			checkGLError();
-        }
-
+			List<glRenderableShape> ShapesToRender = mScene.getRenderableShapes();
+			for (glRenderableShape shap : ShapesToRender) {
+				//
+				// shap.render(mVPMatrix, mShaderHelper, mScene);
+				shap.render(mViewMatrix, mProjectionMatrix, mScene);
+				checkGLError();
+			}
+		}
 	}
 
     void checkGLError()

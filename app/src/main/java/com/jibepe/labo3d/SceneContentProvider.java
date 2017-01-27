@@ -93,7 +93,7 @@ public class SceneContentProvider implements InterfaceSceneRenderer{
 
         shapes2Render.add(shapePerso);
 
-//
+
 //        Square aSquare = new Square();
 //
 //        shapes2Render.add(aSquare);
@@ -101,8 +101,8 @@ public class SceneContentProvider implements InterfaceSceneRenderer{
 //        Triangle aTriangle = new Triangle();
 //
 //        shapes2Render.add(aTriangle);
-//
-//
+
+
         glTexturedShape anIBOShape = new glTexturedShape();
         anIBOShape.setPosition(new float [] {-1.0f, 1.0f, 0.0f});
         shapes2Render.add(anIBOShape);
