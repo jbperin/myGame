@@ -75,7 +75,7 @@ public class DownloadFragment extends Fragment {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        mTask.execute("scene.mtl");
+        mTask.execute("scene.mtl", "scene.obj", "iclauncher.png");
 
     }
 
@@ -113,18 +113,26 @@ public class DownloadFragment extends Fragment {
             long totalSize = 0;
             for (int i = 0; i < count; i++) {
                 totalSize += DownloadHelper.DownloadFile(base_url, target_folder, urls[i]);
-
+                publishProgress(i,count);
                 if (isCancelled()) break;
             }
             return totalSize;
         }
 
         protected void onProgressUpdate(Integer... progress) {
-
+            int count = progress.length;
+            if (count >= 2) {
+                Log.d(TAG, "onProgressUpdate " + progress[0] + " / " + progress[1] + ". ");
+            }
+//            for (int i = 0; i < count; i++) {
+//                Log.d(TAG,"onProgressUpdate");
+//            }
             //setProgressPercent(progress[0]);
         }
 
         protected void onPostExecute(Long result) {
+            Log.d(TAG,"onPostExecute");
+            ((DownloadTaskCallbacks)getActivity()).onPostExecute();
             //showDialog("Downloaded " + result + " bytes");
         }
     }

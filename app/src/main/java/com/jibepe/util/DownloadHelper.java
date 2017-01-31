@@ -20,8 +20,8 @@ public class DownloadHelper {
 
     private static final String TAG = "DownloadHelper";
 
-    private static final int TIMEOUT_CONNECTION = 1000;
-    private static final int TIMEOUT_SOCKET = 1000;
+    private static final int TIMEOUT_CONNECTION = 10000;
+    private static final int TIMEOUT_SOCKET = 10000;
 
 
 
