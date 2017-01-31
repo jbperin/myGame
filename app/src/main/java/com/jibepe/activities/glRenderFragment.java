@@ -20,7 +20,6 @@ import com.jibepe.labo3d.*;
 import com.jibepe.model.SceneGraph;
 import com.jibepe.objparser.ObjLoader;
 import com.jibepe.render3d.GLES20Renderer;
-import com.jibepe.util.DownloadFilesTask;
 import com.jibepe.util.DownloadHelper;
 
 import java.io.File;
@@ -52,14 +51,6 @@ public class glRenderFragment extends Fragment {
         super.onAttach(context);
     }
 
-    // This event fires 2nd, before views are created for the fragment
-    // The onCreate method is called when the Fragment instance is being created, or re-created.
-    // Use onCreate for any standard setup that does not require the activity to be fully created
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
     // This event is triggered soon after onCreateView().
     // onViewCreated() is only called if the view returned from onCreateView() is non-null.
     // Any view setup should occur here.  E.g., view lookups and attaching view listeners.
@@ -81,6 +72,18 @@ public class glRenderFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
+    // This event fires 2nd, before views are created for the fragment
+    // The onCreate method is called when the Fragment instance is being created, or re-created.
+    // Use onCreate for any standard setup that does not require the activity to be fully created
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        this.setRetainInstance(true); // Open GL  context needs to be kept
+
+    }
+
+
     /*********************************************/
     /***                PROCESS                 **/
     /*********************************************/
@@ -92,22 +95,26 @@ public class glRenderFragment extends Fragment {
         FragmentActivity faActivity  = (FragmentActivity)    super.getActivity();
 
         LinearLayout llLayout    = (LinearLayout)    inflater.inflate(R.layout.fragment_render3d, container, false);
+
+
         //DownloadFiles();
         TextureHandler.getInstance().reset();
-        TextureHandler.getInstance().setContext(faActivity.getApplication());
+        TextureHandler.getInstance().setContext(super.getActivity().getApplication());
         ShaderHandler.getInstance().reset();
-        ShaderHandler.getInstance().setContext(faActivity.getApplication());
+        ShaderHandler.getInstance().setContext(super.getActivity().getApplication());
 
         theSceneGraph = new SceneGraph();
         //File file = new File(Environment.getExternalStoragePublicDirectory(
         //        Environment.DIRECTORY_PICTURES), "scene.mtl");
-        ObjLoader mSceneLoader = new ObjLoader(faActivity.getApplication());
+        ObjLoader mSceneLoader = new ObjLoader(super.getActivity().getApplication());
         mSceneLoader.loadModel("scene");
         theSceneGraph.addObj("scene", mSceneLoader);
 
-        ObjLoader mPersoLoader = new ObjLoader(faActivity.getApplication());
+        ObjLoader mPersoLoader = new ObjLoader(super.getActivity().getApplication());
         mPersoLoader.loadModel("plantexture");
         theSceneGraph.addObj("plantexture", mPersoLoader);
+
+
 
         //try {
             //DownloadHelper.DownloadFile("scene.obj");
@@ -141,28 +148,6 @@ public class glRenderFragment extends Fragment {
         return (llLayout);
     }
 
-    private void DownloadFiles() {
-        String DownloadUrl = "http://jb.perin.pagesperso-orange.fr/";
-        String fileName = "scene.mtl";
-
-        boolean canW = DownloadHelper.isExternalStorageWritable();
-        boolean canR = DownloadHelper.isExternalStorageReadable();
-        if(canW == canR == true) {
-
-            File folder = super.getActivity().getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
-            //DownloadHelper.verifyStoragePermissions(this);
-            String FullUrl = DownloadUrl;
-            URL url = null;
-            try {
-                url = new URL(FullUrl);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-            if (url != null) {
-                new DownloadFilesTask(url, folder).execute(fileName);
-            }
-        }
-    }
 
     @Override
     public void onStart() {

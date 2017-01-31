@@ -164,7 +164,7 @@ public class glTexturedShape extends glRenderableShape{
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
 
         // Bind the texture to this unit.
-        int textureHandlerId = TextureHandler.getInstance().getTextureId("ic_launcher-web.png");
+        int textureHandlerId = TextureHandler.getInstance().getTextureId("iclauncher.png");
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandlerId);
 
         // Tell the texture uniform sampler to use this texture in the shader by binding to texture unit 0.

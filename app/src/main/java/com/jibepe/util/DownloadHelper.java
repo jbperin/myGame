@@ -75,19 +75,21 @@ public class DownloadHelper {
 
         boolean success = false;
         long totalSize = 0;
+        Log.d(TAG,"Donwloading file "+fileName+" from " + url.toString() + " into " + folder.toString());
         if (!folder.exists()) {
+            Log.d(TAG,"Path Created");
             success = folder.mkdirs();
         }
         String destinationDir = folder.getAbsolutePath();
         //String fileName = "scene.mtl";
         File outFile = new File(destinationDir, fileName);
-
         try {
             String newline = "\r\n";
             FileOutputStream fos = new FileOutputStream(outFile);
+            URL fileURL = new URL (url, fileName);
 
             URLConnection uconn = null;
-            uconn = url.openConnection();
+            uconn = fileURL.openConnection();
             uconn.setReadTimeout(TIMEOUT_CONNECTION);
             uconn.setConnectTimeout(TIMEOUT_SOCKET);
             InputStream is = null;
@@ -110,15 +112,17 @@ public class DownloadHelper {
                 e.printStackTrace();
             }
 
-
+            Log.d(TAG,"File "+fileURL.toString()+" Downloaded to " + outFile.toString());
             fos.flush();
             fos.close();
             success = true;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (success == true)  return totalSize;
-        else return 0;
+        if (success == true) {
+            return totalSize;
+        }
+        else {return 0;}
     }
 
 

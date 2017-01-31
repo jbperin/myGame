@@ -2,10 +2,10 @@ package com.jibepe.labo3d;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.os.Environment;
 import com.jibepe.util.TextureHelper;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +40,12 @@ public class TextureHandler {
 
     public int getTextureId(String filename) {
         if (! dTextureHandlers.containsKey(filename)){
-            return (loadPNGTexture (filename));
+            if (filename.equals("iclauncher.png")){
+
+                return (loadFilePNGTexture(filename));
+            } else {
+                return (loadPNGTexture(filename));
+            }
         } else {
             return (dTextureHandlers.get(filename));
         }
@@ -63,4 +68,32 @@ public class TextureHandler {
         }
         return (textureId);
     }
+
+    public int loadFilePNGTexture(String filename) {
+        int textureId = 0;
+        // Load the texture
+        File folder = mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+        File file= new File (folder, filename);
+        //try {
+            //InputStream fileInputStream = new FileInputStream(file);
+            textureId = TextureHelper.loadPNGTexture(file.toString());
+            dTextureHandlers.put(filename, textureId);
+        //} catch (FileNotFoundException e) {
+        //    e.printStackTrace();
+        //}
+//        AssetManager assetManager = mContext.getAssets();
+//        try {
+//            InputStream inObj = assetManager.open(filename);
+//
+//            textureId = TextureHelper.loadPNGTexture(inObj);
+//
+//            dTextureHandlers.put(filename, textureId);
+//
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        return (textureId);
+    }
+
 }
