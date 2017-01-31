@@ -44,6 +44,15 @@ public class GLES20View extends GLSurfaceView  {
 		super.onTouchEvent(e);
 		float x = e.getX();
 		float y = e.getY();
+		mRenderer.getWorldSpaceFromMouseCoordinates(0, 0);
+		mRenderer.getWorldSpaceFromMouseCoordinates(mRenderer.mWidth,0);
+		mRenderer.getWorldSpaceFromMouseCoordinates(mRenderer.mWidth, mRenderer.mHeight);
+		mRenderer.getWorldSpaceFromMouseCoordinates(0, mRenderer.mHeight);
+
+		mRenderer.getWorldSpaceFromMouseCoordinates(mRenderer.mWidth/2, mRenderer.mHeight/2);
+
+		mRenderer.getWorldSpaceFromMouseCoordinates(x, y);
+
 		switch (e.getAction()) {
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_POINTER_UP:
