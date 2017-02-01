@@ -22,7 +22,7 @@ public class SceneGraph {
     private float objPos[] = {1.0f, 0.0f, -1.0f};
     private float objRot[] = {0.0f, 0.0f, 0.0f};
 
-    private float camPos[] = {1.0f, 0.0f, -1.0f};
+    private float camPos[] = {1.0f, 1.0f, -1.0f};
     private float camRot[] = {0.0f, -90.0f, 0.0f};
 
     public SceneGraph (){
@@ -42,25 +42,9 @@ public class SceneGraph {
 
     public void moveCam(float f) {
         camPos[0] += f*Math.cos(Math.toRadians(camRot[1]));
-        camPos[1] += f*Math.sin(Math.toRadians(camRot[1]));
+        camPos[2] += f*Math.sin(Math.toRadians(camRot[1]));
     }
 
-
-    public float getCamPosX() {
-        return camPos[0];
-    }
-
-    public void setCamPosX(float mPosCamX) {
-        this.camPos[0] = mPosCamX;
-    }
-
-    public float getCamPosY() {
-        return camPos[1];
-    }
-
-    public void setCamPosY(float mPosCamY) {
-        this.camPos[1] = mPosCamY;
-    }
 
 
 

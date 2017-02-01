@@ -96,16 +96,14 @@ public class GLES20Renderer implements Renderer {
 		// view matrix. In OpenGL 2, we can keep track of these matrices separately if we choose.
 		if (mScene != null ) {
 			float [] mPosCam = mScene.getCamPos();
-			float mPosCamX  = mPosCam [0];
-			float mPosCamY = mPosCam [1];
 			float [] mRotCam = mScene.getCamRot();
 			float mAngleCam = mRotCam [1];
 
 			Matrix.setLookAtM(mViewMatrix, 0,
 					// Position the eye in front of the origin.
-					mPosCamX, 1.0f, mPosCamY,// eyeX, eyeY, eyeZ,
+					mPosCam [0], mPosCam [1], mPosCam [2],// eyeX, eyeY, eyeZ,
 					// We are looking toward the distance
-					(float)(mPosCamX + (Math.cos(Math.toRadians(mAngleCam)))), 1.0f, (float)(mPosCamY + (Math.sin(Math.toRadians(mAngleCam)))), // lookX, lookY, lookZ,
+					(float)(mPosCam [0] + (Math.cos(Math.toRadians(mAngleCam)))), 1.0f, (float)(mPosCam [2] + (Math.sin(Math.toRadians(mAngleCam)))), // lookX, lookY, lookZ,
 					// Set our up vector. This is where our head would be pointing were we holding the camera.
 					0.0f, 1.0f, 0.0f  //upX, upY, upZ
 					);
@@ -137,7 +135,7 @@ public class GLES20Renderer implements Renderer {
 		int [] _viewport = new int[] { 0, 0, mWidth, mHeight };
 		// mouse Y needs to be inverted
 		//mouseY = (float) _viewport[3] - mouseY;
-		Log.d("", "Try to unproject :" + mouseX + "," + mouseY );
+		Log.d(TAG, "Try to unproject :" + mouseX + "," + mouseY );
 		// calling glReadPixels() with GL_DEPTH_COMPONENT is not supported in
 		// GLES so now i will try to implement ray picking
 		int result = GLU.gluUnProject(mouseX, mouseY, 1.0f, mViewMatrix, 0, mProjectionMatrix, 0, _viewport, 0,
@@ -171,11 +169,13 @@ public class GLES20Renderer implements Renderer {
 		direction [1] = direction[1]/dirVector.magnitude();
 		direction [2] = direction[2]/dirVector.magnitude();
 
+		float [] camPos =  mScene.getCamPos();
+
 		//float [] dirVector = Vector.normalize(Vector.minus(farCoord, nearCoord));
 //		float [] rayOrigin =  {0.0f, 0.0f, 3.0f};
 //
-//		Log.d(TAG, "Far Coordinate:" + farCoord[0] + "," + farCoord[1] + "," + farCoord[2]);
-//		Log.d(TAG, "Near Coordinate:" + nearCoord[0] + "," + nearCoord[1] + "," + nearCoord[2]);
+		Log.d(TAG, "Far Coordinate:" + farCoord[0] + "," + farCoord[1] + "," + farCoord[2]);
+		Log.d(TAG, "Near Coordinate:" + nearCoord[0] + "," + nearCoord[1] + "," + nearCoord[2]);
 		Log.d(TAG, "width :" + mWidth + ", height :" + mHeight);
 		Log.d(TAG, "Direction:" + direction[0] + "," + direction[1] + "," + direction[2]);
 

@@ -16,6 +16,33 @@ public abstract class glRenderableShape {
     protected final int COLOR_DATA_SIZE = 4;
 
 
+    public float[] getPosition() {
+        return position;
+    }
+
+    public void setPosition(float[] position) {
+        this.position = position;
+    }
+
+    public float[] getRotation() {
+        return rotation;
+    }
+
+    public void setRotation(float[] rotation) {
+        this.rotation = rotation;
+    }
+
+    public float[] getScale() {
+        return scale;
+    }
+
+    public void setScale(float[] scale) {
+        this.scale = scale;
+    }
+
+    private float [] position = {0.0f, 0.0f, 0.0f}; // X,Y,Z
+    private float [] rotation = {0.0f, 0.0f, 0.0f}; // rX,rY,rZ
+    private float [] scale = {1.0f, 1.0f, 1.0f}; // sX,sY,sZ
 
     public glRenderableShape() {
 
