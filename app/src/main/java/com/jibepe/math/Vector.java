@@ -98,6 +98,18 @@ public class Vector {
         return c;
     }
 
+    // return this cross product that
+    public Vector cross(Vector that) {
+        if (this.length() != that.length())
+            throw new IllegalArgumentException("dimensions disagree");
+        Vector c = new Vector(new float[] {
+                this.data[1]*that.data[2] - this.data[2]*that.data[1]
+                ,this.data[2]*that.data[0] - this.data[0]*that.data[2]
+                ,this.data[0]*that.data[1] - this.data[1]*that.data[0]
+        });
+        return c;
+    }
+
     // return this - that
     public Vector minus(Vector that) {
         if (this.length() != that.length())
@@ -148,6 +160,10 @@ public class Vector {
         }
         s.append(')');
         return s.toString();
+    }
+
+    public float[] array() {
+        return data;
     }
 
 

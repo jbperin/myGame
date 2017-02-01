@@ -3,7 +3,9 @@ package com.jibepe.labo3d;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
 import android.view.MotionEvent;
+import com.jibepe.math.Util;
 import com.jibepe.model.SceneGraph;
 import com.jibepe.render3d.GLES20Renderer;
 
@@ -12,7 +14,7 @@ public class GLES20View extends GLSurfaceView  {
 	GLES20Renderer mRenderer = null;
 	SceneGraph mScene = null;
 	SceneContentProvider mSceneView = null;
-
+	private static String TAG = "GLES20View";
 	private float mPreviousX;
 	private float mPreviousY;
 
@@ -44,15 +46,25 @@ public class GLES20View extends GLSurfaceView  {
 		super.onTouchEvent(e);
 		float x = e.getX();
 		float y = e.getY();
-		mRenderer.getWorldSpaceFromMouseCoordinates(0, 0);
-		mRenderer.getWorldSpaceFromMouseCoordinates(mRenderer.mWidth,0);
-		mRenderer.getWorldSpaceFromMouseCoordinates(mRenderer.mWidth, mRenderer.mHeight);
-		mRenderer.getWorldSpaceFromMouseCoordinates(0, mRenderer.mHeight);
-
-		mRenderer.getWorldSpaceFromMouseCoordinates(mRenderer.mWidth/2, mRenderer.mHeight/2);
-
-		mRenderer.getWorldSpaceFromMouseCoordinates(x, y);
-
+//		mRenderer.getWorldSpaceFromMouseCoordinates(0, 0);
+//		mRenderer.getWorldSpaceFromMouseCoordinates(mRenderer.mWidth,0);
+//		mRenderer.getWorldSpaceFromMouseCoordinates(mRenderer.mWidth, mRenderer.mHeight);
+//		mRenderer.getWorldSpaceFromMouseCoordinates(0, mRenderer.mHeight);
+//
+//		mRenderer.getWorldSpaceFromMouseCoordinates(mRenderer.mWidth/2, mRenderer.mHeight/2);
+//
+		float [] direction = mRenderer.getWorldSpaceFromMouseCoordinates(x, y);
+		float [] posCam = mScene.getCamPos();
+		float [] targeted = Util.intersect3D_RayTriangle(
+				 new float []  { 0.5f, 2.0f , 0.3f} // posCam
+				, new float [] { 0.0f, -1.0f, 0.0f} //, direction
+				, new float [] { 0.5f, 0.0f, 1.0f}  //triVertex0
+				, new float [] { 0.0f, 0.0f, 0.0f}  //triVertex1
+				, new float [] { 1.0f, 0.0f, 0.0f}  // triVertex2);
+		);
+		if (targeted != null){
+			Log.d(TAG, "Found intersection point in ( " + targeted[0] + ", "+ targeted[1] + ", "+ targeted[2] + ")");
+		}
 		switch (e.getAction()) {
 		case MotionEvent.ACTION_UP:
 		case MotionEvent.ACTION_POINTER_UP:
