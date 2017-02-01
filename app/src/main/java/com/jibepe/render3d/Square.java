@@ -68,26 +68,6 @@ public class Square extends glRenderableShape {
 
     private final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
 
-    float color[] = { 0.2f, 0.709803922f, 0.898039216f, 1.0f };
-
-    public float[] getPosition() {
-        return position;
-    }
-
-    public void setPosition(float[] position) {
-        this.position = position;
-    }
-
-    public float[] getRotation() {
-        return rotation;
-    }
-
-    public void setRotation(float[] rotation) {
-        this.rotation = rotation;
-    }
-
-    private float [] position = {0.0f, 0.0f, 0.0f}; // X,Y,Z
-    private float [] rotation = {0.0f, 0.0f, 0.0f}; // rX,rY,rZ
 
 
     /**
@@ -127,6 +107,29 @@ public class Square extends glRenderableShape {
     }
 
     @Override
+    short[] getIBOIndices() {
+        return drawListBuffer.array();
+    }
+
+    @Override
+    float[] getIBObuffer(String type) {
+        if (type.equals(VERTICES)){
+            return vertexBuffer.array();
+        } else if (type.equals(TEX_COORDS)){
+            return null;
+        } else if (type.equals(NORMALS)){
+            return null;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    float[] getVBObuffer() {
+        return null;
+    }
+
+    @Override
     void render(float[] mMatrixView, float[] mMatrixProjection, InterfaceSceneRenderer Scene) {
 
 
@@ -140,13 +143,13 @@ public class Square extends glRenderableShape {
 
         Matrix.setIdentityM(mModelMatrix, 0);
 
-        Matrix.rotateM(mModelMatrix, 0, rotation[0], 1.0f, 0.0f, 0.0f);
-        Matrix.rotateM(mModelMatrix, 0, rotation[1], 0.0f, 1.0f, 0.0f);
-        Matrix.rotateM(mModelMatrix, 0, rotation[2], 0.0f, 0.0f, 1.0f);
+        Matrix.rotateM(mModelMatrix, 0, getRotation()[0], 1.0f, 0.0f, 0.0f);
+        Matrix.rotateM(mModelMatrix, 0, getRotation()[1], 0.0f, 1.0f, 0.0f);
+        Matrix.rotateM(mModelMatrix, 0, getRotation()[2], 0.0f, 0.0f, 1.0f);
 
-        mModelMatrix[12] = position[0];
-        mModelMatrix[13] = position[1];
-        mModelMatrix[14] = position[2];
+        mModelMatrix[12] = getPosition()[0];
+        mModelMatrix[13] = getPosition()[1];
+        mModelMatrix[14] = getPosition()[2];
 
 
         // Pass in the transformation matrix.
@@ -194,6 +197,7 @@ public class Square extends glRenderableShape {
         mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
 
         // Set color for drawing the triangle
+        float [] color = getColor();
         GLES20.glUniform4fv(mColorHandle, 1, color, 0);
 
         // get handle to shape's transformation matrix

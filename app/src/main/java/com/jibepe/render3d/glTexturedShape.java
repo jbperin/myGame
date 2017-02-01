@@ -14,56 +14,76 @@ import java.nio.*;
 public class glTexturedShape extends glRenderableShape{
 
 
-    private float [] position = {0.0f, 0.0f, 0.0f}; // X,Y,Z
-    private float [] rotation = {0.0f, 0.0f, 0.0f}; // rX,rY,rZ
 
-    private float[] VERTS = {
-            -1.000000f, -1.000000f, 0.000000f
-            ,1.000000f, -1.000000f, 0.000000f
-            ,-1.000000f, 1.000000f, -0.000000f
-            ,1.000000f, 1.000000f, -0.000000f
-    };
+//    private float [] position = {0.0f, 0.0f, 0.0f}; // X,Y,Z
+//    private float [] rotation = {0.0f, 0.0f, 0.0f}; // rX,rY,rZ
 
-    private float[] TEX_COORDS = {
-         0.9999f,   0.9999f
-        ,0.00f,     0.999900f
-        ,0.999900f, 0.0f
-        ,0.0f,      0.0f
-    };
 
-    private float[] NORMS = {
-            0.000000f, 0.000000f, 1.000000f
-            ,0.000000f, 0.000000f, 1.000000f
-            ,0.000000f, 0.000000f, 1.000000f
-            ,0.000000f, 0.000000f, 1.000000f
-    };
 
-    private short[] INDICES = { 2, 0, 1, 2, 1, 3};
 
     public glTexturedShape() {
 
     }
 
 
-    public float[] getPosition() {
-        return position;
+    @Override
+    short[] getIBOIndices (){
+        short[] INDICES = { 2, 0, 1, 2, 1, 3};
+        return (INDICES);
     }
 
-    public void setPosition(float[] position) {
-        this.position = position;
+    @Override
+    float[] getIBObuffer(String type) {
+        if (type.equals(VERTICES)){
+            return getVertices ();
+        } else if (type.equals(TEX_COORDS)){
+            return getTexturesCoordinates ();
+        } else if (type.equals(NORMALS)){
+            return getNormals ();
+        } else {
+            return null;
+        }
     }
 
-    public float[] getRotation() {
-        return rotation;
+    private float[] getNormals() {
+        float[] NORMS = {
+                0.000000f, 0.000000f, 1.000000f
+                ,0.000000f, 0.000000f, 1.000000f
+                ,0.000000f, 0.000000f, 1.000000f
+                ,0.000000f, 0.000000f, 1.000000f
+        };
+        return NORMS;
+
     }
 
-    public void setRotation(float[] rotation) {
-        this.rotation = rotation;
+    private float[] getTexturesCoordinates() {
+        float[] TEX_COORDS = {
+                0.9999f,   0.9999f
+                ,0.00f,     0.999900f
+                ,0.999900f, 0.0f
+                ,0.0f,      0.0f
+        };
+
+        return TEX_COORDS;
+    }
+
+    private float[] getVertices() {
+         float[] VERTS = {
+                -1.000000f, -1.000000f, 0.000000f
+                ,1.000000f, -1.000000f, 0.000000f
+                ,-1.000000f, 1.000000f, -0.000000f
+                ,1.000000f, 1.000000f, -0.000000f
+        };
+        return VERTS;
+    }
+
+    @Override
+    float[] getVBObuffer() {
+        return null;
     }
 
 
-
-    public static final String CUBE_MESH_VERTEX_SHADER = " \n" + "\n"
+     public static final String CUBE_MESH_VERTEX_SHADER = " \n" + "\n"
             + "attribute vec4 vertexPosition; \n"
             + "attribute vec2 vertexTexCoord; \n" + "\n"
             + "varying vec2 texCoord; \n" + "\n"
@@ -95,13 +115,13 @@ public class glTexturedShape extends glRenderableShape{
 
         Matrix.setIdentityM(mModelMatrix, 0);
 
-        Matrix.rotateM(mModelMatrix, 0, rotation[0], 1.0f, 0.0f, 0.0f);
-        Matrix.rotateM(mModelMatrix, 0, rotation[1], 0.0f, 1.0f, 0.0f);
-        Matrix.rotateM(mModelMatrix, 0, rotation[2], 0.0f, 0.0f, 1.0f);
+        Matrix.rotateM(mModelMatrix, 0, getRotation()[0], 1.0f, 0.0f, 0.0f);
+        Matrix.rotateM(mModelMatrix, 0, getRotation()[1], 0.0f, 1.0f, 0.0f);
+        Matrix.rotateM(mModelMatrix, 0, getRotation()[2], 0.0f, 0.0f, 1.0f);
 
-        mModelMatrix[12] = position[0];
-        mModelMatrix[13] = position[1];
-        mModelMatrix[14] = position[2];
+        mModelMatrix[12] = getPosition()[0];
+        mModelMatrix[13] = getPosition()[1];
+        mModelMatrix[14] = getPosition()[2];
 
 
         // This multiplies the view matrix by the model matrix, and stores the result in the MVP matrix
@@ -126,21 +146,21 @@ public class glTexturedShape extends glRenderableShape{
 
         int vertexHandle = GLES20.glGetAttribLocation(shaderProgramID, "vertexPosition");
 
-        FloatBuffer VertexData = ByteBuffer.allocateDirect(VERTS.length * FLOAT_FIELD_SIZE)
+        FloatBuffer VertexData = ByteBuffer.allocateDirect(getIBObuffer(VERTICES).length * FLOAT_FIELD_SIZE)
                 .order(ByteOrder.nativeOrder()).asFloatBuffer();
-        VertexData.put(VERTS).position(0);
+        VertexData.put(getIBObuffer(VERTICES)).position(0);
 
         GLES20.glVertexAttribPointer(vertexHandle, 3, GLES20.GL_FLOAT, false, 0, VertexData);
 
-        ShortBuffer FaceData = ByteBuffer.allocateDirect(INDICES.length * SHORT_FIELD_SIZE)
+        ShortBuffer FaceData = ByteBuffer.allocateDirect(getIBOIndices().length * SHORT_FIELD_SIZE)
                 .order(ByteOrder.nativeOrder()).asShortBuffer();
-        FaceData.put(INDICES).position(0);
+        FaceData.put(getIBOIndices()).position(0);
 
         int textureCoordHandle = GLES20.glGetAttribLocation(shaderProgramID, "vertexTexCoord");
 
-        FloatBuffer TexCoordData = ByteBuffer.allocateDirect(TEX_COORDS.length * FLOAT_FIELD_SIZE)
+        FloatBuffer TexCoordData = ByteBuffer.allocateDirect(getTexturesCoordinates().length * FLOAT_FIELD_SIZE)
                 .order(ByteOrder.nativeOrder()).asFloatBuffer();
-        TexCoordData.put(TEX_COORDS).position(0);
+        TexCoordData.put(getTexturesCoordinates()).position(0);
 
 
         GLES20.glVertexAttribPointer(textureCoordHandle, 2, GLES20.GL_FLOAT, false, 0, TexCoordData);
@@ -173,7 +193,7 @@ public class glTexturedShape extends glRenderableShape{
 
 
         // Then, we issue the render call
-        GLES20.glDrawElements(GLES20.GL_TRIANGLES, INDICES.length, GLES20.GL_UNSIGNED_SHORT,
+        GLES20.glDrawElements(GLES20.GL_TRIANGLES, getIBOIndices().length, GLES20.GL_UNSIGNED_SHORT,
                 FaceData);
 
         // Finally, we disable the vertex arrays

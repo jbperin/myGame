@@ -3,6 +3,7 @@ package com.jibepe.objparser;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.FloatBuffer;
+import java.nio.ShortBuffer;
 import java.text.MessageFormat;
 import java.util.Dictionary;
 import java.util.Enumeration;
@@ -35,17 +36,23 @@ public class ObjLoader {
 	public Dictionary<String, MaterialShape> dictionary;
 	private final Context mContext;
 	private final String TAG="ObjLoader";
-	
+
+
+	OBJModel model = null;
+	MTLLibrary library = null;
+
+
 	public ObjLoader(Context context){
 		mContext = context;
 	}
 	/**
-	 * @param args
+	 * @param
 	 */
 	public void  loadModel (String sceneFilename) {// {int objRessourceId, int mtlRessourceId) {
 		// Open a stream to your OBJ resource
 		InputStream inObj;
 		InputStream inMtl;
+
 		AssetManager assetManager = mContext.getAssets();
 		dictionary = new Hashtable<String, MaterialShape>();
 		
@@ -56,8 +63,6 @@ public class ObjLoader {
 			// Create an OBJParser and parse the resource
 			final IOBJParser objParser = new OBJParser();
 			final IMTLParser mtlParser = new MTLParser();
-			OBJModel model;
-			MTLLibrary library;
 			try {
 
 				library = mtlParser.parse(inMtl);
@@ -82,6 +87,73 @@ public class ObjLoader {
 
 
 	}
+
+	public short[] getFaceIndexBuffer() {
+		int nbFaces = 0;
+
+		// Compute number of faces
+		for (OBJObject object : model.getObjects()) {
+			for (OBJMesh mesh : object.getMeshes()) {
+				nbFaces += mesh.getFaces().size();
+			}
+		}
+		// Allocate buffer
+		ShortBuffer bufferObj = ShortBuffer.allocate(nbFaces*3);
+
+		// Fill buffers with indices of each vertice used it meshes faces
+		for (OBJObject object : model.getObjects()) {
+
+			for (OBJMesh mesh : object.getMeshes()) {
+				for (OBJFace face : mesh.getFaces()) {
+					for (OBJDataReference reference : face.getReferences()) {
+						if (reference.hasVertexIndex()) {
+							bufferObj.put((short)reference.vertexIndex);
+						} else {
+							final OBJVertex vertex = model.getVertex(reference);
+							bufferObj.put((short)model.getVertices().indexOf(vertex));
+						}
+					}
+				}
+			}
+		}
+
+
+		return bufferObj.array();
+	}
+
+	public float [] getVerticesBuffer (){
+
+		FloatBuffer bufferObj = FloatBuffer.allocate(model.getVertices().size()*3);
+		for (OBJVertex vert: model.getVertices()){
+			bufferObj.put(vert.x);
+			bufferObj.put(vert.y);
+			bufferObj.put(vert.z);
+		}
+		return bufferObj.array();
+
+	}
+	public float [] getNormalsBuffer (){
+
+		FloatBuffer bufferObj = FloatBuffer.allocate(model.getNormals().size() * 3);
+		for (OBJNormal norm: model.getNormals()){
+			bufferObj.put(norm.x);
+			bufferObj.put(norm.y);
+			bufferObj.put(norm.z);
+		}
+		return bufferObj.array();
+
+	}
+
+	public float [] getTextureCoordinatesBuffer (){
+		FloatBuffer bufferObj = FloatBuffer.allocate(model.getTexCoords().size() * 2);
+		for (OBJTexCoord texCoord: model.getTexCoords()){
+			bufferObj.put(texCoord.u);
+			bufferObj.put(texCoord.v);
+		}
+		return bufferObj.array();
+
+	}
+
 
 	private void buildBuffersByMaterials(OBJModel model,
 			MTLLibrary library) {
@@ -126,7 +198,7 @@ public class ObjLoader {
 		int nb_fl = 0;
 		boolean hasUVcoords = false;
 
-		// determine if material has UVcoords
+		// determine if material has UVcoords can be replaced by model.getTexCoords().size()
 		for (OBJObject object : model.getObjects()) {
 
 			for (OBJMesh mesh : object.getMeshes()) {
@@ -207,7 +279,9 @@ public class ObjLoader {
 		}
 		return (bufferObj.array());
 	}
-
+	public boolean hasUVCoords() {
+		return (model.getTexCoords().size() != 0);
+	}
 	public void listTexture(List<String> ltex) {
 		 
         Enumeration<String> key = this.dictionary.keys();

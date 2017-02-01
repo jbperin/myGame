@@ -11,7 +11,9 @@ import com.jibepe.objparser.ObjLoader;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 
 /**
  * Created by Famille PERIN on 24/01/2017.
@@ -19,24 +21,6 @@ import java.util.Enumeration;
 public class glAlphaTexturedShape extends glRenderableShape{
 
 
-    public float[] getPosition() {
-        return position;
-    }
-
-    public void setPosition(float[] position) {
-        this.position = position;
-    }
-
-    public float[] getRotation() {
-        return rotation;
-    }
-
-    public void setRotation(float[] rotation) {
-        this.rotation = rotation;
-    }
-
-    private float [] position = {0.0f, 0.0f, 0.0f}; // X,Y,Z
-    private float [] rotation = {0.0f, 0.0f, 0.0f}; // rX,rY,rZ
     private float size = 1.0f;
     //private float [] buffer;
 
@@ -50,6 +34,63 @@ public class glAlphaTexturedShape extends glRenderableShape{
     }
 
 
+    @Override
+    short[] getIBOIndices() {
+        return mShape.getFaceIndexBuffer();
+    }
+
+    @Override
+    float[] getIBObuffer(String type) {
+
+        if (type.equals(VERTICES)){
+            return mShape.getVerticesBuffer();
+        } else if (type.equals(TEX_COORDS)){
+            return mShape.getTextureCoordinatesBuffer();
+        } else if (type.equals(NORMALS)){
+            return mShape.getNormalsBuffer();
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    float[] getVBObuffer() {
+
+        FloatBuffer bufferObj = null;
+        float [] buffer = null;
+        Enumeration<String> key = mShape.dictionary.keys();
+        List<String> list = Collections.list(key);
+
+
+        int nb_float_in_buff = 0;
+        for (String matName : list) {
+            MaterialShape matShape = (MaterialShape) mShape.dictionary.get(matName);
+            if (matShape.texturename != null) {
+
+            } else {
+                nb_float_in_buff += matShape.buffer.length;
+            }
+        }
+
+        if (nb_float_in_buff > 0) {
+            bufferObj = FloatBuffer.allocate(nb_float_in_buff);
+            for (String matName : list) {
+                MaterialShape matShape = (MaterialShape) mShape.dictionary.get(matName);
+                if (matShape.texturename != null) {
+
+                } else {
+                    bufferObj.put(matShape.buffer);
+                }
+            }
+
+        }
+
+        if (bufferObj != null ) {
+            return (bufferObj.array());
+        }else {
+            return (null);
+        }
+    }
 
     @Override
     void render(float[] mMatrixView, float[] mMatrixProjection,  InterfaceSceneRenderer Scene) {
@@ -149,13 +190,13 @@ public class glAlphaTexturedShape extends glRenderableShape{
 
                 Matrix.setIdentityM(mModelMatrix, 0);
 
-                Matrix.rotateM(mModelMatrix, 0, rotation[0], 1.0f, 0.0f, 0.0f);
-                Matrix.rotateM(mModelMatrix, 0, rotation[1], 0.0f, 1.0f, 0.0f);
-                Matrix.rotateM(mModelMatrix, 0, rotation[2], 0.0f, 0.0f, 1.0f);
+                Matrix.rotateM(mModelMatrix, 0, getRotation()[0], 1.0f, 0.0f, 0.0f);
+                Matrix.rotateM(mModelMatrix, 0, getRotation()[1], 0.0f, 1.0f, 0.0f);
+                Matrix.rotateM(mModelMatrix, 0, getRotation()[2], 0.0f, 0.0f, 1.0f);
 
-                mModelMatrix[12] = position[0];
-                mModelMatrix[13] = position[1];
-                mModelMatrix[14] = position[2];
+                mModelMatrix[12] = getPosition()[0];
+                mModelMatrix[13] = getPosition()[1];
+                mModelMatrix[14] = getPosition()[2];
 
 
                 // This multiplies the view matrix by the model matrix, and stores the result in the MVP matrix

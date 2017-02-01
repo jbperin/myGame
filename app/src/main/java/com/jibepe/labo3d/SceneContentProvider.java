@@ -94,13 +94,15 @@ public class SceneContentProvider implements InterfaceSceneRenderer{
         shapes2Render.add(shapePerso);
 
 
-//        Square aSquare = new Square();
-//
-//        shapes2Render.add(aSquare);
-//
-//        Triangle aTriangle = new Triangle();
-//
-//        shapes2Render.add(aTriangle);
+        Square aSquare = new Square();
+        aSquare.setPosition(new float[] {-1.0f, 1.0f, -3.0f});
+        aSquare.setColor(new float[] { 0.76953125f, 0.63671875f, 0.22265625f, 0.0f });
+        shapes2Render.add(aSquare);
+
+        Triangle aTriangle = new Triangle();
+        aTriangle.setPosition(new float[] {1.0f, 1.0f, -3.0f});
+        aTriangle.setColor(new float[] { 0.63671875f, 0.76953125f, 0.22265625f, 0.0f });
+        shapes2Render.add(aTriangle);
 
 
         glTexturedShape anIBOShape = new glTexturedShape();

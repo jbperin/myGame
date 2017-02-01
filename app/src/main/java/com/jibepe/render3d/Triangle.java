@@ -65,7 +65,6 @@ public class Triangle extends glRenderableShape {
     private final int vertexCount = triangleCoords.length / COORDS_PER_VERTEX;
     private final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
 
-    float color[] = { 0.63671875f, 0.76953125f, 0.22265625f, 0.0f };
 
     public float[] getPosition() {
         return position;
@@ -118,6 +117,31 @@ public class Triangle extends glRenderableShape {
         GLES20.glLinkProgram(mProgram);                  // create OpenGL program executables
 
     }
+
+    @Override
+    short[] getIBOIndices() {
+        short [] indices = {0, 1 , 2};
+        return indices;
+    }
+
+    @Override
+    float[] getIBObuffer(String type) {
+        if (type.equals(VERTICES)){
+            return vertexBuffer.array();
+        } else if (type.equals(TEX_COORDS)){
+            return null;
+        } else if (type.equals(NORMALS)){
+            return null;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    float[] getVBObuffer() {
+        return null;
+    }
+
 
     @Override
     void render(float[] mMatrixView, float[] mMatrixProjection, InterfaceSceneRenderer Scene) {
@@ -186,6 +210,7 @@ public class Triangle extends glRenderableShape {
         mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
 
         // Set color for drawing the triangle
+        float [] color = getColor();
         GLES20.glUniform4fv(mColorHandle, 1, color, 0);
 
         // get handle to shape's transformation matrix

@@ -10,12 +10,28 @@ import com.jibepe.labo3d.ShaderHandler;
  */
 public class glPoint extends glRenderableShape {
 
-    private float [] position = {0.0f, 0.0f, 0.0f}; // X,Y,Z
-    private float [] color = {1.0f, 1.0f, 1.0f, 1.0f};//r, g, b, a
+//    private float [] position = {0.0f, 0.0f, 0.0f}; // X,Y,Z
+//    private float [] color = {1.0f, 1.0f, 1.0f, 1.0f};//r, g, b, a
     private float size = 1.0f;
 
     public glPoint() {
         super ();
+    }
+
+    @Override
+    float[] getIBObuffer(String type) {
+        return null;
+    }
+
+    @Override
+    short[] getIBOIndices() {
+        return null;
+    }
+
+    @Override
+    float[] getVBObuffer() {
+        float [] buffPosition = {getPosition()[0], getPosition()[1], getPosition()[2]};
+        return buffPosition;
     }
 
     @Override
@@ -40,7 +56,7 @@ public class glPoint extends glRenderableShape {
         Matrix.setIdentityM(mModelMatrix, 0);
         //Matrix.translateM(mLightModelMatrix, 0, 0.0f, 0.0f, -2.0f);
         //Matrix.rotateM(mLightModelMatrix, 0, angleInDegrees, 0.0f, 1.0f, 0.0f);
-        Matrix.translateM(mModelMatrix, 0, position[0], position[1], position[2]);
+        Matrix.translateM(mModelMatrix, 0, getPosition()[0], getPosition()[1], getPosition()[2]);
 
 
         /** Allocate storage for the final combined matrix. This will be passed into the shader program. */
@@ -49,9 +65,11 @@ public class glPoint extends glRenderableShape {
         GLES20.glUseProgram(program);
 
         // Pass in the position.
-        GLES20.glVertexAttrib3f(mPositionHandle, position [0], position [1], position [2]);
+        float [] position = getVBObuffer();
+        GLES20.glVertexAttrib3f(mPositionHandle, position[0], position[1], position[2]);
 
         // Color
+        float [] color = getColor();
         GLES20.glUniform4f(mColorHandle, color[0], color[1], color[2], color[3]);
 
         // Size

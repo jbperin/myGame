@@ -30,20 +30,31 @@ public class glLine extends glRenderableShape {
         this.posEnd = posEnd;
     }
 
-    public float[] getColor() {
-        return color;
-    }
 
-    public void setColor(float[] color) {
-        this.color = color;
-    }
+//    public void setColor(float[] color) {    this.color = color; }
 
     float [] posStart = {0.0f, 0.0f, 0.0f};
     float [] posEnd = {0.0f, 0.0f, 0.0f};
-    private float [] color = {1.0f, 1.0f, 1.0f, 1.0f};//r, g, b, a
+ //   private float [] color = {1.0f, 1.0f, 1.0f, 1.0f};//r, g, b, a
 
     public glLine( ) {
         super();
+    }
+
+    @Override
+    float[] getIBObuffer(String type) {
+        return null;
+    }
+
+    @Override
+    short [] getIBOIndices() {
+        return null;
+    }
+
+    @Override
+    float[] getVBObuffer() {
+        float [] buffer = {posStart[0], posStart[1], posStart[2], posEnd[0], posEnd[1], posEnd[2]};
+        return buffer;
     }
 
     @Override
@@ -54,7 +65,7 @@ public class glLine extends glRenderableShape {
     }
 
     void render(float[] mVPMatrix, InterfaceSceneRenderer Scene) {
-        final float VertexData[] = {posStart[0], posStart[1], posStart[2], posEnd[0], posEnd[1], posEnd[2]};
+        final float VertexData[] = getVBObuffer();
         //final float[] Color = {r, g, b, a};
         final float[] mMVPMatrix = new float[16];
         final float[] ModelMatrix = new float[16];
@@ -86,6 +97,7 @@ public class glLine extends glRenderableShape {
         GLES20.glUniformMatrix4fv(mMVPMatrixHandle, 1, false, mMVPMatrix, 0);
 
         // Color.
+        float []color  = getColor();
         GLES20.glUniform4f(mColorHandle,  color[0], color[1], color[2], color[3]);
 
         GLES20.glDrawArrays(GLES20.GL_LINES, 0, 2);
