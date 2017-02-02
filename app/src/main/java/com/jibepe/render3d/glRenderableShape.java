@@ -5,6 +5,7 @@ import android.opengl.Matrix;
 import android.util.Log;
 import com.jibepe.labo3d.InterfaceSceneRenderer;
 import com.jibepe.math.Util;
+import com.jibepe.math.Vector;
 
 /**
  * Created by tbpk7658 on 24/01/2017.
@@ -22,6 +23,16 @@ public abstract class glRenderableShape {
     protected static final String VERTICES = "VERTICES";
     protected static final String TEX_COORDS = "TEX_COORDS";
     protected static final String NORMALS = "NORMS";
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    private  String name = "";
 
     public float[] getPosition() {
         return position;
@@ -131,13 +142,16 @@ public abstract class glRenderableShape {
         return resultVec ;
 
     }
-    public boolean intersectRay (float [] rayPoint , float [] rayDirection){
-        boolean foundIntersection = false;
+    public float[] intersectRay (float [] rayPoint , float [] rayDirection){
+        float[] foundIntersection = null;
+        float [] closestIntersection = null;
+        float bestDistance = 0.0f;
+
         if (isRaySensible()) {
             float[] vboBuffer = getVBObuffer();
             if (vboBuffer != null) {
 
-                Log.d(TAG, "scanning  VBO defined Shape");
+                Log.d(TAG, "scanning  VBO defined Shape "+getName() );
 
                 int incrementInVboBuffer;
                 // vboBuffer is build
@@ -166,42 +180,37 @@ public abstract class glRenderableShape {
 
                     index += incrementInVboBuffer;
 
-                    Log.d(TAG, "v1 = (" + vert1[0] + ", " + vert1[1] + ", " + vert1[2] + ")");
-                    Log.d(TAG, "v2 = (" + vert2[0] + ", " + vert2[1] + ", " + vert2[2] + ")");
-                    Log.d(TAG, "v3 = (" + vert3[0] + ", " + vert3[1] + ", " + vert3[2] + ")");
+//                    Log.d(TAG, "v1 = (" + vert1[0] + ", " + vert1[1] + ", " + vert1[2] + ")");
+//                    Log.d(TAG, "v2 = (" + vert2[0] + ", " + vert2[1] + ", " + vert2[2] + ")");
+//                    Log.d(TAG, "v3 = (" + vert3[0] + ", " + vert3[1] + ", " + vert3[2] + ")");
 
-                    // CONVERTS VERTEX COORDINATES TO WORLD SPACE
+
                     //setRotateEulerM(float[] rm, int rmOffset, float x, float y, float z);
-                    float [] wcVert1 =  convertWorldSpace(vert1);
-                    float [] wcVert2 =  convertWorldSpace(vert2);
-                    float [] wcVert3 =  convertWorldSpace(vert3);
-                    Log.d(TAG, "wcv1 = (" + wcVert1[0] + ", " + wcVert1[1] + ", " + wcVert1[2] + ")");
-                    Log.d(TAG, "wcv2 = (" + wcVert2[0] + ", " + wcVert2[1] + ", " + wcVert2[2] + ")");
-                    Log.d(TAG, "wcv3 = (" + wcVert3[0] + ", " + wcVert3[1] + ", " + wcVert3[2] + ")");
+                    foundIntersection = isFoundIntersection(rayPoint, rayDirection, vert1, vert2, vert3);
 
-                    //                Log.d(TAG, "v1 = ("+vert1[0] + ", "+vert1[1] + ", "+vert1[2] + ")");
-                    //                Log.d(TAG, "v2 = ("+vert2[0] + ", "+vert2[1] + ", "+vert2[2] + ")");
-                    //                Log.d(TAG, "v3 = ("+vert3[0] + ", "+vert3[1] + ", "+vert3[2] + ")");
 
-                    // CHECK IF FACE is CROSSED BY RAY
+                    if (foundIntersection != null) {
+                        // compute distance to intersection
+                        float distance  = ( new Vector( new float [] {
+                                foundIntersection [0] - rayPoint[0]
+                                ,foundIntersection [1] - rayPoint[1]
+                                ,foundIntersection [2] - rayPoint[2] })).magnitude();
 
-                    float [] targeted = Util.intersect3D_RayTriangle(
-                            rayPoint // posCam
-                            , rayDirection //, direction
-                            , new float [] { wcVert1[0], wcVert1[1], wcVert1[2]}  //triVertex0
-                            , new float [] { wcVert2[0], wcVert2[1], wcVert2[2]}  //triVertex1
-                            , new float [] { wcVert3[0], wcVert3[1], wcVert3[2]}  // triVertex2);
-                    );
-                    if (targeted != null){
-                        Log.d(TAG, "Found intersection point in ( " + targeted[0] + ", "+ targeted[1] + ", "+ targeted[2] + ")");
-                        foundIntersection = true;
+                        if (closestIntersection == null) {
+                            closestIntersection = foundIntersection;
+                            bestDistance = distance;
+                        } else {
+                            if (distance < bestDistance) {
+                                closestIntersection = foundIntersection;
+                                bestDistance = distance;
+                            }
+                        }
                     }
-
                 }
 
             } else {
 
-                Log.d(TAG, "scanning  IBO defined Shape");
+                Log.d(TAG, "scanning  IBO defined Shape "+getName() );
 
                 float[] vertsBuffer = getIBObuffer(VERTICES);
                 short[] indiceBuffer = getIBOIndices();
@@ -223,32 +232,66 @@ public abstract class glRenderableShape {
 
                         index += incrementInIndiceBuffer;
 
-                        Log.d(TAG, "v1 = (" + vert1[0] + ", " + vert1[1] + ", " + vert1[2] + ")");
-                        Log.d(TAG, "v2 = (" + vert2[0] + ", " + vert2[1] + ", " + vert2[2] + ")");
-                        Log.d(TAG, "v3 = (" + vert3[0] + ", " + vert3[1] + ", " + vert3[2] + ")");
+//                        Log.d(TAG, "v1 = (" + vert1[0] + ", " + vert1[1] + ", " + vert1[2] + ")");
+//                        Log.d(TAG, "v2 = (" + vert2[0] + ", " + vert2[1] + ", " + vert2[2] + ")");
+//                        Log.d(TAG, "v3 = (" + vert3[0] + ", " + vert3[1] + ", " + vert3[2] + ")");
                         // CONVERTS VERTEX COORDINATES TO WORLD SPACE
                         //setRotateEulerM(float[] rm, int rmOffset, float x, float y, float z);
-                        float [] wcVert1 =  convertWorldSpace(vert1);
-                        float [] wcVert2 =  convertWorldSpace(vert2);
-                        float [] wcVert3 =  convertWorldSpace(vert3);
-                        float [] targeted = Util.intersect3D_RayTriangle(
-                                rayPoint // posCam
-                                , rayDirection //, direction
-                                , new float [] { wcVert1[0], wcVert1[1], wcVert1[2]}  //triVertex0
-                                , new float [] { wcVert2[0], wcVert2[1], wcVert2[2]}  //triVertex1
-                                , new float [] { wcVert3[0], wcVert3[1], wcVert3[2]}  // triVertex2);
-                        );
-                        if (targeted != null){
-                            Log.d(TAG, "Found intersection point in ( " + targeted[0] + ", "+ targeted[1] + ", "+ targeted[2] + ")");
-                            foundIntersection = true;
-                        }
+                        foundIntersection = isFoundIntersection(rayPoint, rayDirection, vert1, vert2, vert3);
+                        if (foundIntersection != null) {
+                            // compute distance to intersection
+                            float distance  = ( new Vector( new float [] {
+                                    foundIntersection [0] - rayPoint[0]
+                                    ,foundIntersection [1] - rayPoint[1]
+                                    ,foundIntersection [2] - rayPoint[2] })).magnitude();
 
+                            if (closestIntersection == null) {
+                                closestIntersection = foundIntersection;
+                                bestDistance = distance;
+                            } else {
+                                if (distance < bestDistance) {
+                                    closestIntersection = foundIntersection;
+                                    bestDistance = distance;
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
-        return foundIntersection;
+        return closestIntersection;
     }
+
+    private float [] isFoundIntersection( float[] rayPoint, float[] rayDirection,float[] vert1, float[] vert2, float[] vert3) {
+
+        // CONVERTS VERTEX COORDINATES TO WORLD SPACE
+        float [] wcVert1 =  convertWorldSpace(vert1);
+        float [] wcVert2 =  convertWorldSpace(vert2);
+        float [] wcVert3 =  convertWorldSpace(vert3);
+//        Log.d(TAG, "wcv1 = (" + wcVert1[0] + ", " + wcVert1[1] + ", " + wcVert1[2] + ")");
+//        Log.d(TAG, "wcv2 = (" + wcVert2[0] + ", " + wcVert2[1] + ", " + wcVert2[2] + ")");
+//        Log.d(TAG, "wcv3 = (" + wcVert3[0] + ", " + wcVert3[1] + ", " + wcVert3[2] + ")");
+
+        //                Log.d(TAG, "v1 = ("+vert1[0] + ", "+vert1[1] + ", "+vert1[2] + ")");
+        //                Log.d(TAG, "v2 = ("+vert2[0] + ", "+vert2[1] + ", "+vert2[2] + ")");
+        //                Log.d(TAG, "v3 = ("+vert3[0] + ", "+vert3[1] + ", "+vert3[2] + ")");
+
+        // CHECK IF FACE is CROSSED BY RAY
+
+        float [] targeted = Util.intersect3D_RayTriangle(
+                rayPoint // posCam
+                , rayDirection //, direction
+                , new float [] { wcVert1[0], wcVert1[1], wcVert1[2]}  //triVertex0
+                , new float [] { wcVert2[0], wcVert2[1], wcVert2[2]}  //triVertex1
+                , new float [] { wcVert3[0], wcVert3[1], wcVert3[2]}  // triVertex2);
+        );
+        if (targeted != null){
+            Log.d(TAG, "Found intersection point in ( " + targeted[0] + ", "+ targeted[1] + ", "+ targeted[2] + ")");
+            return targeted;
+        }
+        return null;
+    }
+
     abstract short[] getIBOIndices ();
     abstract float[] getIBObuffer (String Type);
     abstract float[] getVBObuffer ();

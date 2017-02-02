@@ -127,7 +127,9 @@ public class GLES20Renderer implements Renderer {
 
 	public glRenderableShape getPointedShape (float mouseX, float mouseY) {
     	glRenderableShape result = null;
-
+		float [] Hit = null;
+		float [] closestHit = null;
+		float bestDistance = 0.0f;
 
 		float[] direction = getWorldSpaceFromMouseCoordinates(mouseX, mouseY);
 		float [] posCam = mScene.getCamPos();
@@ -137,8 +139,26 @@ public class GLES20Renderer implements Renderer {
 		for (glRenderableShape shap : ShapesToRender) {
 			//
 			// shap.render(mVPMatrix, mShaderHelper, mScene);
-			if (shap.intersectRay(posCam, direction)) {
-				result = shap;
+			Hit = shap.intersectRay(posCam, direction);
+			if (Hit != null) {
+				// compute distance to intersection
+				float distance  = ( new Vector( new float [] {
+						Hit [0] - posCam[0]
+						,Hit [1] - posCam[1]
+						,Hit [2] - posCam[2] })).magnitude();
+
+				if (closestHit == null) {
+					closestHit = Hit;
+					bestDistance = distance;
+					result = shap;
+				} else {
+					if(distance < bestDistance) {
+						closestHit = Hit;
+						bestDistance = distance;
+						result = shap;
+					}
+				}
+
 			}
 		}
 
