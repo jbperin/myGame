@@ -41,7 +41,6 @@ public class SceneContentProvider implements InterfaceSceneRenderer{
         List <glRenderableShape> shapes2Render = new ArrayList<glRenderableShape>();
 
         glLine line1 = new glLine();
-
         line1.setPosStart(new float [] {0.0f, 0.0f, 0.0f});
         line1.setPosEnd(new float [] {1.0f, 0.0f, 0.0f});
         line1.setColor(new float [] {1.0f, 0.0f, 0.0f, 1.0f}); //red
@@ -81,15 +80,15 @@ public class SceneContentProvider implements InterfaceSceneRenderer{
 
 		}
 
-        glColoredShape shapeScene = new glColoredShape(mSceneGraph.getObj("scene"));
-        shapeScene.setPosition (new float [] {0.0f, 0.0f, 0.0f});
-        shapeScene.setRotation (new float [] {0.0f, 0.0f, 0.0f});
-
-        shapes2Render.add(shapeScene);
+//        glColoredShape shapeScene = new glColoredShape(mSceneGraph.getObj("scene"));
+//        shapeScene.setPosition (new float [] {0.0f, 0.0f, 0.0f});
+//        shapeScene.setRotation (new float [] {0.0f, 0.0f, 0.0f});
+//
+//        shapes2Render.add(shapeScene);
 
         glAlphaTexturedShape shapePerso = new glAlphaTexturedShape(mSceneGraph.getObj("plantexture"));
         shapePerso.setPosition (new float [] {1.0f, 1.0f, 0.0f});
-        shapePerso.setRotation (new float [] {0.0f, 0.0f, 0.0f});
+        shapePerso.setRotation (new float [] {0.0f, 90.0f, 0.0f});
 
         shapes2Render.add(shapePerso);
 

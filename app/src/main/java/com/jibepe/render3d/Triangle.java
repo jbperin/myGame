@@ -127,7 +127,7 @@ public class Triangle extends glRenderableShape {
     @Override
     float[] getIBObuffer(String type) {
         if (type.equals(VERTICES)){
-            return vertexBuffer.array();
+            return triangleCoords;
         } else if (type.equals(TEX_COORDS)){
             return null;
         } else if (type.equals(NORMALS)){

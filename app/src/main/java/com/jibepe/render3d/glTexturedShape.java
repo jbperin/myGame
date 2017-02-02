@@ -22,7 +22,8 @@ public class glTexturedShape extends glRenderableShape{
 
 
     public glTexturedShape() {
-
+        super();
+        setTextured(true);
     }
 
 

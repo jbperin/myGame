@@ -16,6 +16,7 @@ public class glPoint extends glRenderableShape {
 
     public glPoint() {
         super ();
+        setRaySensible(false);
     }
 
     @Override

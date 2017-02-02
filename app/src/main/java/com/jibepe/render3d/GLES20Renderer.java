@@ -125,7 +125,25 @@ public class GLES20Renderer implements Renderer {
             ;
     }
 
+	public glRenderableShape getPointedShape (float mouseX, float mouseY) {
+    	glRenderableShape result = null;
 
+
+		float[] direction = getWorldSpaceFromMouseCoordinates(mouseX, mouseY);
+		float [] posCam = mScene.getCamPos();
+
+		List<glRenderableShape> ShapesToRender = mScene.getRenderableShapes();
+
+		for (glRenderableShape shap : ShapesToRender) {
+			//
+			// shap.render(mVPMatrix, mShaderHelper, mScene);
+			if (shap.intersectRay(posCam, direction)) {
+				result = shap;
+			}
+		}
+
+    	return result;
+	}
 
 	public float[] getWorldSpaceFromMouseCoordinates(float mouseX, float mouseY)
 	{
@@ -174,9 +192,9 @@ public class GLES20Renderer implements Renderer {
 		//float [] dirVector = Vector.normalize(Vector.minus(farCoord, nearCoord));
 //		float [] rayOrigin =  {0.0f, 0.0f, 3.0f};
 //
-		Log.d(TAG, "Far Coordinate:" + farCoord[0] + "," + farCoord[1] + "," + farCoord[2]);
-		Log.d(TAG, "Near Coordinate:" + nearCoord[0] + "," + nearCoord[1] + "," + nearCoord[2]);
-		Log.d(TAG, "width :" + mWidth + ", height :" + mHeight);
+//		Log.d(TAG, "Far Coordinate:" + farCoord[0] + "," + farCoord[1] + "," + farCoord[2]);
+//		Log.d(TAG, "Near Coordinate:" + nearCoord[0] + "," + nearCoord[1] + "," + nearCoord[2]);
+//		Log.d(TAG, "width :" + mWidth + ", height :" + mHeight);
 		Log.d(TAG, "Direction:" + direction[0] + "," + direction[1] + "," + direction[2]);
 
 //		float [] vertices = { -0.5f, 0.5f, 0.0f, // top left

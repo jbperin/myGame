@@ -2,6 +2,7 @@ package com.jibepe.render3d;
 
 import android.opengl.GLES20;
 import android.opengl.Matrix;
+import android.util.Log;
 import com.jibepe.labo3d.InterfaceSceneRenderer;
 import com.jibepe.labo3d.ShaderHandler;
 import com.jibepe.labo3d.TextureHandler;
@@ -20,7 +21,7 @@ import java.util.List;
  */
 public class glAlphaTexturedShape extends glRenderableShape{
 
-
+    private String TAG = "glAlphaTexturedShape";
     private float size = 1.0f;
     //private float [] buffer;
 
@@ -30,6 +31,7 @@ public class glAlphaTexturedShape extends glRenderableShape{
     public glAlphaTexturedShape(ObjLoader Shape) {
         super();
         mShape = Shape;
+        setTextured(true);
 
     }
 
@@ -66,9 +68,9 @@ public class glAlphaTexturedShape extends glRenderableShape{
         for (String matName : list) {
             MaterialShape matShape = (MaterialShape) mShape.dictionary.get(matName);
             if (matShape.texturename != null) {
-
-            } else {
                 nb_float_in_buff += matShape.buffer.length;
+            } else {
+
             }
         }
 
@@ -77,9 +79,9 @@ public class glAlphaTexturedShape extends glRenderableShape{
             for (String matName : list) {
                 MaterialShape matShape = (MaterialShape) mShape.dictionary.get(matName);
                 if (matShape.texturename != null) {
-
-                } else {
                     bufferObj.put(matShape.buffer);
+                } else {
+
                 }
             }
 
@@ -190,15 +192,36 @@ public class glAlphaTexturedShape extends glRenderableShape{
 
                 Matrix.setIdentityM(mModelMatrix, 0);
 
+                Matrix.translateM(mModelMatrix, 0, getPosition()[0], getPosition()[1], getPosition()[2]);
+                //Matrix.setRotateEulerM(mModelMatrix, 0, getRotation()[0], getRotation()[1], getRotation()[2]);
                 Matrix.rotateM(mModelMatrix, 0, getRotation()[0], 1.0f, 0.0f, 0.0f);
+//                Log.d (TAG, "Rotate X");
+//                Log.d(TAG, "l1 = (" + mModelMatrix[0] + ", " + mModelMatrix[1] + ", " + mModelMatrix[2] + ", " + mModelMatrix[3]+ ")");
+//                Log.d(TAG, "l2 = (" + mModelMatrix[4] + ", " + mModelMatrix[5] + ", " + mModelMatrix[6] + ", " + mModelMatrix[7]+ ")");
+//                Log.d(TAG, "l3 = (" + mModelMatrix[8] + ", " + mModelMatrix[9] + ", " + mModelMatrix[10] + ", " + mModelMatrix[11]+ ")");
+//                Log.d(TAG, "l4 = (" + mModelMatrix[12] + ", " + mModelMatrix[13] + ", " + mModelMatrix[14] + ", " + mModelMatrix[15]+ ")");
                 Matrix.rotateM(mModelMatrix, 0, getRotation()[1], 0.0f, 1.0f, 0.0f);
+//                Log.d (TAG, "Rotate Y");
+//                Log.d(TAG, "l1 = (" + mModelMatrix[0] + ", " + mModelMatrix[1] + ", " + mModelMatrix[2] + ", " + mModelMatrix[3]+ ")");
+//                Log.d(TAG, "l2 = (" + mModelMatrix[4] + ", " + mModelMatrix[5] + ", " + mModelMatrix[6] + ", " + mModelMatrix[7]+ ")");
+//                Log.d(TAG, "l3 = (" + mModelMatrix[8] + ", " + mModelMatrix[9] + ", " + mModelMatrix[10] + ", " + mModelMatrix[11]+ ")");
+//                Log.d(TAG, "l4 = (" + mModelMatrix[12] + ", " + mModelMatrix[13] + ", " + mModelMatrix[14] + ", " + mModelMatrix[15]+ ")");
                 Matrix.rotateM(mModelMatrix, 0, getRotation()[2], 0.0f, 0.0f, 1.0f);
+//                Log.d (TAG, "Rotate Z");
+//                Log.d(TAG, "l1 = (" + mModelMatrix[0] + ", " + mModelMatrix[1] + ", " + mModelMatrix[2] + ", " + mModelMatrix[3]+ ")");
+//                Log.d(TAG, "l2 = (" + mModelMatrix[4] + ", " + mModelMatrix[5] + ", " + mModelMatrix[6] + ", " + mModelMatrix[7]+ ")");
+//                Log.d(TAG, "l3 = (" + mModelMatrix[8] + ", " + mModelMatrix[9] + ", " + mModelMatrix[10] + ", " + mModelMatrix[11]+ ")");
+//                Log.d(TAG, "l4 = (" + mModelMatrix[12] + ", " + mModelMatrix[13] + ", " + mModelMatrix[14] + ", " + mModelMatrix[15]+ ")");
 
-                mModelMatrix[12] = getPosition()[0];
-                mModelMatrix[13] = getPosition()[1];
-                mModelMatrix[14] = getPosition()[2];
+                //mModelMatrix[12] = getPosition()[0];
+                //mModelMatrix[13] = getPosition()[1];
+                //mModelMatrix[14] = getPosition()[2];
 
-
+//                Log.d(TAG, "l1 = (" + mModelMatrix[0] + ", " + mModelMatrix[1] + ", " + mModelMatrix[2] + ", " + mModelMatrix[3]+ ")");
+//                Log.d(TAG, "l2 = (" + mModelMatrix[4] + ", " + mModelMatrix[5] + ", " + mModelMatrix[6] + ", " + mModelMatrix[7]+ ")");
+//                Log.d(TAG, "l3 = (" + mModelMatrix[8] + ", " + mModelMatrix[9] + ", " + mModelMatrix[10] + ", " + mModelMatrix[11]+ ")");
+//                Log.d(TAG, "l4 = (" + mModelMatrix[12] + ", " + mModelMatrix[13] + ", " + mModelMatrix[14] + ", " + mModelMatrix[15]+ ")");
+//
                 // This multiplies the view matrix by the model matrix, and stores the result in the MVP matrix
                 // (which currently contains model * view).
                 Matrix.multiplyMM(mMVPMatrix, 0, mMatrixView, 0, mModelMatrix, 0);

@@ -64,7 +64,7 @@ public class Square extends glRenderableShape {
              0.5f, -0.5f, 0.0f,   // bottom right
              0.5f,  0.5f, 0.0f }; // top right
 
-    private final short drawOrder[] = { 0, 1, 2, 0, 2, 3 }; // order to draw vertices
+    private short drawOrder[] = { 0, 1, 2, 0, 2, 3 }; // order to draw vertices
 
     private final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
 
@@ -108,13 +108,13 @@ public class Square extends glRenderableShape {
 
     @Override
     short[] getIBOIndices() {
-        return drawListBuffer.array();
+        return drawOrder;
     }
 
     @Override
     float[] getIBObuffer(String type) {
         if (type.equals(VERTICES)){
-            return vertexBuffer.array();
+            return squareCoords;
         } else if (type.equals(TEX_COORDS)){
             return null;
         } else if (type.equals(NORMALS)){

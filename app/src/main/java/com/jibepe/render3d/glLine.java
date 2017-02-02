@@ -39,6 +39,8 @@ public class glLine extends glRenderableShape {
 
     public glLine( ) {
         super();
+        setRaySensible(false);
+
     }
 
     @Override

@@ -2,16 +2,30 @@ package com.jibepe.math;
 
 import static java.lang.Math.abs;
 
-/**
- * Created by tbpk7658 on 01/02/2017.
- * http://geomalgorithms.com/a06-_intersect-2.html
- */
 public class Util {
     final private static String TAG = "Util";
     final private static float SMALL_NUM = 0.00000001f ;
 
+    public static double[] convertFloatsToDoubles(float[] input)
+    {
+        if (input == null)
+        {
+            return null; // Or throw an exception - your choice
+        }
+        double[] output = new double[input.length];
+        for (int i = 0; i < input.length; i++)
+        {
+            output[i] = input[i];
+        }
+        return output;
+    }
+
     public static float [] intersect3D_RayTriangle( float [] rayPoint, float [] rayDirection , float [] triVertex0, float [] triVertex1, float [] triVertex2) {
 
+/**
+ * Created by tbpk7658 on 01/02/2017.
+ * http://geomalgorithms.com/a06-_intersect-2.html
+ */
 //        #define dot(u,v)   ((u).x * (v).x + (u).y * (v).y + (u).z * (v).z)
 //
 //
