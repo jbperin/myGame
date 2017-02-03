@@ -151,7 +151,7 @@ public abstract class glRenderableShape {
             float[] vboBuffer = getVBObuffer();
             if (vboBuffer != null) {
 
-                Log.d(TAG, "scanning  VBO defined Shape "+getName() );
+                //Log.d(TAG, "scanning  VBO defined Shape "+getName() );
 
                 int incrementInVboBuffer;
                 // vboBuffer is build
@@ -210,7 +210,7 @@ public abstract class glRenderableShape {
 
             } else {
 
-                Log.d(TAG, "scanning  IBO defined Shape "+getName() );
+                //Log.d(TAG, "scanning  IBO defined Shape "+getName() );
 
                 float[] vertsBuffer = getIBObuffer(VERTICES);
                 short[] indiceBuffer = getIBOIndices();
@@ -224,11 +224,11 @@ public abstract class glRenderableShape {
                     int index = 0;
                     while (index < indiceBuffer.length - incrementInIndiceBuffer + 1) {
 
-                        float[] vert1 = new float[]{vertsBuffer[indiceBuffer[index]*3], vertsBuffer[indiceBuffer[index]*3 + 1 ], vertsBuffer[indiceBuffer[index]*3 + 2], 0.0f};
+                        float[] vert1 = new float[]{vertsBuffer[indiceBuffer[index]*3], vertsBuffer[indiceBuffer[index]*3 + 1 ], vertsBuffer[indiceBuffer[index]*3 + 2], 1.0f};
 
-                        float[] vert2 = new float[]{vertsBuffer[indiceBuffer[index+1]*3], vertsBuffer[indiceBuffer[index+1]*3 + 1 ], vertsBuffer[indiceBuffer[index+1]*3 + 2], 0.0f};
+                        float[] vert2 = new float[]{vertsBuffer[indiceBuffer[index+1]*3], vertsBuffer[indiceBuffer[index+1]*3 + 1 ], vertsBuffer[indiceBuffer[index+1]*3 + 2], 1.0f};
 
-                        float[] vert3 = new float[]{vertsBuffer[indiceBuffer[index+2]*3], vertsBuffer[indiceBuffer[index+2]*3 + 1 ], vertsBuffer[indiceBuffer[index+2]*3 + 2], 0.0f};
+                        float[] vert3 = new float[]{vertsBuffer[indiceBuffer[index+2]*3], vertsBuffer[indiceBuffer[index+2]*3 + 1 ], vertsBuffer[indiceBuffer[index+2]*3 + 2], 1.0f};
 
                         index += incrementInIndiceBuffer;
 
@@ -286,7 +286,7 @@ public abstract class glRenderableShape {
                 , new float [] { wcVert3[0], wcVert3[1], wcVert3[2]}  // triVertex2);
         );
         if (targeted != null){
-            Log.d(TAG, "Found intersection point in ( " + targeted[0] + ", "+ targeted[1] + ", "+ targeted[2] + ")");
+            //Log.d(TAG, "Found intersection point in ( " + targeted[0] + ", "+ targeted[1] + ", "+ targeted[2] + ")");
             return targeted;
         }
         return null;

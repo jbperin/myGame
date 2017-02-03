@@ -173,7 +173,7 @@ public class GLES20Renderer implements Renderer {
 		int [] _viewport = new int[] { 0, 0, mWidth, mHeight };
 		// mouse Y needs to be inverted
 		//mouseY = (float) _viewport[3] - mouseY;
-		Log.d(TAG, "Try to unproject :" + mouseX + "," + mouseY );
+		//Log.d(TAG, "Try to unproject :" + mouseX + "," + mouseY );
 		// calling glReadPixels() with GL_DEPTH_COMPONENT is not supported in
 		// GLES so now i will try to implement ray picking
 		int result = GLU.gluUnProject(mouseX, mouseY, 1.0f, mViewMatrix, 0, mProjectionMatrix, 0, _viewport, 0,
@@ -215,7 +215,7 @@ public class GLES20Renderer implements Renderer {
 //		Log.d(TAG, "Far Coordinate:" + farCoord[0] + "," + farCoord[1] + "," + farCoord[2]);
 //		Log.d(TAG, "Near Coordinate:" + nearCoord[0] + "," + nearCoord[1] + "," + nearCoord[2]);
 //		Log.d(TAG, "width :" + mWidth + ", height :" + mHeight);
-		Log.d(TAG, "Direction:" + direction[0] + "," + direction[1] + "," + direction[2]);
+//		Log.d(TAG, "Direction:" + direction[0] + "," + direction[1] + "," + direction[2]);
 
 //		float [] vertices = { -0.5f, 0.5f, 0.0f, // top left
 //				-0.5f, -0.5f, 0.0f, // bottom left

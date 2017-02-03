@@ -71,7 +71,7 @@ public class GLES20View extends GLSurfaceView  {
 
 		glRenderableShape targetedShape = mRenderer.getPointedShape(x, y);
 		if (targetedShape != null){
-			Log.d(TAG, "Found targeted Object  " +targetedShape.getName()+".");
+			Log.d(TAG, "Pointed Object : " +targetedShape.getName()+".");
 		}
 
 		switch (e.getAction()) {
