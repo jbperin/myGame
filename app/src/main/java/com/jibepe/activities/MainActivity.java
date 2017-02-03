@@ -4,27 +4,20 @@ package com.jibepe.activities;
 import android.content.Intent;
 
 
-import android.os.AsyncTask;
 import android.os.Environment;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 import com.jibepe.labo3d.R;
 //import com.jibepe.util.DownloadFilesTask;
-import com.jibepe.labo3d.TextureHandler;
-import com.jibepe.util.DownloadFilesTask;
+import com.jibepe.recorder.GameRecorder;
 import com.jibepe.util.DownloadHelper;
+import com.jibepe.recorder.glRecorder;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -85,7 +78,9 @@ public class MainActivity extends AppCompatActivity implements DownloadFragment.
 //        // Complete the changes added above
 //        ft.commit();
 
-
+        // glRecorder theRecorder = new glRecorder(getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
+        //theRecorder.testEncodeVideoToMp4();
+        GameRecorder.getInstance().prepareEncoder(this);
     }
 
 
