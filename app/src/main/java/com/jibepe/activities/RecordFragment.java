@@ -4,7 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
+import com.jibepe.labo3d.SceneContentProvider;
+import com.jibepe.model.SceneGraph;
+import com.jibepe.recorder.glRecorder;
 
 import java.io.File;
 import java.net.URL;
@@ -17,7 +21,7 @@ public class RecordFragment extends Fragment {
     private final String TAG = "glRenderFragment";
 
 
-    public static RecordFragment newInstance() {
+    public static RecordFragment newInstance(File folder, Context context) {
         RecordFragment myFragment = new RecordFragment();
 
         //Bundle args = new Bundle();
@@ -25,6 +29,15 @@ public class RecordFragment extends Fragment {
         //args.putString("folder", folder.toString());
         //myFragment.setArguments(args);
 
+        SceneGraph mScene = null;
+        SceneContentProvider mSceneView = null;
+        SceneGraph theSceneGraph = new SceneGraph();
+
+        mScene = theSceneGraph;
+        mSceneView = new SceneContentProvider(mScene);
+
+        glRecorder theRecorder = new glRecorder(folder, mSceneView, context);
+        theRecorder.testEncodeVideoToMp4();
 
         return myFragment;
     }

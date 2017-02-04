@@ -34,28 +34,33 @@ public class MainActivity extends AppCompatActivity implements DownloadFragment.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-//        String fileName = "scene.mtl"; //"iclauncher.png"; //
-//        String fileURL = "http://jb.perin.pagesperso-orange.fr";
-//        File folder = getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
-//        URL url = null;
-//        try {
-//            url = new URL(fileURL);
-//        } catch (MalformedURLException e) {
-//            e.printStackTrace();
-//        }
-//        if (url != null) {
-//            new pDownloadFilesTask(url, folder).execute(fileName);
-//        }
-//        while (!goon);
         setContentView(R.layout.activity_main);
 
+        File folder = getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+
+        startDownloadFragment(folder);
+        //startRecordFragment(folder);
+
+
+
+
+        //GameRecorder.getInstance().prepareEncoder(this);
+    }
+
+    private void startRecordFragment(File folder) {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        RecordFragment fragmentRecord = RecordFragment.newInstance(folder, getApplicationContext());
+        ft.replace(R.id.recorder_placeholder, fragmentRecord);
+        ft.commit();
+    }
+
+    private void startDownloadFragment(File folder) {
         boolean canW = DownloadHelper.isExternalStorageWritable();
         boolean canR = DownloadHelper.isExternalStorageReadable();
-        if(canW == canR == true) {
+         if(canW == canR == true) {
 
             //File folder = super.getActivity().getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
-            File folder = getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+
             //DownloadHelper.verifyStoragePermissions(this);
             String FullUrl = "http://jb.perin.pagesperso-orange.fr/";
             URL url = null;
@@ -72,26 +77,8 @@ public class MainActivity extends AppCompatActivity implements DownloadFragment.
                 //new DownloadFilesTask(url, folder).execute(fileName);
             }
         }
-//        // Begin the transaction
-//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-//        // Replace the contents of the container with the new fragment
-//        ft.replace(R.id.render3d_placeholder, (Fragment) new glRenderFragment());
-//        // or ft.add(R.id.your_placeholder, new FooFragment());
-//        // Complete the changes added above
-//        ft.commit();
-        SceneGraph mScene = null;
-        SceneContentProvider mSceneView = null;
-        SceneGraph theSceneGraph = new SceneGraph();
 
-        mScene = theSceneGraph;
-        mSceneView = new SceneContentProvider(mScene);
-
-        glRecorder theRecorder = new glRecorder(getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), mSceneView, getApplicationContext());
-        theRecorder.testEncodeVideoToMp4();
-        //GameRecorder.getInstance().prepareEncoder(this);
     }
-
-
 
 
     /*********************************************/
