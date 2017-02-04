@@ -29,7 +29,7 @@ public class glColoredShape extends glRenderableShape {
     }
 
     @Override
-    void render(float[] mMatrixView, float[] mMatrixProjection, InterfaceSceneRenderer Scene) {
+    public void render(float[] mMatrixView, float[] mMatrixProjection, InterfaceSceneRenderer Scene) {
 
         Enumeration<String> key = mShape.dictionary.keys();
 

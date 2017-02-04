@@ -13,6 +13,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import com.jibepe.labo3d.R;
 //import com.jibepe.util.DownloadFilesTask;
+import com.jibepe.labo3d.SceneContentProvider;
+import com.jibepe.model.SceneGraph;
 import com.jibepe.recorder.GameRecorder;
 import com.jibepe.util.DownloadHelper;
 import com.jibepe.recorder.glRecorder;
@@ -77,10 +79,16 @@ public class MainActivity extends AppCompatActivity implements DownloadFragment.
 //        // or ft.add(R.id.your_placeholder, new FooFragment());
 //        // Complete the changes added above
 //        ft.commit();
+        SceneGraph mScene = null;
+        SceneContentProvider mSceneView = null;
+        SceneGraph theSceneGraph = new SceneGraph();
 
-        // glRecorder theRecorder = new glRecorder(getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
-        //theRecorder.testEncodeVideoToMp4();
-        GameRecorder.getInstance().prepareEncoder(this);
+        mScene = theSceneGraph;
+        mSceneView = new SceneContentProvider(mScene);
+
+        glRecorder theRecorder = new glRecorder(getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), mSceneView, getApplicationContext());
+        theRecorder.testEncodeVideoToMp4();
+        //GameRecorder.getInstance().prepareEncoder(this);
     }
 
 

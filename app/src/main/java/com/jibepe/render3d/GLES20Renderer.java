@@ -44,14 +44,14 @@ public class GLES20Renderer implements Renderer {
 
 	private InterfaceSceneRenderer mScene = null;
 
-	// used by saveRenderState() / restoreRenderState()
-	private final float mSavedMatrix[] = new float[16];
-	private EGLDisplay mSavedEglDisplay;
-	private EGLSurface mSavedEglDrawSurface;
-	private EGLSurface mSavedEglReadSurface;
-	private EGLContext mSavedEglContext;
-	// Frame counter, used for reducing recorder frame rate.
-	private int mFrameCount;
+//	// used by saveRenderState() / restoreRenderState()
+//	private final float mSavedMatrix[] = new float[16];
+//	private EGLDisplay mSavedEglDisplay;
+//	private EGLSurface mSavedEglDrawSurface;
+//	private EGLSurface mSavedEglReadSurface;
+//	private EGLContext mSavedEglContext;
+//	// Frame counter, used for reducing recorder frame rate.
+//	private int mFrameCount;
 
     public GLES20Renderer() {
 		super();
@@ -76,42 +76,42 @@ public class GLES20Renderer implements Renderer {
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) {
 		glSetup();
 
-		// now repeat it for the game recorder
-		GameRecorder recorder = GameRecorder.getInstance();
-		if (recorder.isRecording()) {
-			Log.d(TAG, "configuring GL for recorder");
-			saveRenderState();
-			recorder.firstTimeSetup();
-			recorder.makeCurrent();
-			glSetup();
-			restoreRenderState();
-
-			mFrameCount = 0;
-		}
+//		// now repeat it for the game recorder
+//		GameRecorder recorder = GameRecorder.getInstance();
+//		if (recorder.isRecording()) {
+//			Log.d(TAG, "configuring GL for recorder");
+//			saveRenderState();
+//			recorder.firstTimeSetup();
+//			recorder.makeCurrent();
+//			glSetup();
+//			restoreRenderState();
+//
+//			mFrameCount = 0;
+//		}
 
 	}
-	/**
-	 * Saves the current projection matrix and EGL state.
-	 */
-	private void saveRenderState() {
-		System.arraycopy(mProjectionMatrix, 0, mSavedMatrix, 0, mProjectionMatrix.length);
-		mSavedEglDisplay = EGL14.eglGetCurrentDisplay();
-		mSavedEglDrawSurface = EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW);
-		mSavedEglReadSurface = EGL14.eglGetCurrentSurface(EGL14.EGL_READ);
-		mSavedEglContext = EGL14.eglGetCurrentContext();
-	}
-
-	/**
-	 * Saves the current projection matrix and EGL state.
-	 */
-	private void restoreRenderState() {
-		// switch back to previous state
-		if (!EGL14.eglMakeCurrent(mSavedEglDisplay, mSavedEglDrawSurface, mSavedEglReadSurface,
-				mSavedEglContext)) {
-			throw new RuntimeException("eglMakeCurrent failed");
-		}
-		System.arraycopy(mSavedMatrix, 0, mProjectionMatrix, 0, mProjectionMatrix.length);
-	}
+//	/**
+//	 * Saves the current projection matrix and EGL state.
+//	 */
+//	private void saveRenderState() {
+//		System.arraycopy(mProjectionMatrix, 0, mSavedMatrix, 0, mProjectionMatrix.length);
+//		mSavedEglDisplay = EGL14.eglGetCurrentDisplay();
+//		mSavedEglDrawSurface = EGL14.eglGetCurrentSurface(EGL14.EGL_DRAW);
+//		mSavedEglReadSurface = EGL14.eglGetCurrentSurface(EGL14.EGL_READ);
+//		mSavedEglContext = EGL14.eglGetCurrentContext();
+//	}
+//
+//	/**
+//	 * Saves the current projection matrix and EGL state.
+//	 */
+//	private void restoreRenderState() {
+//		// switch back to previous state
+//		if (!EGL14.eglMakeCurrent(mSavedEglDisplay, mSavedEglDrawSurface, mSavedEglReadSurface,
+//				mSavedEglContext)) {
+//			throw new RuntimeException("eglMakeCurrent failed");
+//		}
+//		System.arraycopy(mSavedMatrix, 0, mProjectionMatrix, 0, mProjectionMatrix.length);
+//	}
 
 	@Override
 	public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -136,23 +136,23 @@ public class GLES20Renderer implements Renderer {
 	public void onDrawFrame(GL10 gl) {
 
 		//gameState.calculateNextFrame();
-
-		GameRecorder recorder = GameRecorder.getInstance();
-		if (recorder.isRecording() && recordThisFrame()) {
-			saveRenderState();
-
-			// switch to recorder state
-			recorder.makeCurrent();
-			recorder.getProjectionMatrix(mProjectionMatrix);
-			recorder.setViewport();
-
-			// render everything again
-			drawFrame();
-			recorder.swapBuffers();
-
-			restoreRenderState();
-		}
-
+		drawFrame();
+//		GameRecorder recorder = GameRecorder.getInstance();
+//		if (recorder.isRecording() && recordThisFrame()) {
+//			saveRenderState();
+//
+//			// switch to recorder state
+//			recorder.makeCurrent();
+//			recorder.getProjectionMatrix(mProjectionMatrix);
+//			recorder.setViewport();
+//
+//			// render everything again
+//			drawFrame();
+//			recorder.swapBuffers();
+//
+//			restoreRenderState();
+//		}
+//
 		// Stop animating at 60fps (or whatever the refresh rate is) if the game is over.  Once
 		// we do this, we won't get here again unless something explicitly asks the system to
 		// render a new frame.  (As a handy side-effect, this prevents the paddle from actively
@@ -206,31 +206,31 @@ public class GLES20Renderer implements Renderer {
 			}
 		}
 	}
-	/**
-	 * Decides whether we want to record the current frame, based on the target frame rate
-	 * and an assumed 60fps refresh rate.
-	 * <p>
-	 * We could be smarter here, and not drop a frame if the system dropped one inadvertently
-	 * (i.e. we missed a vsync by being too slow).
-	 */
-	private boolean recordThisFrame() {
-		final int TARGET_FPS = 30;
-
-		mFrameCount++;
-		switch (TARGET_FPS) {
-			case 60:
-				return true;
-			case 30:
-				return (mFrameCount & 0x01) == 0;
-			case 24:
-				// want 2 out of every 5 frames
-				int mod = mFrameCount % 5;
-				return mod == 0 || mod == 2;
-			default:
-				return true;
-		}
-	}
-
+//	/**
+//	 * Decides whether we want to record the current frame, based on the target frame rate
+//	 * and an assumed 60fps refresh rate.
+//	 * <p>
+//	 * We could be smarter here, and not drop a frame if the system dropped one inadvertently
+//	 * (i.e. we missed a vsync by being too slow).
+//	 */
+//	private boolean recordThisFrame() {
+//		final int TARGET_FPS = 30;
+//
+//		mFrameCount++;
+//		switch (TARGET_FPS) {
+//			case 60:
+//				return true;
+//			case 30:
+//				return (mFrameCount & 0x01) == 0;
+//			case 24:
+//				// want 2 out of every 5 frames
+//				int mod = mFrameCount % 5;
+//				return mod == 0 || mod == 2;
+//			default:
+//				return true;
+//		}
+//	}
+//
 
 	void checkGLError()
     {
@@ -277,23 +277,23 @@ public class GLES20Renderer implements Renderer {
 
     	return result;
 	}
-    /**
-     * Handles pausing of the game Activity.  This is called by the View (via queueEvent) at
-     * pause time.  It tells GameState to save its state.
-     *
-     * @param syncObj Object to notify when we have finished saving state.
-     */
-    public void onViewPause(ConditionVariable syncObj) {
-        /*
-         * We don't explicitly pause the game action, because the main game loop is being driven
-         * by the framework's calls to our onDrawFrame() callback.  If we were driving the updates
-         * ourselves we'd need to do something more.
-         */
-
-         GameRecorder.getInstance().gamePaused();
-
-        syncObj.open();
-    }
+//    /**
+//     * Handles pausing of the game Activity.  This is called by the View (via queueEvent) at
+//     * pause time.  It tells GameState to save its state.
+//     *
+//     * @param syncObj Object to notify when we have finished saving state.
+//     */
+//    public void onViewPause(ConditionVariable syncObj) {
+//        /*
+//         * We don't explicitly pause the game action, because the main game loop is being driven
+//         * by the framework's calls to our onDrawFrame() callback.  If we were driving the updates
+//         * ourselves we'd need to do something more.
+//         */
+//
+//         GameRecorder.getInstance().gamePaused();
+//
+//        syncObj.open();
+//    }
 	public float[] getWorldSpaceFromMouseCoordinates(float mouseX, float mouseY)
 	{
 		float[] farCoord = { 0.0f, 0.0f, 0.0f, 0.0f };

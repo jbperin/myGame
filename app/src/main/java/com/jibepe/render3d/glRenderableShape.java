@@ -296,6 +296,6 @@ public abstract class glRenderableShape {
     abstract float[] getIBObuffer (String Type);
     abstract float[] getVBObuffer ();
 
-    abstract void render (float[] mMatrixView, float[] mMatrixProjection,  InterfaceSceneRenderer Scene);
+    abstract public void render (float[] mMatrixView, float[] mMatrixProjection,  InterfaceSceneRenderer Scene);
 
 }

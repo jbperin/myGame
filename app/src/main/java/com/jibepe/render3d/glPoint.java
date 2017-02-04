@@ -36,7 +36,7 @@ public class glPoint extends glRenderableShape {
     }
 
     @Override
-    void render(float[] mMatrixView, float[] mMatrixProjection, InterfaceSceneRenderer Scene) {
+    public void render(float[] mMatrixView, float[] mMatrixProjection, InterfaceSceneRenderer Scene) {
         float[] mVPMatrix = new float[16];
         Matrix.multiplyMM(mVPMatrix, 0, mMatrixProjection, 0, mMatrixView, 0);
         render (mVPMatrix, Scene);

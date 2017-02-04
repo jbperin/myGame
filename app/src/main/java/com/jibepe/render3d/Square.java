@@ -130,7 +130,7 @@ public class Square extends glRenderableShape {
     }
 
     @Override
-    void render(float[] mMatrixView, float[] mMatrixProjection, InterfaceSceneRenderer Scene) {
+    public void render(float[] mMatrixView, float[] mMatrixProjection, InterfaceSceneRenderer Scene) {
 
 
         /**

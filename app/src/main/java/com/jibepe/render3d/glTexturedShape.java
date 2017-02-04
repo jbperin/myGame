@@ -104,7 +104,7 @@ public class glTexturedShape extends glRenderableShape{
 
 
     @Override
-    void render(float[] mMatrixView, float[] mMatrixProjection, InterfaceSceneRenderer Scene) {
+    public void render(float[] mMatrixView, float[] mMatrixProjection, InterfaceSceneRenderer Scene) {
 
         /**
          * Store the model matrix. This matrix is used to move models from object space (where each model can be thought

@@ -5,16 +5,23 @@ package com.jibepe.recorder;
  */
 
 
+import android.content.Context;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
 import android.media.MediaMuxer;
 import android.opengl.GLES20;
+import android.opengl.Matrix;
 import android.util.Log;
+import com.jibepe.labo3d.InterfaceSceneRenderer;
+import com.jibepe.labo3d.ShaderHandler;
+import com.jibepe.labo3d.TextureHandler;
+import com.jibepe.render3d.glRenderableShape;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.List;
 
 public class glRecorder {
 
@@ -50,13 +57,20 @@ public class glRecorder {
     private MediaMuxer mMuxer;
     private int mTrackIndex;
     private boolean mMuxerStarted;
+    InterfaceSceneRenderer mScene;
 
     // allocate one of these up front so we don't need to do it every time
     private MediaCodec.BufferInfo mBufferInfo;
 
 
-    public glRecorder(File  folder_path) {
+    public glRecorder(File  folder_path, InterfaceSceneRenderer theScene, Context context) {
+        this.mScene = theScene;
         OUTPUT_DIR = folder_path;
+        //DownloadFiles();
+        TextureHandler.getInstance().reset();
+        TextureHandler.getInstance().setContext(context);
+        ShaderHandler.getInstance().reset();
+        ShaderHandler.getInstance().setContext(context);
 
     }
 
@@ -64,6 +78,8 @@ public class glRecorder {
      * Tests encoding of AVC video from a Surface.  The output is saved as an MP4 file.
      */
     public void testEncodeVideoToMp4() {
+
+
         // QVGA at 2Mbps
         mWidth = 320;
         mHeight = 240;
@@ -275,26 +291,98 @@ public class glRecorder {
      * We draw one of the eight rectangles and leave the rest set to the clear color.
      */
     private void generateSurfaceFrame(int frameIndex) {
-        frameIndex %= 8;
 
-        int startX, startY;
-        if (frameIndex < 4) {
-            // (0,0) is bottom-left in GL
-            startX = frameIndex * (mWidth / 4);
-            startY = mHeight / 2;
-        } else {
-            startX = (7 - frameIndex) * (mWidth / 4);
-            startY = 0;
+        // Set the clear color
+        GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+        // Use culling to remove back faces.
+        GLES20.glEnable(GLES20.GL_CULL_FACE);
+
+        // Enable depth testing
+        GLES20.glEnable(GLES20.GL_DEPTH_TEST);
+
+
+
+        // clear Screen and Depth Buffer, we have set the clear color as black.
+        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+
+        //GLES20.glDisable(GLES20.GL_DEPTH_TEST);
+
+        // Set the view matrix. This matrix can be said to represent the camera position.
+        // NOTE: In OpenGL 1, a ModelView matrix is used, which is a combination of a model and
+        // view matrix. In OpenGL 2, we can keep track of these matrices separately if we choose.
+        if (mScene != null ) {
+
+
+            /** Store the projection matrix. This is used to project the scene onto a 2D viewport. */
+            float[] mProjectionMatrix = new float[16];
+
+            GLES20.glViewport(0, 0, mWidth, mHeight);
+
+
+            // Create a new perspective projection matrix. The height will stay the same
+            // while the width will vary as per aspect ratio.
+            final float ratio = (float) mWidth / mHeight;
+
+            Matrix.frustumM(mProjectionMatrix, 0,
+                    -ratio, ratio, // left, right,
+                    -1.0f, 1.0f,// bottom, top,
+                    1.0f, 70.0f// near, far
+            );
+
+
+            /**
+             * Store the view matrix. This can be thought of as our camera. This matrix transforms world space to eye space;
+             * it positions things relative to our eye.
+             */
+            float[] mViewMatrix = new float[16];
+
+
+
+            float [] mPosCam = mScene.getCamPos();
+            float [] mRotCam = mScene.getCamRot();
+            float mAngleCam = mRotCam [1];
+
+            Matrix.setLookAtM(mViewMatrix, 0,
+                    // Position the eye in front of the origin.
+                    mPosCam [0], mPosCam [1], mPosCam [2],// eyeX, eyeY, eyeZ,
+                    // We are looking toward the distance
+                    (float)(mPosCam [0] + (Math.cos(Math.toRadians(mAngleCam)))), 1.0f, (float)(mPosCam [2] + (Math.sin(Math.toRadians(mAngleCam)))), // lookX, lookY, lookZ,
+                    // Set our up vector. This is where our head would be pointing were we holding the camera.
+                    0.0f, 1.0f, 0.0f  //upX, upY, upZ
+            );
+            //Matrix.multiplyMM(mVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+
+            List<glRenderableShape> ShapesToRender = mScene.getRenderableShapes();
+            for (glRenderableShape shap : ShapesToRender) {
+                //
+                // shap.render(mVPMatrix, mShaderHelper, mScene);
+                Log.d(TAG, " at frame " + frameIndex + "rendering shape " + shap.getName() );
+                shap.render(mViewMatrix, mProjectionMatrix, mScene);
+                //checkGLError();
+            }
         }
 
-        GLES20.glClearColor(TEST_R0 / 255.0f, TEST_G0 / 255.0f, TEST_B0 / 255.0f, 1.0f);
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
-
-        GLES20.glEnable(GLES20.GL_SCISSOR_TEST);
-        GLES20.glScissor(startX, startY, mWidth / 4, mHeight / 2);
-        GLES20.glClearColor(TEST_R1 / 255.0f, TEST_G1 / 255.0f, TEST_B1 / 255.0f, 1.0f);
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
-        GLES20.glDisable(GLES20.GL_SCISSOR_TEST);
+//        frameIndex %= 8;
+//
+//        int startX, startY;
+//        if (frameIndex < 4) {
+//            // (0,0) is bottom-left in GL
+//            startX = frameIndex * (mWidth / 4);
+//            startY = mHeight / 2;
+//        } else {
+//            startX = (7 - frameIndex) * (mWidth / 4);
+//            startY = 0;
+//        }
+//
+//        GLES20.glClearColor(TEST_R0 / 255.0f, TEST_G0 / 255.0f, TEST_B0 / 255.0f, 1.0f);
+//        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+//
+//        GLES20.glEnable(GLES20.GL_SCISSOR_TEST);
+//        GLES20.glScissor(startX, startY, mWidth / 4, mHeight / 2);
+//        GLES20.glClearColor(TEST_R1 / 255.0f, TEST_G1 / 255.0f, TEST_B1 / 255.0f, 1.0f);
+//        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
+//        GLES20.glDisable(GLES20.GL_SCISSOR_TEST);
     }
 
     /**
