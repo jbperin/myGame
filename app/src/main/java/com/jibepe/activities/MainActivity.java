@@ -100,6 +100,9 @@ public class MainActivity extends AppCompatActivity implements DownloadFragment.
         if (id == R.id.action_settings) {
             startActivity(new Intent(getApplicationContext(), ConfigActivity.class));
             return true;
+        } else if (id == R.id.action_record) {
+            startRecordFragment(getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -107,7 +110,7 @@ public class MainActivity extends AppCompatActivity implements DownloadFragment.
 
     @Override
     public void onProgressUpdate(int percent) {
-        Log.d(TAG, "in onProgressUpdate");
+        Log.d(TAG, "in onProgressUpdate = " + percent + "% ");
     }
 
     @Override

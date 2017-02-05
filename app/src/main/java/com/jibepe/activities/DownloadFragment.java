@@ -113,7 +113,7 @@ public class DownloadFragment extends Fragment {
             long totalSize = 0;
             for (int i = 0; i < count; i++) {
                 totalSize += DownloadHelper.DownloadFile(base_url, target_folder, urls[i]);
-                publishProgress(i,count);
+                publishProgress(i,count-1);
                 if (isCancelled()) break;
             }
             return totalSize;
@@ -123,6 +123,7 @@ public class DownloadFragment extends Fragment {
             int count = progress.length;
             if (count >= 2) {
                 Log.d(TAG, "onProgressUpdate " + progress[0] + " / " + progress[1] + ". ");
+                ((DownloadTaskCallbacks)getActivity()).onProgressUpdate(progress[0] * 100 /progress [1]);
             }
 //            for (int i = 0; i < count; i++) {
 //                Log.d(TAG,"onProgressUpdate");

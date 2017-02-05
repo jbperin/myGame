@@ -357,7 +357,7 @@ public class glRecorder {
             for (glRenderableShape shap : ShapesToRender) {
                 //
                 // shap.render(mVPMatrix, mShaderHelper, mScene);
-                Log.d(TAG, " at frame " + frameIndex + "rendering shape " + shap.getName() );
+                //Log.d(TAG, " at frame " + frameIndex + "rendering shape " + shap.getName() );
                 shap.render(mViewMatrix, mProjectionMatrix, mScene);
                 //checkGLError();
             }

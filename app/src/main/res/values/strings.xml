@@ -79,5 +79,6 @@
     <string name="pref_title_vibrate">Vibrate</string>
     <string name="dark_theme">Dark theme</string>
     <string name="title_activity_config">ConfigActivity</string>
+    <string name="action_record">Record</string>
 
 </resources>
