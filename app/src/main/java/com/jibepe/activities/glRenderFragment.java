@@ -18,11 +18,16 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import com.jibepe.labo3d.*;
 import com.jibepe.model.SceneGraph;
+import com.jibepe.objparser.ColladaLoader;
+import com.jibepe.objparser.MMesh;
+import com.jibepe.objparser.MaterialManager;
 import com.jibepe.objparser.ObjLoader;
 import com.jibepe.render3d.GLES20Renderer;
 import com.jibepe.util.DownloadHelper;
+import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -36,6 +41,7 @@ public class glRenderFragment extends Fragment {
     GLES20Renderer mRenderer = null;
     SceneGraph theSceneGraph = null;
     FragmentActivity listener;
+    MaterialManager mMaterialManager = null;
 //    @Override
 //    public void onCreate(Bundle savedInstanceState) {
 //        super.onCreate(savedInstanceState);
@@ -114,6 +120,18 @@ public class glRenderFragment extends Fragment {
         mPersoLoader.loadModel("plantexture");
         theSceneGraph.addObj("plantexture", mPersoLoader);
 
+        mMaterialManager = new MaterialManager(super.getActivity().getApplication().getResources());
+        ColladaLoader colladaLoader = new ColladaLoader(super.getActivity().getApplication(), mMaterialManager);
+        try {
+            colladaLoader.loadModel("ViS.dae");
+            int cnt = colladaLoader.geoEntries.size();
+            //for (int ii=0;ii<cnt;ii++) { addMesh((MMesh) colladaLoader.geoEntries.get(ii)); }
+
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
         //try {

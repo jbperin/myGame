@@ -90,7 +90,10 @@ public class ObjLoader {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			} finally {
+			    if (inObj != null ) inObj.close();
+                if (inMtl != null ) inMtl.close();
+            }
 
 		
 		} catch (IOException e1) {
