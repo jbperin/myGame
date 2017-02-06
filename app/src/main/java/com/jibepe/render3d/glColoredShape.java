@@ -111,7 +111,7 @@ public class glColoredShape extends glRenderableShape {
                 mModelMatrix[12] = getPosition()[0];
                 mModelMatrix[13] = getPosition()[1];
                 mModelMatrix[14] = getPosition()[2];
-
+                Matrix.scaleM(mModelMatrix, 0, getScale()[0], getScale()[1], getScale()[2] );
 
                 // Pass in the transformation matrix.
                 //Matrix.multiplyMM(mMVPMatrix, 0, mMatrixVP, 0, mModelMatrix, 0);

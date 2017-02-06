@@ -101,6 +101,7 @@ public class SceneContentProvider implements InterfaceSceneRenderer{
         aSquare.setName("aSquare.001");
         aSquare.setPosition(new float[] {-1.0f, 1.0f, -3.0f});
         aSquare.setColor(new float[] { 0.76953125f, 0.63671875f, 0.22265625f, 0.0f });
+        aSquare.setScale(new float[] {1.0f, 3.0f, 1.0f});
         shapes2Render.add(aSquare);
 
         Triangle aTriangle = new Triangle();

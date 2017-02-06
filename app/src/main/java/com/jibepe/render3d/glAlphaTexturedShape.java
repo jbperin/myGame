@@ -212,7 +212,7 @@ public class glAlphaTexturedShape extends glRenderableShape{
 //                Log.d(TAG, "l2 = (" + mModelMatrix[4] + ", " + mModelMatrix[5] + ", " + mModelMatrix[6] + ", " + mModelMatrix[7]+ ")");
 //                Log.d(TAG, "l3 = (" + mModelMatrix[8] + ", " + mModelMatrix[9] + ", " + mModelMatrix[10] + ", " + mModelMatrix[11]+ ")");
 //                Log.d(TAG, "l4 = (" + mModelMatrix[12] + ", " + mModelMatrix[13] + ", " + mModelMatrix[14] + ", " + mModelMatrix[15]+ ")");
-
+                Matrix.scaleM(mModelMatrix, 0, getScale()[0], getScale()[1], getScale()[2] );
                 //mModelMatrix[12] = getPosition()[0];
                 //mModelMatrix[13] = getPosition()[1];
                 //mModelMatrix[14] = getPosition()[2];
