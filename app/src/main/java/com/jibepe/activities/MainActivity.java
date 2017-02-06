@@ -1,9 +1,12 @@
 package com.jibepe.activities;
 
 
+import android.content.Context;
 import android.content.Intent;
 
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Environment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 import com.jibepe.labo3d.R;
 //import com.jibepe.util.DownloadFilesTask;
 import com.jibepe.labo3d.SceneContentProvider;
@@ -27,7 +31,6 @@ public class MainActivity extends AppCompatActivity implements DownloadFragment.
 
     private final String TAG = "MainActivity";
 
-    private boolean goon =  false;
 
 
     @Override
@@ -36,9 +39,9 @@ public class MainActivity extends AppCompatActivity implements DownloadFragment.
 
         setContentView(R.layout.activity_main);
 
-        File folder = getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+        //File folder = getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
 
-        startDownloadFragment(folder);
+        //startDownloadFragment(folder);
         //startRecordFragment(folder);
 
 
@@ -47,6 +50,13 @@ public class MainActivity extends AppCompatActivity implements DownloadFragment.
         //GameRecorder.getInstance().prepareEncoder(this);
     }
 
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
     private void startRecordFragment(File folder) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         RecordFragment fragmentRecord = RecordFragment.newInstance(folder, getApplicationContext());
@@ -57,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements DownloadFragment.
     private void startDownloadFragment(File folder) {
         boolean canW = DownloadHelper.isExternalStorageWritable();
         boolean canR = DownloadHelper.isExternalStorageReadable();
-         if(canW == canR == true) {
+         if((canW == canR == true) && (isNetworkAvailable())) {
 
             //File folder = super.getActivity().getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
 
@@ -76,7 +86,19 @@ public class MainActivity extends AppCompatActivity implements DownloadFragment.
                 ft.commit();
                 //new DownloadFilesTask(url, folder).execute(fileName);
             }
-        }
+        } else {
+             CharSequence text = "";
+             if (!(canW == canR == true))
+             {
+                 text = text + "No store media available.";
+             }
+             if (!isNetworkAvailable()) {
+                 text = text + " network not reachable.";
+             }
+             Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+
+             toast.show();
+         }
 
     }
 
@@ -103,6 +125,9 @@ public class MainActivity extends AppCompatActivity implements DownloadFragment.
         } else if (id == R.id.action_record) {
             startRecordFragment(getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
             return true;
+        } else if (id == R.id.action_update) {
+            startDownloadFragment(getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS));
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -117,5 +142,10 @@ public class MainActivity extends AppCompatActivity implements DownloadFragment.
     public void onPostExecute() {
         Log.d(TAG, "in   onPostExecute\n");
 
+        CharSequence text = "Download Complete !!";
+
+        Toast toast = Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+
+        toast.show();
     }
 }

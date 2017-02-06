@@ -1,5 +1,7 @@
 package com.jibepe.objparser;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.FloatBuffer;
@@ -12,6 +14,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.os.Environment;
 import android.util.Log;
 
 import com.momchil_atanasov.data.front.error.WFException;
@@ -53,13 +56,23 @@ public class ObjLoader {
 		InputStream inObj;
 		InputStream inMtl;
 
-		AssetManager assetManager = mContext.getAssets();
 		dictionary = new Hashtable<String, MaterialShape>();
 		
 		try {
-			inObj = assetManager.open(sceneFilename+".obj"); // mContext.getResources().openRawResource(objRessourceId);
-			inMtl = assetManager.open(sceneFilename+".mtl"); //mContext.getResources().openRawResource(mtlRessourceId);
+			File folder = mContext.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+			File objFile= new File (folder, sceneFilename+".obj");
+			File mtlFile= new File (folder, sceneFilename+".mtl");
 
+			if (objFile.exists() && mtlFile.exists()) {
+				Log.d(TAG, "Loading OBJ file " + sceneFilename+".obj from app directory" );
+				inObj = new FileInputStream(objFile);
+				inMtl = new FileInputStream(mtlFile);
+			} else {
+				Log.d(TAG, "Loading OBJ file " + sceneFilename+".obj from raw resources" );
+				AssetManager assetManager = mContext.getAssets();
+				inObj = assetManager.open(sceneFilename + ".obj"); // mContext.getResources().openRawResource(objRessourceId);
+				inMtl = assetManager.open(sceneFilename + ".mtl"); //mContext.getResources().openRawResource(mtlRessourceId);
+			}
 			// Create an OBJParser and parse the resource
 			final IOBJParser objParser = new OBJParser();
 			final IMTLParser mtlParser = new MTLParser();

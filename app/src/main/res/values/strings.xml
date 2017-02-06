@@ -80,5 +80,6 @@
     <string name="dark_theme">Dark theme</string>
     <string name="title_activity_config">ConfigActivity</string>
     <string name="action_record">Record</string>
+    <string name="action_update">Update</string>
 
 </resources>

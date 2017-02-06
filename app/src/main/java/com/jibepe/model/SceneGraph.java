@@ -15,12 +15,6 @@ public class SceneGraph {
 
 
     public Dictionary<String, ObjLoader> objectDictionary;
-//    private float mPosCamX = 0.0f;
-//
-//    private float mPosCamY = 0.0f;
-
-    private float objPos[] = {1.0f, 0.0f, -1.0f};
-    private float objRot[] = {0.0f, 0.0f, 0.0f};
 
     private float camPos[] = {1.0f, 1.0f, -1.0f};
     private float camRot[] = {0.0f, -90.0f, 0.0f};
@@ -46,19 +40,10 @@ public class SceneGraph {
     }
 
 
-
-
-    public void setObjPos(String objName, float [] pos){
-        // TODO: Gerer le dictionnaire d'objet
-        objPos = pos;
-    }
-    public void setObjRot(String objName, float [] rot){
-        // TODO: Gerer le dictionnaire d'objet
-        objRot = rot;
-    }
     public void addObj (String name, ObjLoader obj) {
         objectDictionary.put(name, obj);
     }
+
     public ObjLoader getObj (String objectName) {
         return objectDictionary.get(objectName);
     }
