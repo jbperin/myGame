@@ -120,7 +120,7 @@ public abstract class glRenderableShape {
         Matrix.rotateM(mModelMatrix, 0, getRotation()[0], 1.0f, 0.0f, 0.0f);
         Matrix.rotateM(mModelMatrix, 0, getRotation()[1], 0.0f, 1.0f, 0.0f);
         Matrix.rotateM(mModelMatrix, 0, getRotation()[2], 0.0f, 0.0f, 1.0f);
-
+        Matrix.scaleM(mModelMatrix, 0, getScale()[0], getScale()[1], getScale()[2] );
         //Matrix.setRotateEulerM(mModelMatrix, 0, rotation[0], rotation[1], rotation[2]);
 //        Log.d(TAG, "Translate + Rotate");
 //        Log.d(TAG, "l1 = (" + mModelMatrix[0] + ", " + mModelMatrix[1] + ", " + mModelMatrix[2] + ", " + mModelMatrix[3]+ ")");

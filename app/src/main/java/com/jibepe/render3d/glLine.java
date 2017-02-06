@@ -93,6 +93,12 @@ public class glLine extends glRenderableShape {
         GLES20.glEnableVertexAttribArray(mPositionHandle);
 
         Matrix.setIdentityM(ModelMatrix, 0);
+        Matrix.rotateM(ModelMatrix, 0, getRotation()[0], 1.0f, 0.0f, 0.0f);
+        Matrix.rotateM(ModelMatrix, 0, getRotation()[1], 0.0f, 1.0f, 0.0f);
+        Matrix.rotateM(ModelMatrix, 0, getRotation()[2], 0.0f, 0.0f, 1.0f);
+
+        Matrix.scaleM(ModelMatrix, 0, getScale()[0], getScale()[1], getScale()[2] );
+
         Matrix.multiplyMM(mMVPMatrix, 0, mVPMatrix, 0, ModelMatrix, 0);
 
         // Combined matrix.

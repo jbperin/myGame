@@ -123,7 +123,7 @@ public class glTexturedShape extends glRenderableShape{
         mModelMatrix[12] = getPosition()[0];
         mModelMatrix[13] = getPosition()[1];
         mModelMatrix[14] = getPosition()[2];
-
+        Matrix.scaleM(mModelMatrix, 0, getScale()[0], getScale()[1], getScale()[2] );
 
         // This multiplies the view matrix by the model matrix, and stores the result in the MVP matrix
         // (which currently contains model * view).

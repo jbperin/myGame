@@ -58,6 +58,11 @@ public class glPoint extends glRenderableShape {
         //Matrix.translateM(mLightModelMatrix, 0, 0.0f, 0.0f, -2.0f);
         //Matrix.rotateM(mLightModelMatrix, 0, angleInDegrees, 0.0f, 1.0f, 0.0f);
         Matrix.translateM(mModelMatrix, 0, getPosition()[0], getPosition()[1], getPosition()[2]);
+        Matrix.rotateM(mModelMatrix, 0, getRotation()[0], 1.0f, 0.0f, 0.0f);
+        Matrix.rotateM(mModelMatrix, 0, getRotation()[1], 0.0f, 1.0f, 0.0f);
+        Matrix.rotateM(mModelMatrix, 0, getRotation()[2], 0.0f, 0.0f, 1.0f);
+
+        Matrix.scaleM(mModelMatrix, 0, getScale()[0], getScale()[1], getScale()[2] );
 
 
         /** Allocate storage for the final combined matrix. This will be passed into the shader program. */

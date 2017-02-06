@@ -163,6 +163,7 @@ public class Triangle extends glRenderableShape {
         mModelMatrix[13] = position[1];
         mModelMatrix[14] = position[2];
 
+        Matrix.scaleM(mModelMatrix, 0, getScale()[0], getScale()[1], getScale()[2] );
 
         // Pass in the transformation matrix.
         //Matrix.multiplyMM(mMVPMatrix, 0, mMatrixVP, 0, mModelMatrix, 0);
