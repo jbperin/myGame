@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements DownloadFragment.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        System.setProperty("org.xml.sax.driver","org.xmlpull.v1.sax2.Driver");
         setContentView(R.layout.activity_main);
 
         //File folder = getApplicationContext().getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);

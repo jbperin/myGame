@@ -16,8 +16,10 @@ import android.support.v4.app.FragmentActivity;
 import android.view.*;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import com.dddviewr.collada.Collada;
 import com.jibepe.labo3d.*;
 import com.jibepe.model.SceneGraph;
+import com.jibepe.objparser.DaeLoader;
 import com.jibepe.objparser.ObjLoader;
 import com.jibepe.render3d.GLES20Renderer;
 import com.jibepe.util.DownloadHelper;
@@ -106,15 +108,21 @@ public class glRenderFragment extends Fragment {
         theSceneGraph = new SceneGraph();
         //File file = new File(Environment.getExternalStoragePublicDirectory(
         //        Environment.DIRECTORY_PICTURES), "scene.mtl");
-        ObjLoader mSceneLoader = new ObjLoader(super.getActivity().getApplication());
-        mSceneLoader.loadModel("scene");
-        theSceneGraph.addObj("scene", mSceneLoader);
+//        ObjLoader mSceneLoader = new ObjLoader(super.getActivity().getApplication());
+//        mSceneLoader.loadModel("scene");
+//        theSceneGraph.addObj("scene", mSceneLoader);
+//
+//        ObjLoader mPersoLoader = new ObjLoader(super.getActivity().getApplication());
+//        mPersoLoader.loadModel("plantexture");
+//        theSceneGraph.addObj("plantexture", mPersoLoader);
 
-        ObjLoader mPersoLoader = new ObjLoader(super.getActivity().getApplication());
-        mPersoLoader.loadModel("plantexture");
-        theSceneGraph.addObj("plantexture", mPersoLoader);
-
-
+        DaeLoader mCollLoader = new DaeLoader(super.getActivity().getApplication());
+        mCollLoader.loadModel("cubebleu.dae");
+        theSceneGraph.addDae("cubebleu", mCollLoader);
+//        float [] verts = mCollLoader.getVerticesBuffer();
+//        float [] norms = mCollLoader.getNormalsBuffer();
+//        float [] coords = mCollLoader.getTextureCoordinatesBuffer();
+//        short [] faceindex = mCollLoader.getFaceIndexBuffer();
 
         //try {
             //DownloadHelper.DownloadFile("scene.obj");

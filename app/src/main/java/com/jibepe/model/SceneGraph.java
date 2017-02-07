@@ -1,5 +1,6 @@
 package com.jibepe.model;
 
+import com.jibepe.objparser.DaeLoader;
 import com.jibepe.objparser.MaterialShape;
 import com.jibepe.objparser.ObjLoader;
 
@@ -15,12 +16,14 @@ public class SceneGraph {
 
 
     public Dictionary<String, ObjLoader> objectDictionary;
+    public Dictionary<String, DaeLoader> colladaDictionary;
 
     private float camPos[] = {1.0f, 1.0f, -1.0f};
     private float camRot[] = {0.0f, -90.0f, 0.0f};
 
     public SceneGraph (){
         objectDictionary = new Hashtable<String, ObjLoader>();
+        colladaDictionary = new Hashtable<String, DaeLoader>();
 
     }
     public float [] getCamPos(){
@@ -43,9 +46,15 @@ public class SceneGraph {
     public void addObj (String name, ObjLoader obj) {
         objectDictionary.put(name, obj);
     }
+    public void addDae (String name, DaeLoader dae) {
+        colladaDictionary.put(name, dae);
+    }
 
     public ObjLoader getObj (String objectName) {
         return objectDictionary.get(objectName);
+    }
+    public DaeLoader getDae (String objectName) {
+        return colladaDictionary.get(objectName);
     }
 
     public List<float[]> getLightsPos() {

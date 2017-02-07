@@ -88,13 +88,24 @@ public class SceneContentProvider implements InterfaceSceneRenderer{
 //
 //        shapes2Render.add(shapeScene);
 
-        glAlphaTexturedShape shapePerso = new glAlphaTexturedShape(mSceneGraph.getObj("plantexture"));
-        shapePerso.setName("PlanTexture.001");
+//        glAlphaTexturedShape shapePerso = new glAlphaTexturedShape(mSceneGraph.getObj("plantexture"));
+//        shapePerso.setName("PlanTexture.001");
+//
+//        shapePerso.setPosition (new float [] {1.0f, 1.0f, 0.0f});
+//        shapePerso.setRotation (new float [] {0.0f, 90.0f, 0.0f});
+//
+//        shapes2Render.add(shapePerso);
 
-        shapePerso.setPosition (new float [] {1.0f, 1.0f, 0.0f});
-        shapePerso.setRotation (new float [] {0.0f, 90.0f, 0.0f});
 
-        shapes2Render.add(shapePerso);
+
+        glDaeTexturedShape shapeCube = new glDaeTexturedShape(mSceneGraph.getDae("cubebleu"));
+        shapeCube.setName("CubeBleu.001");
+
+        shapeCube.setPosition (new float [] {0.0f, 0.0f, 0.0f});
+        shapeCube.setRotation (new float [] {0.0f, 00.0f, 0.0f});
+
+        shapes2Render.add(shapeCube);
+
 
 
         Square aSquare = new Square();
