@@ -15,6 +15,7 @@ public class matrix extends State {
 		this.theMatrix = new Matrix(attrs.getValue("sid"));
 		Node node = ((node) getParent()).getNode();
 		node.addXform(this.theMatrix);
+		node.setMatrix(this.theMatrix);
 		setContentNeeded(true);
 	}
 

@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import com.dddviewr.collada.Collada;
 import com.jibepe.labo3d.*;
+import com.jibepe.model.DaeSceneGraph;
 import com.jibepe.model.SceneGraph;
 import com.jibepe.objparser.DaeLoader;
 import com.jibepe.objparser.ObjLoader;
@@ -36,7 +37,7 @@ public class glRenderFragment extends Fragment {
     private GLES20View theView;
 
     GLES20Renderer mRenderer = null;
-    SceneGraph theSceneGraph = null;
+    DaeSceneGraph theSceneGraph = null;
     FragmentActivity listener;
 //    @Override
 //    public void onCreate(Bundle savedInstanceState) {
@@ -105,7 +106,7 @@ public class glRenderFragment extends Fragment {
         ShaderHandler.getInstance().reset();
         ShaderHandler.getInstance().setContext(super.getActivity().getApplication());
 
-        theSceneGraph = new SceneGraph();
+        //theSceneGraph = new SceneGraph();
         //File file = new File(Environment.getExternalStoragePublicDirectory(
         //        Environment.DIRECTORY_PICTURES), "scene.mtl");
 //        ObjLoader mSceneLoader = new ObjLoader(super.getActivity().getApplication());
@@ -118,7 +119,9 @@ public class glRenderFragment extends Fragment {
 
         DaeLoader mCollLoader = new DaeLoader(super.getActivity().getApplication());
         mCollLoader.loadModel("cubebleu.dae");
-        theSceneGraph.addDae("cubebleu", mCollLoader);
+        theSceneGraph = new DaeSceneGraph(mCollLoader.getTheCollada());
+
+        //theSceneGraph.loadFromDae(mCollLoader);
 //        float [] verts = mCollLoader.getVerticesBuffer();
 //        float [] norms = mCollLoader.getNormalsBuffer();
 //        float [] coords = mCollLoader.getTextureCoordinatesBuffer();

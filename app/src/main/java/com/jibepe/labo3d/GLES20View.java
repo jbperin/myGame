@@ -6,6 +6,7 @@ import android.opengl.GLSurfaceView;
 import android.util.Log;
 import android.view.MotionEvent;
 import com.jibepe.math.Util;
+import com.jibepe.model.InterfaceSceneGraph;
 import com.jibepe.model.SceneGraph;
 import com.jibepe.render3d.GLES20Renderer;
 import com.jibepe.render3d.glRenderableShape;
@@ -13,13 +14,13 @@ import com.jibepe.render3d.glRenderableShape;
 public class GLES20View extends GLSurfaceView  {
 
 	GLES20Renderer mRenderer = null;
-	SceneGraph mScene = null;
+	InterfaceSceneGraph mScene = null;
 	SceneContentProvider mSceneView = null;
 	private static String TAG = "GLES20View";
 	private float mPreviousX;
 	private float mPreviousY;
 
-	public GLES20View(Context context, GLES20Renderer theRenderer, SceneGraph theSceneGraph) {
+	public GLES20View(Context context, GLES20Renderer theRenderer, InterfaceSceneGraph theSceneGraph) {
 		super(context);
 
 

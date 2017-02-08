@@ -12,6 +12,7 @@ public interface InterfaceSceneRenderer {
 
     float [] getCamPos();
     float [] getCamRot();
+    float [] getCamMatrix();
     List<float[]>  getLightsPos ();
     List<glRenderableShape> getRenderableShapes();
 }

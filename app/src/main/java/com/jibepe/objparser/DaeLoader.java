@@ -254,9 +254,9 @@ public class DaeLoader {
         return textureName;
     }
 
-    public short[] getMeshFaceIndexBuffer(String id) {
+    public short[] getMeshFaceIndexBuffer(String geomId) {
         int[] buff = null;
-        Geometry geom = theCollada.findGeometry(id);
+        Geometry geom = theCollada.findGeometry(geomId);
         Mesh aMesh = geom.getMesh();
         List <Primitives> lPrim = aMesh.getPrimitives();
         for (Primitives prim: lPrim) {

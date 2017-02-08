@@ -2,6 +2,7 @@ package com.jibepe.labo3d;
 
 
 
+import com.jibepe.model.InterfaceSceneGraph;
 import com.jibepe.model.SceneGraph;
 import com.jibepe.render3d.*;
 
@@ -13,13 +14,20 @@ import java.util.List;
  */
 public class SceneContentProvider implements InterfaceSceneRenderer{
 
-    SceneGraph mSceneGraph;
+    InterfaceSceneGraph mSceneGraph;
 
 
-    public SceneContentProvider (SceneGraph sg) {
+    public SceneContentProvider (InterfaceSceneGraph sg) {
         mSceneGraph = sg;
 
     }
+
+    @Override
+    public float [] getCamMatrix() {
+        return mSceneGraph.getCamMatrix();
+    }
+
+
     @Override
     public float[] getCamPos() {
         return mSceneGraph.getCamPos();
@@ -66,21 +74,21 @@ public class SceneContentProvider implements InterfaceSceneRenderer{
 
         shapes2Render.add(line3);
 
-        int numberOfLine = 5;
-		for (int ii = -numberOfLine; ii <= numberOfLine; ii ++) {
-            glLine aLine = new glLine();
-            aLine.setPosStart (new float [] {(float)ii, 0.0f, (float)-numberOfLine});
-            aLine.setPosEnd (new float [] {(float)ii, 0.0f, (float) numberOfLine});
-            aLine.setColor(new float [] {0.5f, 0.5f , 0.5f ,1.0f});
-            shapes2Render.add(aLine);
-
-            glLine aLine2 = new glLine();
-            aLine2.setPosStart (new float [] {(float)-numberOfLine, 0.0f, (float)ii});
-            aLine2.setPosEnd (new float [] {(float) numberOfLine, 0.0f, (float)ii});
-            aLine2.setColor(new float [] {0.5f, 0.5f , 0.5f ,1.0f});
-            shapes2Render.add(aLine2);
-
-		}
+//        int numberOfLine = 5;
+//		for (int ii = -numberOfLine; ii <= numberOfLine; ii ++) {
+//            glLine aLine = new glLine();
+//            aLine.setPosStart (new float [] {(float)ii, 0.0f, (float)-numberOfLine});
+//            aLine.setPosEnd (new float [] {(float)ii, 0.0f, (float) numberOfLine});
+//            aLine.setColor(new float [] {0.5f, 0.5f , 0.5f ,1.0f});
+//            shapes2Render.add(aLine);
+//
+//            glLine aLine2 = new glLine();
+//            aLine2.setPosStart (new float [] {(float)-numberOfLine, 0.0f, (float)ii});
+//            aLine2.setPosEnd (new float [] {(float) numberOfLine, 0.0f, (float)ii});
+//            aLine2.setColor(new float [] {0.5f, 0.5f , 0.5f ,1.0f});
+//            shapes2Render.add(aLine2);
+//
+//		}
 
 //        glColoredShape shapeScene = new glColoredShape(mSceneGraph.getObj("scene"));
 //        shapeScene.setPosition (new float [] {0.0f, 0.0f, 0.0f});
@@ -98,14 +106,14 @@ public class SceneContentProvider implements InterfaceSceneRenderer{
 
 
 
-        glDaeTexturedShape shapeCube = new glDaeTexturedShape(mSceneGraph.getDae("cubebleu"));
-        shapeCube.setName("CubeBleu.001");
-
-        shapeCube.setPosition (new float [] {0.0f, 0.0f, 0.0f});
-        shapeCube.setRotation (new float [] {0.0f, 00.0f, 0.0f});
-
-        shapes2Render.add(shapeCube);
-
+//        glDaeTexturedShape shapeCube = new glDaeTexturedShape(mSceneGraph.getDae("cubebleu"));
+//        shapeCube.setName("CubeBleu.001");
+//
+//        shapeCube.setPosition (new float [] {0.0f, 0.0f, 0.0f});
+//        shapeCube.setRotation (new float [] {0.0f, 00.0f, 0.0f});
+//
+//        shapes2Render.add(shapeCube);
+//
 
 
         Square aSquare = new Square();
