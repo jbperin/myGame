@@ -173,12 +173,12 @@ public class SceneGraphDae implements InterfaceSceneGraph {
                 , -daeMatrix[4], -daeMatrix[5], -daeMatrix[6], -daeMatrix[7]
                 ,daeMatrix[12], daeMatrix[13], daeMatrix[14], daeMatrix[15]
         };
-        float [] invGlMatrix = new float [16];
-        android.opengl.Matrix.invertM(invGlMatrix, 0, glMatrix, 0);
-        float [] invTransGlMatrix = new float [16];
-        android.opengl.Matrix.transposeM(invTransGlMatrix, 0, invGlMatrix, 0);
-        android.opengl.Matrix.rotateM(invTransGlMatrix, 0, 180.0f, 1.0f, 0.0f, 0.0f);
-        return invTransGlMatrix;
+        //float [] invGlMatrix = new float [16];
+        //android.opengl.Matrix.invertM(invGlMatrix, 0, glMatrix, 0);
+        float [] transGlMatrix = new float [16];
+        android.opengl.Matrix.transposeM(transGlMatrix, 0, glMatrix, 0);
+        //android.opengl.Matrix.rotateM(invTransGlMatrix, 0, 180.0f, 1.0f, 0.0f, 0.0f);
+        return transGlMatrix;
 
     }
 
