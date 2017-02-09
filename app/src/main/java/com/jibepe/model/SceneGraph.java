@@ -24,22 +24,23 @@ public class SceneGraph implements InterfaceSceneGraph{
     public SceneGraph (){
         objectDictionary = new Hashtable<String, ObjLoader>();
         colladaDictionary = new Hashtable<String, DaeLoader>();
+        //lSceneObjects.add();
 
     }
     @Override
     public float[] getCamMatrix() {
-        return new float[] {
-                0.6859207f, -0.3240135f, 0.6515582f, 7.481132f,
-                0.7276763f, 0.3054208f, -0.6141704f, -6.50764f,
-                0.0f, 0.8953956f, 0.4452714f, 5.343665f,
-                0.0f, 0.0f, 0.0f, 1.0f
-        };
-//        return new float [] {
-//                1.0f, 0.0f, 0.0f, 0.0f
-//                , 0.0f, 1.0f, 0.0f, 0.0f
-//                , 0.0f, 0.0f, 1.0f, 0.0f
-//                , 0.0f, 0.0f, 0.0f, 1.0f
+//        return new float[] {
+//                0.6859207f, -0.3240135f, 0.6515582f, 7.481132f,
+//                0.7276763f, 0.3054208f, -0.6141704f, -6.50764f,
+//                0.0f, 0.8953956f, 0.4452714f, 5.343665f,
+//                0.0f, 0.0f, 0.0f, 1.0f
 //        };
+        return new float [] {
+                1.0f, 0.0f, 0.0f, 0.0f
+                , 0.0f, 1.0f, 0.0f, 0.0f
+                , 0.0f, 0.0f, 1.0f, 0.0f
+                , 0.0f, 0.0f, 0.0f, 1.0f
+        };
     }
 
     @Override
@@ -58,6 +59,28 @@ public class SceneGraph implements InterfaceSceneGraph{
     public void moveCam(float f) {
         camPos[0] += f*Math.cos(Math.toRadians(camRot[1]));
         camPos[2] += f*Math.sin(Math.toRadians(camRot[1]));
+    }
+
+    List<InterfaceSceneObject> lSceneObjects ;
+
+    @Override
+    public List<InterfaceSceneObject> getSceneObjects() {
+        return (lSceneObjects);
+
+        //        glColoredShape shapeScene = new glColoredShape(mSceneGraph.getObj("scene"));
+//        shapeScene.setPosition (new float [] {0.0f, 0.0f, 0.0f});
+//        shapeScene.setRotation (new float [] {0.0f, 0.0f, 0.0f});
+//
+//        shapes2Render.add(shapeScene);
+
+//        glAlphaTexturedShape shapePerso = new glAlphaTexturedShape(mSceneGraph.getObj("plantexture"));
+//        shapePerso.setName("PlanTexture.001");
+//
+//        shapePerso.setPosition (new float [] {1.0f, 1.0f, 0.0f});
+//        shapePerso.setRotation (new float [] {0.0f, 90.0f, 0.0f});
+//
+//        shapes2Render.add(shapePerso);
+
     }
 
 

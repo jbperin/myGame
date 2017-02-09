@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.78.0 commit date:2016-10-24, commit time:12:20, hash:e8299c8</authoring_tool>
     </contributor>
-    <created>2017-02-07T15:59:01</created>
-    <modified>2017-02-07T15:59:01</modified>
+    <created>2017-02-09T17:38:48</created>
+    <modified>2017-02-09T17:38:48</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -101,24 +101,10 @@
       </extra>
     </light>
   </library_lights>
-  <library_images>
-    <image id="OhUnBallon_jpg" name="OhUnBallon_jpg">
-      <init_from>OhUnBallon.jpg</init_from>
-    </image>
-  </library_images>
+  <library_images/>
   <library_effects>
     <effect id="Material-effect">
       <profile_COMMON>
-        <newparam sid="OhUnBallon_jpg-surface">
-          <surface type="2D">
-            <init_from>OhUnBallon_jpg</init_from>
-          </surface>
-        </newparam>
-        <newparam sid="OhUnBallon_jpg-sampler">
-          <sampler2D>
-            <source>OhUnBallon_jpg-surface</source>
-          </sampler2D>
-        </newparam>
         <technique sid="common">
           <phong>
             <emission>
@@ -128,7 +114,7 @@
               <color sid="ambient">0 0 0 1</color>
             </ambient>
             <diffuse>
-              <texture texture="OhUnBallon_jpg-sampler" texcoord="UVMap"/>
+              <color sid="diffuse">0.05715095 0.07290697 0.64 1</color>
             </diffuse>
             <specular>
               <color sid="specular">0.5 0.5 0.5 1</color>
@@ -153,7 +139,7 @@
     <geometry id="Plane-mesh" name="Plane">
       <mesh>
         <source id="Plane-mesh-positions">
-          <float_array id="Plane-mesh-positions-array" count="18">-1 -1 0 1 -1 0 -1 1 0 1 1 0 -1 0.002869963 0 1 0.002869963 0</float_array>
+          <float_array id="Plane-mesh-positions-array" count="18">-1 -1 0 1 -1 0 -1 1 0 1 1 0 -1 0 0 1 0 0</float_array>
           <technique_common>
             <accessor source="#Plane-mesh-positions-array" count="6" stride="3">
               <param name="X" type="float"/>
@@ -173,7 +159,7 @@
           </technique_common>
         </source>
         <source id="Plane-mesh-map-0">
-          <float_array id="Plane-mesh-map-0-array" count="24">1.002445 0.5014347 9.71998e-5 0.9999028 9.72432e-5 0.5014346 1.002445 9.71564e-5 9.72432e-5 0.5014346 9.71564e-5 9.72432e-5 1.002445 0.5014347 1.002445 0.9999028 9.71998e-5 0.9999028 1.002445 9.71564e-5 1.002445 0.5014347 9.72432e-5 0.5014346</float_array>
+          <float_array id="Plane-mesh-map-0-array" count="24">1.002445 0.5014347 0 0.9999028 9.72432e-5 0.5014346 1.002445 0 9.72432e-5 0.5014346 0 0 1.002445 0.5014347 1.002445 0.9999028 0 0.9999028 1.002445 0 1.002445 0.5014347 9.72432e-5 0.5014346</float_array>
           <technique_common>
             <accessor source="#Plane-mesh-map-0-array" count="12" stride="2">
               <param name="S" type="float"/>
@@ -198,7 +184,7 @@
   <library_visual_scenes>
     <visual_scene id="Scene" name="Scene">
       <node id="Camera" name="Camera" type="NODE">
-        <matrix sid="transform">0.6859207 -0.3240135 0.6515582 7.481132 0.7276763 0.3054208 -0.6141704 -6.50764 0 0.8953956 0.4452714 5.343665 0 0 0 1</matrix>
+        <matrix sid="transform">0.6859207 -0.6180496 0.3840931 2.741875 0.7276763 0.5825846 -0.362053 -2.212689 1.92489e-8 0.5278351 0.8493469 5.343665 0 0 0 1</matrix>
         <instance_camera url="#Camera-camera"/>
       </node>
       <node id="Lamp" name="Lamp" type="NODE">
@@ -206,13 +192,11 @@
         <instance_light url="#Lamp-light"/>
       </node>
       <node id="Plane" name="Plane" type="NODE">
-        <matrix sid="transform">1 0 0 0 0 7.54979e-8 -1 -0.01863903 0 1 7.54979e-8 0.01863903 0 0 0 1</matrix>
+        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
         <instance_geometry url="#Plane-mesh" name="Plane">
           <bind_material>
             <technique_common>
-              <instance_material symbol="Material-material" target="#Material-material">
-                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
-              </instance_material>
+              <instance_material symbol="Material-material" target="#Material-material"/>
             </technique_common>
           </bind_material>
         </instance_geometry>

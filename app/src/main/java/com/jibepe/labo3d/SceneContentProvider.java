@@ -2,7 +2,9 @@ package com.jibepe.labo3d;
 
 
 
+import com.jibepe.model.InterfaceMesh;
 import com.jibepe.model.InterfaceSceneGraph;
+import com.jibepe.model.InterfaceSceneObject;
 import com.jibepe.model.SceneGraph;
 import com.jibepe.render3d.*;
 
@@ -130,14 +132,64 @@ public class SceneContentProvider implements InterfaceSceneRenderer{
         shapes2Render.add(aTriangle);
 
 
-        glTexturedShape anIBOShape = new glTexturedShape();
-        anIBOShape.setName("anIBOShape.001");
-        anIBOShape.setPosition(new float [] {-1.0f, 1.0f, 0.0f});
-        shapes2Render.add(anIBOShape);
+//        glTexturedShape anIBOShape = new glTexturedShape();
+//        anIBOShape.setName("anIBOShape.001");
+//        anIBOShape.setPosition(new float [] {-1.0f, 1.0f, 0.0f});
+//        shapes2Render.add(anIBOShape);
+//
 
+
+
+        List <InterfaceSceneObject> lObject = mSceneGraph.getSceneObjects();
+        for (InterfaceSceneObject obj : lObject) {
+            shapes2Render.addAll(convert2glShapes(obj));
+        }
 
         return shapes2Render;
     }
 
+    List <glRenderableShape> convert2glShapes(InterfaceSceneObject inObj) {
+        List <glRenderableShape> lShapes = new ArrayList<glRenderableShape>();
 
+        List <InterfaceMesh> lMeshes = inObj.getMeshes();
+
+        for (InterfaceMesh mesh: lMeshes){
+
+            String name = inObj.getName()+"."+mesh.getName();
+            float [] matrix = inObj.getGlMatrix();
+            float [] verts = mesh.getVertices();
+            float [] norms = mesh.getNormals();
+            float [] uvcoords = mesh.getTexCoordinates();
+            short [] indexes = mesh.getFaceIndexes();
+            float [] color = mesh.getMaterial().getColor();
+            String textureName =  mesh.getMaterial().getTexture();
+
+            if ((verts != null) && (norms != null) && (uvcoords != null) && (indexes != null) && ((textureName != null))) {
+
+                    glVboTexturedShape theShape = new glVboTexturedShape();
+                    theShape.setName(name);
+                    theShape.setMatrix(matrix);
+                    theShape.setVerts(verts);
+                    theShape.setMaterialName(mesh.getMaterial().getTexture());
+                    theShape.setNorms(norms);
+                    theShape.setTexCoords(uvcoords);
+                    theShape.setIndexBuffer(indexes);
+                    lShapes.add(theShape);
+            } else {
+                if ((verts != null) && (norms != null) && (color != null)) {
+                    glVboColoredShape theShape = new glVboColoredShape();
+                    theShape.setName(name);
+                    theShape.setMatrix(matrix);
+                    theShape.setVerts(verts);
+                    theShape.setColor(mesh.getMaterial().getColor());
+                    theShape.setNorms(norms);
+                    //theShape.setTexCoords(uvcoords);
+                    theShape.setIndexBuffer(indexes);
+                    lShapes.add(theShape);
+                }
+            }
+
+        }
+        return (lShapes);
+    }
 }

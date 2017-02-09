@@ -58,6 +58,20 @@ public abstract class glRenderableShape {
         this.scale = scale;
     }
 
+    public float[] getMatrix() {
+        return matrix;
+    }
+
+    public void setMatrix(float[] matrix) {
+        this.matrix = matrix;
+    }
+
+    private float [] matrix = {
+                  1.0f, 0.0f, 0.0f, 0.0f
+                , 0.0f, 1.0f, 0.0f, 0.0f
+                , 0.0f, 0.0f, 1.0f, 0.0f
+                , 0.0f, 0.0f, 0.0f, 1.0f
+        };
     private float [] position = {0.0f, 0.0f, 0.0f}; // X,Y,Z
     private float [] rotation = {0.0f, 0.0f, 0.0f}; // rX,rY,rZ
     private float [] scale = {1.0f, 1.0f, 1.0f}; // sX,sY,sZ

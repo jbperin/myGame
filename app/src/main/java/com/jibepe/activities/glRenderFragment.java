@@ -2,32 +2,20 @@ package com.jibepe.activities;
 
 
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.support.v4.app.Fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ConfigurationInfo;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
 import android.view.*;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import com.dddviewr.collada.Collada;
 import com.jibepe.labo3d.*;
-import com.jibepe.model.DaeSceneGraph;
-import com.jibepe.model.SceneGraph;
+import com.jibepe.model.SceneGraphDae;
 import com.jibepe.objparser.DaeLoader;
-import com.jibepe.objparser.ObjLoader;
 import com.jibepe.render3d.GLES20Renderer;
-import com.jibepe.util.DownloadHelper;
-
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 
 public class glRenderFragment extends Fragment {
@@ -37,7 +25,7 @@ public class glRenderFragment extends Fragment {
     private GLES20View theView;
 
     GLES20Renderer mRenderer = null;
-    DaeSceneGraph theSceneGraph = null;
+    SceneGraphDae theSceneGraph = null;
     FragmentActivity listener;
 //    @Override
 //    public void onCreate(Bundle savedInstanceState) {
@@ -119,7 +107,7 @@ public class glRenderFragment extends Fragment {
 
         DaeLoader mCollLoader = new DaeLoader(super.getActivity().getApplication());
         mCollLoader.loadModel("cubebleu.dae");
-        theSceneGraph = new DaeSceneGraph(mCollLoader.getTheCollada());
+        theSceneGraph = new SceneGraphDae(mCollLoader.getTheCollada());
 
         //theSceneGraph.loadFromDae(mCollLoader);
 //        float [] verts = mCollLoader.getVerticesBuffer();

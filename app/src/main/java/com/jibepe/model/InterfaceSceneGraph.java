@@ -11,11 +11,12 @@ public interface InterfaceSceneGraph {
 
     public float[] getCamPos();
     public float[] getCamRot();
+
     public float[] getCamMatrix();
 
     public void rotateCam (float angle );
     public void moveCam (float angle );
 
-    //public List<SceneObject> getSceneObjects();
+    public List<InterfaceSceneObject> getSceneObjects();
 
 }

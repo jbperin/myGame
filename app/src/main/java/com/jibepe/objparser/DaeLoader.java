@@ -48,6 +48,16 @@ public class DaeLoader {
     }
 
     public void  loadModel (String sceneFilename) {
+
+        // Remove following block to give priority
+        try {
+            if (Arrays.asList( mContext.getAssets().list("")).contains(sceneFilename)) {
+                copyAssets(new String[]{sceneFilename});
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         File infile = new File(mFolder, sceneFilename);
         if (! infile.exists()) {
             AssetManager assetManager = mContext.getAssets();
