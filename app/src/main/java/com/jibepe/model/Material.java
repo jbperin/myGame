@@ -10,6 +10,11 @@ public class Material implements InterfaceMaterial {
     }
 
     private float[] color = {0.5f, 0.5f, 0.5f, 1.0f};
+
+    public void setTexture(String texture) {
+        this.texture = texture;
+    }
+
     private String texture = null;
 
     public Material() {

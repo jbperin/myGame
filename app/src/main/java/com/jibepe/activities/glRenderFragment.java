@@ -106,7 +106,7 @@ public class glRenderFragment extends Fragment {
 //        theSceneGraph.addObj("plantexture", mPersoLoader);
 
         DaeLoader mCollLoader = new DaeLoader(super.getActivity().getApplication());
-        mCollLoader.loadModel("cubebleu.dae");
+        mCollLoader.loadModel("cubetexturebleu.dae");
         theSceneGraph = new SceneGraphDae(mCollLoader.getTheCollada());
 
         //theSceneGraph.loadFromDae(mCollLoader);

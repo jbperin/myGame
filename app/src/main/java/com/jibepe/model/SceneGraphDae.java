@@ -3,6 +3,7 @@ package com.jibepe.model;
 import com.dddviewr.collada.Collada;
 import com.dddviewr.collada.effects.Effect;
 import com.dddviewr.collada.effects.EffectMaterial;
+import com.dddviewr.collada.effects.NewParam;
 import com.dddviewr.collada.geometry.Geometry;
 import com.dddviewr.collada.geometry.Primitives;
 import com.dddviewr.collada.materials.InstanceEffect;
@@ -94,7 +95,22 @@ public class SceneGraphDae implements InterfaceSceneGraph {
                         Effect theEffect = this.theCollada.findEffect(instanceEffect.getUrl());
                         EffectMaterial effMat = theEffect.getEffectMaterial();
                         mat.setColor(effMat.getDiffuse().getData());
-//                        List <NewParam> lNewParam = theEffect.getNewParams();
+
+
+                        String imageId = null;
+                        String textureName = "";
+                        List<NewParam> lNewParams = theEffect.getNewParams();
+                        for (NewParam nParm : lNewParams) {
+                            if ((nParm.getSurface() != null) && (nParm.getSurface().getInitFrom() != null)){
+                                imageId = nParm.getSurface().getInitFrom();
+                            }
+                        }
+                        if (imageId != null) {
+                            textureName = theCollada.findImage(imageId).getInitFrom();
+                            mat.setTexture(textureName);
+                        }
+
+                        //                        List <NewParam> lNewParam = theEffect.getNewParams();
 //                        for (NewParam nParam: lNewParam) {
 //                            String paramSid = nParam.getSid();
 //                        }
@@ -139,7 +155,7 @@ public class SceneGraphDae implements InterfaceSceneGraph {
         float [] res = new float[uvcoordData.length];
         for (int ii = 0; ii< uvcoordData.length ; ii+=2) {
             res[ii] = uvcoordData[ii];
-            res[ii+1] = uvcoordData[ii+1];
+            res[ii+1] = 1.0f - uvcoordData[ii+1]; // TODO expliquer ca
         }
         return res;
     }
