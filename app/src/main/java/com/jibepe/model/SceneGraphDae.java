@@ -1,6 +1,9 @@
 package com.jibepe.model;
 
+import android.opengl.*;
 import com.dddviewr.collada.Collada;
+import com.dddviewr.collada.Source;
+import com.dddviewr.collada.animation.Animation;
 import com.dddviewr.collada.effects.Effect;
 import com.dddviewr.collada.effects.EffectMaterial;
 import com.dddviewr.collada.effects.NewParam;
@@ -24,6 +27,7 @@ public class SceneGraphDae implements InterfaceSceneGraph {
     private Collada theCollada;
     private float [] cameraMatrix = null;
     private float [] lightMatrix = null;
+
     public Dictionary<String, InterfaceSceneObject> dicObjects;
 
 
@@ -44,9 +48,20 @@ public class SceneGraphDae implements InterfaceSceneGraph {
 //            lXForms.get(0).getSid();
             //theCollada.nod.getMatrix()
             if (nod.getName().startsWith("Camera")) {
-                cameraMatrix = Dae2GlCamMatrix(nod.getMatrix().getData());
+                if (nod.getMatrix() != null) {
+                    cameraMatrix = Dae2GlCamMatrix(nod.getMatrix().getData());
+                } else {
+                    float[] matrice = getMatrixFromTransforms(nod);
+                    cameraMatrix = Dae2GlCamMatrix(matrice);
+                }
             } else if (nod.getName().startsWith("Lamp")) {
-                lightMatrix = Dae2GlCamMatrix(nod.getMatrix().getData());
+                if (nod.getMatrix() != null) {
+                    lightMatrix = Dae2GlMatrix(nod.getMatrix().getData());
+                } else {
+                    float[] matrice = getMatrixFromTransforms(nod);
+                    lightMatrix = Dae2GlMatrix(matrice);
+
+                }
             } else {
 
                 String nodeName = nod.getName();
@@ -55,6 +70,10 @@ public class SceneGraphDae implements InterfaceSceneGraph {
                 if (nod.getMatrix() != null) {
                     float [] nodeMatrix = Dae2GlMatrix(nod.getMatrix().getData());//Dae2GlCamMatrix(nod.getMatrix().getData());
                     sObject.setGlMatrix(nodeMatrix);
+                }else {
+                    float[] matrice = getMatrixFromTransforms(nod);
+                    sObject.setGlMatrix(Dae2GlMatrix(matrice));
+
                 }
                 List <InstanceGeometry> lInstGeom = nod.getInstanceGeometry();
                 for (InstanceGeometry instGeom: lInstGeom) {
@@ -127,6 +146,55 @@ public class SceneGraphDae implements InterfaceSceneGraph {
 //            }
         }
 
+
+        // ANIMATIONS
+
+        List <Animation> lAnims = this.theCollada.getLibraryAnimations().getAnimations();
+        for (Animation anim: lAnims) {
+            Dictionary<String, float []> dicAnimsData = new Hashtable<String, float []>();
+
+            List <Source> lSources = anim.getSources();
+            String[] types = null;
+            for (Source src: lSources){
+                String anim_name = src.getId();
+                if (src.getFloatArray() != null) {
+                    float[] values = src.getFloatArray().getData();
+                    dicAnimsData.put(anim_name, values);
+                }
+                if (src.getNameArray() != null) {
+                    types = src.getNameArray().getData();
+                }
+            }
+            if (( types != null ) && (types[0].equals("BEZIER"))){
+
+            }
+
+
+        }
+
+    }
+
+    private float[] getMatrixFromTransforms(Node nod) {
+        float [] matrice = new float [16];
+        float [] outMatrice = new float [16];
+        android.opengl.Matrix.setIdentityM(matrice, 0);
+
+        List<BaseXform> lXForms = nod.getXforms();
+        for (BaseXform xForm: lXForms) {
+            if (xForm instanceof Translate) {
+                Translate txForm = ((Translate) xForm);
+                android.opengl.Matrix.translateM(matrice, 0, txForm.getX(), txForm.getY(), txForm.getZ() );
+            } else if (xForm instanceof Rotate) {
+                Rotate rxForm = ((Rotate) xForm);
+                android.opengl.Matrix.rotateM(matrice, 0, rxForm.getAngle(), rxForm.getX(), rxForm.getY(), rxForm.getZ());
+            } else if (xForm instanceof Scale) {
+                Scale sxForm = ((Scale) xForm);
+                android.opengl.Matrix.scaleM(matrice, 0 , sxForm.getX(), sxForm.getY(), sxForm.getZ());
+            }
+
+            android.opengl.Matrix.transposeM(outMatrice, 0, matrice, 0);
+        }
+        return outMatrice;
     }
 
     private float[] Dae2glVerts(float[] positionData) {
