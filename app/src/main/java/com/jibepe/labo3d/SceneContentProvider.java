@@ -6,9 +6,11 @@ import com.jibepe.model.InterfaceMesh;
 import com.jibepe.model.InterfaceSceneGraph;
 import com.jibepe.model.InterfaceSceneObject;
 import com.jibepe.model.SceneGraph;
+import com.jibepe.objparser.ObjLoader;
 import com.jibepe.render3d.*;
 
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.List;
 
 /**
@@ -92,11 +94,12 @@ public class SceneContentProvider implements InterfaceSceneRenderer{
 //
 //		}
 
-//        glColoredShape shapeScene = new glColoredShape(mSceneGraph.getObj("scene"));
-//        shapeScene.setPosition (new float [] {0.0f, 0.0f, 0.0f});
-//        shapeScene.setRotation (new float [] {0.0f, 0.0f, 0.0f});
-//
-//        shapes2Render.add(shapeScene);
+
+        glColoredShape shapeScene = new glColoredShape(mSceneGraph.getObj("scene"));
+        shapeScene.setPosition (new float [] {0.0f, 0.0f, 0.0f});
+        shapeScene.setRotation (new float [] {0.0f, 0.0f, 0.0f});
+
+        shapes2Render.add(shapeScene);
 
 //        glAlphaTexturedShape shapePerso = new glAlphaTexturedShape(mSceneGraph.getObj("plantexture"));
 //        shapePerso.setName("PlanTexture.001");

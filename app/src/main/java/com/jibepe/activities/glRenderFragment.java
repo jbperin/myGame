@@ -3,6 +3,7 @@ package com.jibepe.activities;
 
 
 import android.app.ActivityManager;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 
 import android.content.Context;
@@ -15,7 +16,10 @@ import android.widget.LinearLayout;
 import com.jibepe.labo3d.*;
 import com.jibepe.model.SceneGraphDae;
 import com.jibepe.objparser.DaeLoader;
+import com.jibepe.objparser.ObjLoader;
 import com.jibepe.render3d.GLES20Renderer;
+
+import java.io.File;
 
 
 public class glRenderFragment extends Fragment {
@@ -95,19 +99,20 @@ public class glRenderFragment extends Fragment {
         ShaderHandler.getInstance().setContext(super.getActivity().getApplication());
 
         //theSceneGraph = new SceneGraph();
-        //File file = new File(Environment.getExternalStoragePublicDirectory(
-        //        Environment.DIRECTORY_PICTURES), "scene.mtl");
-//        ObjLoader mSceneLoader = new ObjLoader(super.getActivity().getApplication());
-//        mSceneLoader.loadModel("scene");
-//        theSceneGraph.addObj("scene", mSceneLoader);
+        DaeLoader mCollLoader = new DaeLoader(super.getActivity().getApplication());
+        mCollLoader.loadModel("cubetexturebleu.dae");
+        theSceneGraph = new SceneGraphDae(mCollLoader.getTheCollada());
+//        File file = new File(Environment.getExternalStoragePublicDirectory(
+//                Environment.DIRECTORY_PICTURES), "scene.mtl");
+        ObjLoader mSceneLoader = new ObjLoader(super.getActivity().getApplication());
+        mSceneLoader.loadModel("scene");
+        theSceneGraph.addObj("scene", mSceneLoader);
 //
 //        ObjLoader mPersoLoader = new ObjLoader(super.getActivity().getApplication());
 //        mPersoLoader.loadModel("plantexture");
 //        theSceneGraph.addObj("plantexture", mPersoLoader);
 
-        DaeLoader mCollLoader = new DaeLoader(super.getActivity().getApplication());
-        mCollLoader.loadModel("cubetexturebleu.dae");
-        theSceneGraph = new SceneGraphDae(mCollLoader.getTheCollada());
+
 
         //theSceneGraph.loadFromDae(mCollLoader);
 //        float [] verts = mCollLoader.getVerticesBuffer();

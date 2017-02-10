@@ -1,5 +1,7 @@
 package com.jibepe.model;
 
+import com.jibepe.objparser.ObjLoader;
+
 import java.util.List;
 
 /**
@@ -18,5 +20,9 @@ public interface InterfaceSceneGraph {
     public void moveCam (float angle );
 
     public List<InterfaceSceneObject> getSceneObjects();
+
+    public void addObj (String name, ObjLoader obj);
+
+    public ObjLoader getObj (String objectName);
 
 }

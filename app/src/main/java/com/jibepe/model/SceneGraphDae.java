@@ -1,6 +1,7 @@
 package com.jibepe.model;
 
 import android.opengl.*;
+import android.opengl.Matrix;
 import com.dddviewr.collada.Collada;
 import com.dddviewr.collada.Source;
 import com.dddviewr.collada.animation.Animation;
@@ -13,6 +14,8 @@ import com.dddviewr.collada.materials.InstanceEffect;
 import com.dddviewr.collada.materials.Material;
 import com.dddviewr.collada.nodes.Node;
 import com.dddviewr.collada.visualscene.*;
+import com.jibepe.objparser.DaeLoader;
+import com.jibepe.objparser.ObjLoader;
 
 import java.nio.ShortBuffer;
 import java.util.*;
@@ -29,7 +32,7 @@ public class SceneGraphDae implements InterfaceSceneGraph {
     private float [] lightMatrix = null;
 
     public Dictionary<String, InterfaceSceneObject> dicObjects;
-
+    public Dictionary<String, ObjLoader> objectDictionary;
 
     public SceneGraphDae(Collada theCollada) {
 
@@ -37,6 +40,7 @@ public class SceneGraphDae implements InterfaceSceneGraph {
         this.theCollada = theCollada;
 
         dicObjects = new Hashtable<String, InterfaceSceneObject>();
+        objectDictionary = new Hashtable<String, ObjLoader>();
 
 
 
@@ -166,12 +170,21 @@ public class SceneGraphDae implements InterfaceSceneGraph {
                 }
             }
             if (( types != null ) && (types[0].equals("BEZIER"))){
+                // register a new bezier curve.
 
             }
 
 
         }
 
+    }
+    @Override
+    public void addObj (String name, ObjLoader obj) {
+        objectDictionary.put(name, obj);
+    }
+    @Override
+    public ObjLoader getObj (String objectName) {
+        return objectDictionary.get(objectName);
     }
 
     private float[] getMatrixFromTransforms(Node nod) {
@@ -312,7 +325,18 @@ public class SceneGraphDae implements InterfaceSceneGraph {
 
 
     public void rotateCam (float angle ) {
-
+        //float [] rotateY = new float [16];
+        //Matrix.setIdentityM(rotateY,0);
+        //Matrix.setRotateM(rotateY, 0, angle, 0.0f, 1.0f, 0.0f);
+        float [] currentPosition = new float [] {cameraMatrix[12],cameraMatrix[13],cameraMatrix[14]};
+        cameraMatrix[12] = 0.0f;
+        cameraMatrix[13] = 0.0f;
+        cameraMatrix[14] = 0.0f;
+        Matrix.rotateM(cameraMatrix, 0, angle, 0.0f, 1.0f, 0.0f);
+        cameraMatrix[12] = currentPosition[0];
+        cameraMatrix[13] = currentPosition[1];
+        cameraMatrix[14] = currentPosition[2];
+        //cameraMatrix
     }
     public void moveCam (float angle ) {
 
