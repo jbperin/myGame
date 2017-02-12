@@ -62,11 +62,21 @@ public class glVboColoredShape extends glRenderableShape {
     float[] getVBObuffer() {
         FloatBuffer vboBuffer = null;
 
-        vboBuffer = FloatBuffer.allocate((indexBuffer.length / 9) * 3 * (POSITION_DATA_SIZE + NORMAL_DATA_SIZE));
-        for (int ii = 0; ii < indexBuffer.length; ii += 3) {
+
+        int offset_index = 3;
+        if (coords != null) {
+            offset_index = 3;
+            vboBuffer = FloatBuffer.allocate((indexBuffer.length / 9) * 3 * (POSITION_DATA_SIZE + NORMAL_DATA_SIZE));
+
+        } else {
+            offset_index = 2;
+            vboBuffer = FloatBuffer.allocate((indexBuffer.length / 6) * 3 * (POSITION_DATA_SIZE + NORMAL_DATA_SIZE));
+        }
+
+        for (int ii = 0; ii < indexBuffer.length; ii += offset_index) {
             int idxPosition = indexBuffer[ii];
             int idxNormal = indexBuffer[ii + 1];
-            int idxCoord = indexBuffer[ii + 2];
+
 
             // vertice position
             vboBuffer.put(verts[idxPosition * POSITION_DATA_SIZE]); // X

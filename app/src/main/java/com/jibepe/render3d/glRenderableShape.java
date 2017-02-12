@@ -40,6 +40,10 @@ public abstract class glRenderableShape {
 
     public void setPosition(float[] position) {
         this.position = position;
+        this.matrix [12] = position[0];
+        this.matrix [13] = position[1];
+        this.matrix [14] = position[2];
+
     }
 
     public float[] getRotation() {
@@ -64,6 +68,10 @@ public abstract class glRenderableShape {
 
     public void setMatrix(float[] matrix) {
         this.matrix = matrix;
+        this.position [0] = matrix [12];
+        this.position [1] = matrix [13];
+        this.position [2] = matrix [14];
+
     }
 
     private float [] matrix = {
@@ -122,18 +130,19 @@ public abstract class glRenderableShape {
 
     private float[] convertWorldSpace (float [] inCoord) {
         //float [] outCoord = new float[4];
-        float[] mModelMatrix = new float[16];
+        float[] mModelMatrix = null;
         float[] resultVec = new float[4];
 
 //        Log.d(TAG, "inCoord = (" + inCoord[0] + ", " + inCoord[1] + ", " + inCoord[2] + ", " + inCoord[3]+ ")");
 
-        Matrix.setIdentityM(mModelMatrix, 0);
-
-        Matrix.translateM(mModelMatrix, 0, getPosition()[0], getPosition()[1], getPosition()[2]);
-        //Matrix.setRotateEulerM(mModelMatrix, 0, getRotation()[0], getRotation()[1], getRotation()[2]);
-        Matrix.rotateM(mModelMatrix, 0, getRotation()[0], 1.0f, 0.0f, 0.0f);
-        Matrix.rotateM(mModelMatrix, 0, getRotation()[1], 0.0f, 1.0f, 0.0f);
-        Matrix.rotateM(mModelMatrix, 0, getRotation()[2], 0.0f, 0.0f, 1.0f);
+//        Matrix.setIdentityM(mModelMatrix, 0);
+//
+//        Matrix.translateM(mModelMatrix, 0, getPosition()[0], getPosition()[1], getPosition()[2]);
+//        //Matrix.setRotateEulerM(mModelMatrix, 0, getRotation()[0], getRotation()[1], getRotation()[2]);
+//        Matrix.rotateM(mModelMatrix, 0, getRotation()[0], 1.0f, 0.0f, 0.0f);
+//        Matrix.rotateM(mModelMatrix, 0, getRotation()[1], 0.0f, 1.0f, 0.0f);
+//        Matrix.rotateM(mModelMatrix, 0, getRotation()[2], 0.0f, 0.0f, 1.0f);
+        mModelMatrix = getMatrix().clone();
         Matrix.scaleM(mModelMatrix, 0, getScale()[0], getScale()[1], getScale()[2] );
         //Matrix.setRotateEulerM(mModelMatrix, 0, rotation[0], rotation[1], rotation[2]);
 //        Log.d(TAG, "Translate + Rotate");
@@ -282,13 +291,15 @@ public abstract class glRenderableShape {
         float [] wcVert1 =  convertWorldSpace(vert1);
         float [] wcVert2 =  convertWorldSpace(vert2);
         float [] wcVert3 =  convertWorldSpace(vert3);
-//        Log.d(TAG, "wcv1 = (" + wcVert1[0] + ", " + wcVert1[1] + ", " + wcVert1[2] + ")");
-//        Log.d(TAG, "wcv2 = (" + wcVert2[0] + ", " + wcVert2[1] + ", " + wcVert2[2] + ")");
-//        Log.d(TAG, "wcv3 = (" + wcVert3[0] + ", " + wcVert3[1] + ", " + wcVert3[2] + ")");
+/*
+                        Log.d(TAG, "v1 = ("+vert1[0] + ", "+vert1[1] + ", "+vert1[2] + ")");
+                        Log.d(TAG, "v2 = ("+vert2[0] + ", "+vert2[1] + ", "+vert2[2] + ")");
+                        Log.d(TAG, "v3 = ("+vert3[0] + ", "+vert3[1] + ", "+vert3[2] + ")");
+        Log.d(TAG, "wcv1 = (" + wcVert1[0] + ", " + wcVert1[1] + ", " + wcVert1[2] + ")");
+        Log.d(TAG, "wcv2 = (" + wcVert2[0] + ", " + wcVert2[1] + ", " + wcVert2[2] + ")");
+        Log.d(TAG, "wcv3 = (" + wcVert3[0] + ", " + wcVert3[1] + ", " + wcVert3[2] + ")");
+*/
 
-        //                Log.d(TAG, "v1 = ("+vert1[0] + ", "+vert1[1] + ", "+vert1[2] + ")");
-        //                Log.d(TAG, "v2 = ("+vert2[0] + ", "+vert2[1] + ", "+vert2[2] + ")");
-        //                Log.d(TAG, "v3 = ("+vert3[0] + ", "+vert3[1] + ", "+vert3[2] + ")");
 
         // CHECK IF FACE is CROSSED BY RAY
 

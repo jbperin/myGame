@@ -95,11 +95,12 @@ public class SceneContentProvider implements InterfaceSceneRenderer{
 //		}
 
 
-        glColoredShape shapeScene = new glColoredShape(mSceneGraph.getObj("scene"));
-        shapeScene.setPosition (new float [] {0.0f, 0.0f, 0.0f});
-        shapeScene.setRotation (new float [] {0.0f, 0.0f, 0.0f});
-
-        shapes2Render.add(shapeScene);
+//        glColoredShape shapeScene = new glColoredShape(mSceneGraph.getObj("scene"));
+//        shapeScene.setName("Scene.001");
+//        shapeScene.setPosition (new float [] {0.0f, 0.0f, 0.0f});
+//        shapeScene.setRotation (new float [] {0.0f, 0.0f, 0.0f});
+//
+//        shapes2Render.add(shapeScene);
 
 //        glAlphaTexturedShape shapePerso = new glAlphaTexturedShape(mSceneGraph.getObj("plantexture"));
 //        shapePerso.setName("PlanTexture.001");
@@ -186,7 +187,8 @@ public class SceneContentProvider implements InterfaceSceneRenderer{
                     theShape.setVerts(verts);
                     theShape.setColor(mesh.getMaterial().getColor());
                     theShape.setNorms(norms);
-                    //theShape.setTexCoords(uvcoords);
+                    theShape.setTexCoords(uvcoords);
+
                     theShape.setIndexBuffer(indexes);
                     lShapes.add(theShape);
                 }

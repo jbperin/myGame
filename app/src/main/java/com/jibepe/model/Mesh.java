@@ -15,7 +15,7 @@ public class Mesh implements InterfaceMesh {
     public String getName() {
         return name;
     }
-
+    boolean UVtextured = false;
     float[] vertices = null;
     @Override
     public float[] getVertices() {
@@ -64,5 +64,9 @@ public class Mesh implements InterfaceMesh {
     @Override
     public InterfaceMaterial getMaterial() {
         return material;
+    }
+
+    public void setUVtextured(boolean UVtextured) {
+        this.UVtextured = UVtextured;
     }
 }

@@ -190,23 +190,25 @@ public class glAlphaTexturedShape extends glRenderableShape{
 //		GLES20.glDisable(GLES20.GL_DEPTH_TEST);
                 GLES20.glDisable(GLES20.GL_CULL_FACE);
 
-                Matrix.setIdentityM(mModelMatrix, 0);
 
-                Matrix.translateM(mModelMatrix, 0, getPosition()[0], getPosition()[1], getPosition()[2]);
+                mModelMatrix = getMatrix();
+                //Matrix.setIdentityM(mModelMatrix, 0);
+
+                //Matrix.translateM(mModelMatrix, 0, getPosition()[0], getPosition()[1], getPosition()[2]);
                 //Matrix.setRotateEulerM(mModelMatrix, 0, getRotation()[0], getRotation()[1], getRotation()[2]);
-                Matrix.rotateM(mModelMatrix, 0, getRotation()[0], 1.0f, 0.0f, 0.0f);
+                //Matrix.rotateM(mModelMatrix, 0, getRotation()[0], 1.0f, 0.0f, 0.0f);
 //                Log.d (TAG, "Rotate X");
 //                Log.d(TAG, "l1 = (" + mModelMatrix[0] + ", " + mModelMatrix[1] + ", " + mModelMatrix[2] + ", " + mModelMatrix[3]+ ")");
 //                Log.d(TAG, "l2 = (" + mModelMatrix[4] + ", " + mModelMatrix[5] + ", " + mModelMatrix[6] + ", " + mModelMatrix[7]+ ")");
 //                Log.d(TAG, "l3 = (" + mModelMatrix[8] + ", " + mModelMatrix[9] + ", " + mModelMatrix[10] + ", " + mModelMatrix[11]+ ")");
 //                Log.d(TAG, "l4 = (" + mModelMatrix[12] + ", " + mModelMatrix[13] + ", " + mModelMatrix[14] + ", " + mModelMatrix[15]+ ")");
-                Matrix.rotateM(mModelMatrix, 0, getRotation()[1], 0.0f, 1.0f, 0.0f);
+                //Matrix.rotateM(mModelMatrix, 0, getRotation()[1], 0.0f, 1.0f, 0.0f);
 //                Log.d (TAG, "Rotate Y");
 //                Log.d(TAG, "l1 = (" + mModelMatrix[0] + ", " + mModelMatrix[1] + ", " + mModelMatrix[2] + ", " + mModelMatrix[3]+ ")");
 //                Log.d(TAG, "l2 = (" + mModelMatrix[4] + ", " + mModelMatrix[5] + ", " + mModelMatrix[6] + ", " + mModelMatrix[7]+ ")");
 //                Log.d(TAG, "l3 = (" + mModelMatrix[8] + ", " + mModelMatrix[9] + ", " + mModelMatrix[10] + ", " + mModelMatrix[11]+ ")");
 //                Log.d(TAG, "l4 = (" + mModelMatrix[12] + ", " + mModelMatrix[13] + ", " + mModelMatrix[14] + ", " + mModelMatrix[15]+ ")");
-                Matrix.rotateM(mModelMatrix, 0, getRotation()[2], 0.0f, 0.0f, 1.0f);
+                //Matrix.rotateM(mModelMatrix, 0, getRotation()[2], 0.0f, 0.0f, 1.0f);
 //                Log.d (TAG, "Rotate Z");
 //                Log.d(TAG, "l1 = (" + mModelMatrix[0] + ", " + mModelMatrix[1] + ", " + mModelMatrix[2] + ", " + mModelMatrix[3]+ ")");
 //                Log.d(TAG, "l2 = (" + mModelMatrix[4] + ", " + mModelMatrix[5] + ", " + mModelMatrix[6] + ", " + mModelMatrix[7]+ ")");

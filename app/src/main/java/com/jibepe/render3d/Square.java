@@ -140,17 +140,17 @@ public class Square extends glRenderableShape {
         float[] mModelMatrix = new float[16];
         final float[] mMVPMatrix = new float[16];
 
-
-        Matrix.setIdentityM(mModelMatrix, 0);
-
-        Matrix.rotateM(mModelMatrix, 0, getRotation()[0], 1.0f, 0.0f, 0.0f);
-        Matrix.rotateM(mModelMatrix, 0, getRotation()[1], 0.0f, 1.0f, 0.0f);
-        Matrix.rotateM(mModelMatrix, 0, getRotation()[2], 0.0f, 0.0f, 1.0f);
-
-        mModelMatrix[12] = getPosition()[0];
-        mModelMatrix[13] = getPosition()[1];
-        mModelMatrix[14] = getPosition()[2];
-
+        mModelMatrix = getMatrix().clone();
+//        Matrix.setIdentityM(mModelMatrix, 0);
+//
+//        Matrix.rotateM(mModelMatrix, 0, getRotation()[0], 1.0f, 0.0f, 0.0f);
+//        Matrix.rotateM(mModelMatrix, 0, getRotation()[1], 0.0f, 1.0f, 0.0f);
+//        Matrix.rotateM(mModelMatrix, 0, getRotation()[2], 0.0f, 0.0f, 1.0f);
+//
+//        mModelMatrix[12] = getPosition()[0];
+//        mModelMatrix[13] = getPosition()[1];
+//        mModelMatrix[14] = getPosition()[2];
+//
         Matrix.scaleM(mModelMatrix, 0, getScale()[0], getScale()[1], getScale()[2] );
 
         // Pass in the transformation matrix.

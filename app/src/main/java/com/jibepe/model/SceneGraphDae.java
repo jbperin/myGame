@@ -53,10 +53,10 @@ public class SceneGraphDae implements InterfaceSceneGraph {
             //theCollada.nod.getMatrix()
             if (nod.getName().startsWith("Camera")) {
                 if (nod.getMatrix() != null) {
-                    cameraMatrix = Dae2GlCamMatrix(nod.getMatrix().getData());
+                    cameraMatrix = Dae2GlMatrix(nod.getMatrix().getData()); //Dae2GlCamMatrix(nod.getMatrix().getData());
                 } else {
                     float[] matrice = getMatrixFromTransforms(nod);
-                    cameraMatrix = Dae2GlCamMatrix(matrice);
+                    cameraMatrix = Dae2GlMatrix(matrice);// Dae2GlCamMatrix(matrice);
                 }
             } else if (nod.getName().startsWith("Lamp")) {
                 if (nod.getMatrix() != null) {
@@ -90,10 +90,16 @@ public class SceneGraphDae implements InterfaceSceneGraph {
                     Geometry theGeom = this.theCollada.findGeometry(geomUrl) ;
                     float [] verts = Dae2glVerts (theGeom.getMesh().getPositionData());
                     float [] norms = Dae2glNorms (theGeom.getMesh().getNormalData());
-                    float [] uvcoords = Dae2glTexCoords ( theGeom.getMesh().getTexCoordData());
                     aMesh.setVertices(verts);
                     aMesh.setNormals(norms);
-                    aMesh.setTexCoordinates(uvcoords);
+                    if (theGeom.getMesh().getTexCoordData() != null) {
+                        float[] uvcoords = Dae2glTexCoords(theGeom.getMesh().getTexCoordData());
+                        aMesh.setTexCoordinates(uvcoords);
+                        aMesh.setUVtextured (true);
+                    } else {
+                        aMesh.setUVtextured (false);
+                    }
+
 
                     List <Primitives> lPrim = theGeom.getMesh().getPrimitives();
                     int [] buff = null;
@@ -152,29 +158,30 @@ public class SceneGraphDae implements InterfaceSceneGraph {
 
 
         // ANIMATIONS
+        if (this.theCollada.getLibraryAnimations() != null) {
+            List<Animation> lAnims = this.theCollada.getLibraryAnimations().getAnimations();
+            for (Animation anim : lAnims) {
+                Dictionary<String, float[]> dicAnimsData = new Hashtable<String, float[]>();
 
-        List <Animation> lAnims = this.theCollada.getLibraryAnimations().getAnimations();
-        for (Animation anim: lAnims) {
-            Dictionary<String, float []> dicAnimsData = new Hashtable<String, float []>();
-
-            List <Source> lSources = anim.getSources();
-            String[] types = null;
-            for (Source src: lSources){
-                String anim_name = src.getId();
-                if (src.getFloatArray() != null) {
-                    float[] values = src.getFloatArray().getData();
-                    dicAnimsData.put(anim_name, values);
+                List<Source> lSources = anim.getSources();
+                String[] types = null;
+                for (Source src : lSources) {
+                    String anim_name = src.getId();
+                    if (src.getFloatArray() != null) {
+                        float[] values = src.getFloatArray().getData();
+                        dicAnimsData.put(anim_name, values);
+                    }
+                    if (src.getNameArray() != null) {
+                        types = src.getNameArray().getData();
+                    }
                 }
-                if (src.getNameArray() != null) {
-                    types = src.getNameArray().getData();
+                if ((types != null) && (types[0].equals("BEZIER"))) {
+                    // register a new bezier curve.
+
                 }
-            }
-            if (( types != null ) && (types[0].equals("BEZIER"))){
-                // register a new bezier curve.
+
 
             }
-
-
         }
 
     }
@@ -255,7 +262,7 @@ public class SceneGraphDae implements InterfaceSceneGraph {
 
     @Override
     public float[] getCamPos() {
-        return new float [] {0.0f, 0.0f, 0.0f};
+        return new float [] {cameraMatrix[12],cameraMatrix[13],cameraMatrix[14]};
     }
 
     @Override
@@ -280,20 +287,6 @@ public class SceneGraphDae implements InterfaceSceneGraph {
     }
 
 
-    float [] Dae2GlCamMatrix(float[] daeMatrix) {
-        float [] glMatrix = new float []{
-                daeMatrix[0], daeMatrix[1], daeMatrix[2], daeMatrix[3]
-                , daeMatrix[8], daeMatrix[9], daeMatrix[10], daeMatrix[11]
-                , -daeMatrix[4], -daeMatrix[5], -daeMatrix[6], -daeMatrix[7]
-                ,daeMatrix[12], daeMatrix[13], daeMatrix[14], daeMatrix[15]
-        };
-        float [] invGlMatrix = new float [16];
-        android.opengl.Matrix.invertM(invGlMatrix, 0, glMatrix, 0);
-        float [] invTransGlMatrix = new float [16];
-        android.opengl.Matrix.transposeM(invTransGlMatrix, 0, invGlMatrix, 0);
-        return invTransGlMatrix;
-
-    }
     @Override
     public float[] getCamMatrix() {
         return cameraMatrix;
@@ -328,14 +321,14 @@ public class SceneGraphDae implements InterfaceSceneGraph {
         //float [] rotateY = new float [16];
         //Matrix.setIdentityM(rotateY,0);
         //Matrix.setRotateM(rotateY, 0, angle, 0.0f, 1.0f, 0.0f);
-        float [] currentPosition = new float [] {cameraMatrix[12],cameraMatrix[13],cameraMatrix[14]};
-        cameraMatrix[12] = 0.0f;
-        cameraMatrix[13] = 0.0f;
-        cameraMatrix[14] = 0.0f;
-        Matrix.rotateM(cameraMatrix, 0, angle, 0.0f, 1.0f, 0.0f);
-        cameraMatrix[12] = currentPosition[0];
-        cameraMatrix[13] = currentPosition[1];
-        cameraMatrix[14] = currentPosition[2];
+//        float [] currentPosition = new float [] {cameraMatrix[12],cameraMatrix[13],cameraMatrix[14]};
+//        cameraMatrix[12] = 0.0f;
+//        cameraMatrix[13] = 0.0f;
+//        cameraMatrix[14] = 0.0f;
+//        Matrix.rotateM(cameraMatrix, 0, angle, 0.0f, 1.0f, 0.0f);
+//        cameraMatrix[12] = currentPosition[0];
+//        cameraMatrix[13] = currentPosition[1];
+//        cameraMatrix[14] = currentPosition[2];
         //cameraMatrix
     }
     public void moveCam (float angle ) {

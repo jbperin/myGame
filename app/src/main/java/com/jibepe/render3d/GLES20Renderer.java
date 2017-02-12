@@ -171,6 +171,20 @@ public class GLES20Renderer implements Renderer {
 //			mSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 //		}
 	}
+    float [] Dae2GlCamMatrix(float[] daeMatrix) {
+//        float [] glMatrix = new float []{
+//                daeMatrix[0], daeMatrix[1], daeMatrix[2], daeMatrix[3]
+//                , daeMatrix[8], daeMatrix[9], daeMatrix[10], daeMatrix[11]
+//                , -daeMatrix[4], -daeMatrix[5], -daeMatrix[6], -daeMatrix[7]
+//                ,daeMatrix[12], daeMatrix[13], daeMatrix[14], daeMatrix[15]
+//        };
+        float [] invGlMatrix = new float [16];
+        android.opengl.Matrix.invertM(invGlMatrix, 0, daeMatrix, 0);
+//        float [] invTransGlMatrix = new float [16];
+//        android.opengl.Matrix.transposeM(invTransGlMatrix, 0, invGlMatrix, 0);
+        return invGlMatrix;
+
+    }
 
 	private void drawFrame() {
 
@@ -183,10 +197,10 @@ public class GLES20Renderer implements Renderer {
 		// NOTE: In OpenGL 1, a ModelView matrix is used, which is a combination of a model and
 		// view matrix. In OpenGL 2, we can keep track of these matrices separately if we choose.
 		if (mScene != null ) {
-			float [] mPosCam = mScene.getCamPos();
-			float [] mRotCam = mScene.getCamRot();
+//			float [] mPosCam = mScene.getCamPos();
+//			float [] mRotCam = mScene.getCamRot();
 			float mAngleCam = 0.0f ;// mRotCam [1];
-			float [] mViewMatrix = mScene.getCamMatrix();
+			mViewMatrix = Dae2GlCamMatrix(mScene.getCamMatrix());
 //			Matrix.setLookAtM(mViewMatrix, 0,
 //					// Position the eye in front of the origin.
 //					7.48113f, 5.34367f, 6.50767f,//mPosCam [0], mPosCam [1], mPosCam [2],// eyeX, eyeY, eyeZ,
@@ -248,10 +262,13 @@ public class GLES20Renderer implements Renderer {
 		float [] posCam = mScene.getCamPos();
 
 		List<glRenderableShape> ShapesToRender = mScene.getRenderableShapes();
+        Log.d(TAG, "direction = (" + direction [0] +", " + direction [1] +", " +direction [2] +") ");
+        Log.d(TAG, "posCam = (" + posCam [0] +", " + posCam [1] +", " +posCam [2] +") ");
 
 		for (glRenderableShape shap : ShapesToRender) {
 			//
 			// shap.render(mVPMatrix, mShaderHelper, mScene);
+			//Log.d(TAG, "Scanning : " + shap.getName());
 			Hit = shap.intersectRay(posCam, direction);
 			if (Hit != null) {
 				// compute distance to intersection
@@ -302,9 +319,10 @@ public class GLES20Renderer implements Renderer {
 		int [] _viewport = new int[] { 0, 0, mWidth, mHeight };
 		// mouse Y needs to be inverted
 		//mouseY = (float) _viewport[3] - mouseY;
-		//Log.d(TAG, "Try to unproject :" + mouseX + "," + mouseY );
+		Log.d(TAG, "Try to unproject :" + mouseX + "," + mouseY );
 		// calling glReadPixels() with GL_DEPTH_COMPONENT is not supported in
 		// GLES so now i will try to implement ray picking
+
 		int result = GLU.gluUnProject(mouseX, mouseY, 1.0f, mViewMatrix, 0, mProjectionMatrix, 0, _viewport, 0,
 				farCoord, 0);
 
@@ -333,7 +351,7 @@ public class GLES20Renderer implements Renderer {
 
 		Vector dirVector = new Vector(direction);
 		direction [0] = direction[0]/dirVector.magnitude();
-		direction [1] = direction[1]/dirVector.magnitude();
+		direction [1] = - direction[1]/dirVector.magnitude(); // TODO
 		direction [2] = direction[2]/dirVector.magnitude();
 
 		float [] camPos =  mScene.getCamPos();

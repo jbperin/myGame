@@ -66,22 +66,6 @@ public class Triangle extends glRenderableShape {
     private final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
 
 
-    public float[] getPosition() {
-        return position;
-    }
-
-    public void setPosition(float[] position) {
-        this.position = position;
-    }
-
-    public float[] getRotation() {
-        return rotation;
-    }
-
-    public void setRotation(float[] rotation) {
-        this.rotation = rotation;
-    }
-
     private float [] position = {0.0f, 0.0f, 0.0f}; // X,Y,Z
     private float [] rotation = {0.0f, 0.0f, 0.0f}; // rX,rY,rZ
 
@@ -152,18 +136,18 @@ public class Triangle extends glRenderableShape {
         float[] mModelMatrix = new float[16];
         final float[] mMVPMatrix = new float[16];
 
-
-        Matrix.setIdentityM(mModelMatrix, 0);
-
-        Matrix.rotateM(mModelMatrix, 0, rotation[0], 1.0f, 0.0f, 0.0f);
-        Matrix.rotateM(mModelMatrix, 0, rotation[1], 0.0f, 1.0f, 0.0f);
-        Matrix.rotateM(mModelMatrix, 0, rotation[2], 0.0f, 0.0f, 1.0f);
-
-        mModelMatrix[12] = position[0];
-        mModelMatrix[13] = position[1];
-        mModelMatrix[14] = position[2];
-
-        Matrix.scaleM(mModelMatrix, 0, getScale()[0], getScale()[1], getScale()[2] );
+        mModelMatrix = getMatrix().clone();
+//        Matrix.setIdentityM(mModelMatrix, 0);
+//
+//        Matrix.rotateM(mModelMatrix, 0, rotation[0], 1.0f, 0.0f, 0.0f);
+//        Matrix.rotateM(mModelMatrix, 0, rotation[1], 0.0f, 1.0f, 0.0f);
+//        Matrix.rotateM(mModelMatrix, 0, rotation[2], 0.0f, 0.0f, 1.0f);
+//
+//        mModelMatrix[12] = position[0];
+//        mModelMatrix[13] = position[1];
+//        mModelMatrix[14] = position[2];
+//
+//        Matrix.scaleM(mModelMatrix, 0, getScale()[0], getScale()[1], getScale()[2] );
 
         // Pass in the transformation matrix.
         //Matrix.multiplyMM(mMVPMatrix, 0, mMatrixVP, 0, mModelMatrix, 0);

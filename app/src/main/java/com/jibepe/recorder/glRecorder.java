@@ -340,17 +340,18 @@ public class glRecorder {
 
 
             float [] mPosCam = mScene.getCamPos();
-            float [] mRotCam = mScene.getCamRot();
-            float mAngleCam = mRotCam [1];
+            //float [] mRotCam = mScene.getCamRot();
+            //float mAngleCam = mRotCam [1];
 
-            Matrix.setLookAtM(mViewMatrix, 0,
-                    // Position the eye in front of the origin.
-                    mPosCam [0], mPosCam [1], mPosCam [2],// eyeX, eyeY, eyeZ,
-                    // We are looking toward the distance
-                    (float)(mPosCam [0] + (Math.cos(Math.toRadians(mAngleCam)))), 1.0f, (float)(mPosCam [2] + (Math.sin(Math.toRadians(mAngleCam)))), // lookX, lookY, lookZ,
-                    // Set our up vector. This is where our head would be pointing were we holding the camera.
-                    0.0f, 1.0f, 0.0f  //upX, upY, upZ
-            );
+             mViewMatrix = mScene.getCamMatrix();
+//            Matrix.setLookAtM(mViewMatrix, 0,
+//                    // Position the eye in front of the origin.
+//                    mPosCam [0], mPosCam [1], mPosCam [2],// eyeX, eyeY, eyeZ,
+//                    // We are looking toward the distance
+//                    (float)(mPosCam [0] + (Math.cos(Math.toRadians(mAngleCam)))), 1.0f, (float)(mPosCam [2] + (Math.sin(Math.toRadians(mAngleCam)))), // lookX, lookY, lookZ,
+//                    // Set our up vector. This is where our head would be pointing were we holding the camera.
+//                    0.0f, 1.0f, 0.0f  //upX, upY, upZ
+//            );
             //Matrix.multiplyMM(mVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
 
             List<glRenderableShape> ShapesToRender = mScene.getRenderableShapes();
